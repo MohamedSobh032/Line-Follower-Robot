@@ -1,0 +1,8 @@
+../Src/MSTK_Program.c:26:6:MSTK_vInit	4	static
+../Src/MSTK_Program.c:41:6:MSTK_vDisable	4	static
+../Src/MSTK_Program.c:54:6:MSTK_vBusyWait	16	static
+../Src/MSTK_Program.c:74:6:MSTK_vSingleCall	16	static
+../Src/MSTK_Program.c:97:6:MSTK_vPeriodicCall	16	static
+../Src/MSTK_Program.c:119:5:MSTK_u32GetElapsedTicks	4	static
+../Src/MSTK_Program.c:127:5:MSTK_u32GetRemainingTicks	4	static
+../Src/MSTK_Program.c:135:6:SysTick_Handler	8	static

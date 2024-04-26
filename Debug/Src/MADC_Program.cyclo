@@ -1,0 +1,8 @@
+../Src/MADC_Program.c:21:6:MADC_vGeneralInit	1
+../Src/MADC_Program.c:42:6:MADC_vAWDInit	3
+../Src/MADC_Program.c:61:6:MADC_vEnableScanMode	1
+../Src/MADC_Program.c:72:6:MADC_vEnableDiscontinuousMode	2
+../Src/MADC_Program.c:84:6:MADC_vEnableContinuousMode	1
+../Src/MADC_Program.c:98:6:MADC_vEnableAutomaticInjection	1
+../Src/MADC_Program.c:110:6:MADC_vSetExternalTrigger	2
+../Src/MADC_Program.c:120:6:MADC_vEnableInjectedInterrupt	1

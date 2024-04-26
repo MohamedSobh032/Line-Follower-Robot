@@ -1,0 +1,6 @@
+../Src/MNVIC_Program.c:22:6:MNVIC_vInit	4	static
+../Src/MNVIC_Program.c:34:6:MNVIC_vSetPeripheralInterruptPriority	24	static
+../Src/MNVIC_Program.c:53:6:MNVIC_vEnablePeripheralInterrupt	16	static
+../Src/MNVIC_Program.c:64:6:MNVIC_vDisablePeripheralInterrupt	16	static
+../Src/MNVIC_Program.c:75:6:MNVIC_vSetPendingFlag	16	static
+../Src/MNVIC_Program.c:86:6:MNVIC_vClearPendingFlag	16	static

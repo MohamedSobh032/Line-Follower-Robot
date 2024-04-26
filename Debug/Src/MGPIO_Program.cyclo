@@ -1,0 +1,11 @@
+../Src/MGPIO_Program.c:23:6:MGPIO_vSetPinMode	2
+../Src/MGPIO_Program.c:37:6:MGPIO_vSetPinOutputType	2
+../Src/MGPIO_Program.c:51:6:MGPIO_vSetPinOutputSpeed	2
+../Src/MGPIO_Program.c:65:6:MGPIO_vSetPinInputType	2
+../Src/MGPIO_Program.c:79:6:MGPIO_vSetPinAFDirection	2
+../Src/MGPIO_Program.c:92:6:MGPIO_vSetPinValue	3
+../Src/MGPIO_Program.c:106:6:MGPIO_vSetPartValue	1
+../Src/MGPIO_Program.c:118:6:MGPIO_vSetPinDirectAccess	1
+../Src/MGPIO_Program.c:130:6:MGPIO_vTogglePinValue	1
+../Src/MGPIO_Program.c:141:4:MGPIO_u8GetPinValue	1
+../Src/MGPIO_Program.c:152:6:MGPIO_bLockPin	2
