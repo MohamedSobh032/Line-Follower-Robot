@@ -1,8 +1,11 @@
 ../Src/MADC_Program.c:21:6:MADC_vGeneralInit	16	static
 ../Src/MADC_Program.c:42:6:MADC_vAWDInit	16	static
-../Src/MADC_Program.c:61:6:MADC_vEnableScanMode	4	static
-../Src/MADC_Program.c:72:6:MADC_vEnableDiscontinuousMode	16	static
-../Src/MADC_Program.c:84:6:MADC_vEnableContinuousMode	4	static
-../Src/MADC_Program.c:98:6:MADC_vEnableAutomaticInjection	4	static
-../Src/MADC_Program.c:110:6:MADC_vSetExternalTrigger	16	static
-../Src/MADC_Program.c:120:6:MADC_vEnableInjectedInterrupt	4	static
+../Src/MADC_Program.c:61:6:MADC_vSetScanMode	16	static
+../Src/MADC_Program.c:77:6:MADC_vSetDiscontinuousMode	16	static
+../Src/MADC_Program.c:94:6:MADC_vSetContinuousMode	16	static
+../Src/MADC_Program.c:112:6:MADC_vSetAutomaticInjection	16	static
+../Src/MADC_Program.c:128:6:MADC_vSetExternalTrigger	16	static
+../Src/MADC_Program.c:145:6:MADC_vSetInterrupt	16	static
+../Src/MADC_Program.c:162:6:MADC_vSetSamplingTime	24	static
+../Src/MADC_Program.c:173:6:MADC_vSetNumberOfConversions	16	static
+../Src/MADC_Program.c:189:6:MADC_vSetSequence	16	static

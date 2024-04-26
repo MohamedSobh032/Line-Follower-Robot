@@ -1,11 +1,11 @@
-/**********************************************/
-/* SWC: USART Driver                          */
-/* Author: Mohamed Sobh                       */
-/* Version: v0.0                              */
-/* Date: 30 SEPT 2023                         */
-/* Description: This is the implem. of USART  */
-/**********************************************/
-/* File Guard */
+/******************************************************/
+/* SWC: USART Driver                                  */
+/* Author: Mohamed Sobh                               */
+/* Version: v1.0                                      */
+/* Date: 02 APR 2024                                  */
+/* Description: This is the implem. of USART          */
+/******************************************************/
+/* Header File Guard */
 #ifndef _MUSART_CONFIG_H_
 #define _MUSART_CONFIG_H_
 

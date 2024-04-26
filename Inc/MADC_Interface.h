@@ -38,26 +38,16 @@ typedef struct {
 } MADC_AWDTypeDef;
 
 
-
 void MADC_vGeneralInit(u8 Copy_u8DataAllignment, u8 Copy_u8Resolution);
 void MADC_vAWDInit(MADC_AWDTypeDef* A_InitStruct);
-
-void MADC_vEnableScanMode(void);
-
-void MADC_vEnableDiscontinuousMode(u8 Copy_u8Group, u8 Copy_u8DiscontinousNumber);
-void MADC_vEnableContinuousMode(void);
-
-void MADC_vEnableAutomaticInjection(void);
-
+void MADC_vSetScanMode(u8 Copy_u8EnableValue);
+void MADC_vSetDiscontinuousMode(u8 Copy_u8EnableValue, u8 Copy_u8Group, u8 Copy_u8DiscontinousNumber);
+void MADC_vSetContinuousMode(u8 Copy_u8EnableValue);
+void MADC_vSetAutomaticInjection(u8 Copy_u8EnableValue);
 void MADC_vSetExternalTrigger(u8 Copy_u8Group, u8 Copy_u8TriggeringEdge, u8 Copy_u8TriggerSource);
-
-void MADC_vEnableInjectedInterrupt(void);
-void MADC_vEnableRegularInterrupt(void);
-
-void MADC_vSetSamplingTime(u8 Copy_u8Channel, u8 Copy_u8SampleTime);
-
-void MADC_vSetNumberOfConversions(u8 Copy_u8Conversions);
-
+void MADC_vSetInterrupt(u8 Copy_u8Group, u8 Copy_u8EnableValue);
+void MADC_vSetSamplingTime(MADC_CHANNEL Channel, u8 Copy_u8SampleTime);
+void MADC_vSetNumberOfConversions(u8 Copy_u8Group, u8 Copy_u8Conversions);
 void MADC_vSetSequence(u8 Copy_u8Group, u8 Copy_u8SeqNumber, u8 Copy_u8Channel);
 
 /**********************************************/
@@ -146,6 +136,48 @@ void MADC_vSetSequence(u8 Copy_u8Group, u8 Copy_u8SeqNumber, u8 Copy_u8Channel);
 #define MADC_EVENT_TRIG_INJECTED_TIM5CC4    0b1010
 #define MADC_EVENT_TRIG_INJECTED_TIM5TRGO   0b1011
 #define MADC_EVENT_TRIG_INJECTED_EXTI15     0b1111
+
+/**********************************************/
+/*         Conversion Sampling Cycles         */
+/**********************************************/
+#define MADC_SAMPLING_CYCLES_3				0b000
+#define MADC_SAMPLING_CYCLES_15				0b001
+#define MADC_SAMPLING_CYCLES_28				0b010
+#define MADC_SAMPLING_CYCLES_56				0b011
+#define MADC_SAMPLING_CYCLES_84				0b100
+#define MADC_SAMPLING_CYCLES_112			0b101
+#define MADC_SAMPLING_CYCLES_144			0b110
+#define MADC_SAMPLING_CYCLES_480			0b111
+
+/**********************************************/
+/*           ADC Conversion Lengths           */
+/**********************************************/
+#define MADC_ONE_CONVERSION					0b0000
+#define MADC_TWO_CONVERSIONS				0b0001
+#define MADC_THREE_CONVERSIONS				0b0010
+#define MADC_FOUR_CONVERSIONS				0b0011
+#define MADC_FIVE_CONVERSIONS				0b0100
+#define MADC_SIX_CONVERSIONS				0b0101
+#define MADC_SEVEN_CONVERSIONS				0b0110
+#define MADC_EIGHT_CONVERSIONS				0b0111
+#define MADC_NINE_CONVERSIONS				0b1000
+
+/**********************************************/
+/*              Sequence Location             */
+/**********************************************/
+#define MADC_SEQUENCE_1						0
+#define MADC_SEQUENCE_2						1
+#define MADC_SEQUENCE_3						2
+#define MADC_SEQUENCE_4						3
+#define MADC_SEQUENCE_5						4
+#define MADC_SEQUENCE_6						5
+#define MADC_SEQUENCE_7						6
+#define MADC_SEQUENCE_8						7
+#define MADC_SEQUENCE_9						8
+#define MADC_SEQUENCE_10					9
+#define MADC_SEQUENCE_11					10
+#define MADC_SEQUENCE_12					11
+#define MADC_SEQUENCE_13					12
 
 /**********************************************/
 /*      End Of Conversion Selection Modes     */

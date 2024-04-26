@@ -82,35 +82,41 @@ Discarded input sections
                 0x0000000000000000       0x78 ./Src/MADC_Program.o
  .text.MADC_vAWDInit
                 0x0000000000000000       0xb4 ./Src/MADC_Program.o
- .text.MADC_vEnableScanMode
-                0x0000000000000000       0x20 ./Src/MADC_Program.o
- .text.MADC_vEnableDiscontinuousMode
+ .text.MADC_vSetScanMode
+                0x0000000000000000       0x3c ./Src/MADC_Program.o
+ .text.MADC_vSetDiscontinuousMode
+                0x0000000000000000       0x80 ./Src/MADC_Program.o
+ .text.MADC_vSetContinuousMode
                 0x0000000000000000       0x54 ./Src/MADC_Program.o
- .text.MADC_vEnableContinuousMode
-                0x0000000000000000       0x38 ./Src/MADC_Program.o
- .text.MADC_vEnableAutomaticInjection
-                0x0000000000000000       0x20 ./Src/MADC_Program.o
+ .text.MADC_vSetAutomaticInjection
+                0x0000000000000000       0x3c ./Src/MADC_Program.o
  .text.MADC_vSetExternalTrigger
                 0x0000000000000000       0x7c ./Src/MADC_Program.o
- .text.MADC_vEnableInjectedInterrupt
-                0x0000000000000000        0xe ./Src/MADC_Program.o
- .debug_info    0x0000000000000000      0x38b ./Src/MADC_Program.o
- .debug_abbrev  0x0000000000000000      0x12c ./Src/MADC_Program.o
+ .text.MADC_vSetInterrupt
+                0x0000000000000000       0x68 ./Src/MADC_Program.o
+ .text.MADC_vSetSamplingTime
+                0x0000000000000000       0xb0 ./Src/MADC_Program.o
+ .text.MADC_vSetNumberOfConversions
+                0x0000000000000000       0x50 ./Src/MADC_Program.o
+ .text.MADC_vSetSequence
+                0x0000000000000000       0xf8 ./Src/MADC_Program.o
+ .debug_info    0x0000000000000000      0x494 ./Src/MADC_Program.o
+ .debug_abbrev  0x0000000000000000      0x111 ./Src/MADC_Program.o
  .debug_aranges
-                0x0000000000000000       0x58 ./Src/MADC_Program.o
+                0x0000000000000000       0x70 ./Src/MADC_Program.o
  .debug_rnglists
-                0x0000000000000000       0x3e ./Src/MADC_Program.o
+                0x0000000000000000       0x53 ./Src/MADC_Program.o
  .debug_macro   0x0000000000000000       0x3e ./Src/MADC_Program.o
  .debug_macro   0x0000000000000000      0xaae ./Src/MADC_Program.o
  .debug_macro   0x0000000000000000       0x10 ./Src/MADC_Program.o
  .debug_macro   0x0000000000000000       0x2e ./Src/MADC_Program.o
- .debug_macro   0x0000000000000000      0x166 ./Src/MADC_Program.o
+ .debug_macro   0x0000000000000000      0x172 ./Src/MADC_Program.o
  .debug_macro   0x0000000000000000       0x10 ./Src/MADC_Program.o
- .debug_macro   0x0000000000000000      0x16a ./Src/MADC_Program.o
- .debug_line    0x0000000000000000      0x188 ./Src/MADC_Program.o
- .debug_str     0x0000000000000000     0x4010 ./Src/MADC_Program.o
+ .debug_macro   0x0000000000000000      0x235 ./Src/MADC_Program.o
+ .debug_line    0x0000000000000000      0x261 ./Src/MADC_Program.o
+ .debug_str     0x0000000000000000     0x4397 ./Src/MADC_Program.o
  .comment       0x0000000000000000       0x44 ./Src/MADC_Program.o
- .debug_frame   0x0000000000000000      0x130 ./Src/MADC_Program.o
+ .debug_frame   0x0000000000000000      0x1cc ./Src/MADC_Program.o
  .ARM.attributes
                 0x0000000000000000       0x34 ./Src/MADC_Program.o
  .group         0x0000000000000000        0xc ./Src/MGPIO_Program.o
@@ -172,7 +178,7 @@ Discarded input sections
  .text.MNVIC_vInit
                 0x0000000000000000       0x1c ./Src/MNVIC_Program.o
  .text.MNVIC_vSetPeripheralInterruptPriority
-                0x0000000000000000       0x78 ./Src/MNVIC_Program.o
+                0x0000000000000000       0x4c ./Src/MNVIC_Program.o
  .text.MNVIC_vEnablePeripheralInterrupt
                 0x0000000000000000       0x64 ./Src/MNVIC_Program.o
  .text.MNVIC_vDisablePeripheralInterrupt
@@ -193,7 +199,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x2e ./Src/MNVIC_Program.o
  .debug_macro   0x0000000000000000       0x3a ./Src/MNVIC_Program.o
  .debug_macro   0x0000000000000000       0x10 ./Src/MNVIC_Program.o
- .debug_line    0x0000000000000000      0x1b7 ./Src/MNVIC_Program.o
+ .debug_line    0x0000000000000000      0x19a ./Src/MNVIC_Program.o
  .debug_str     0x0000000000000000     0x33d0 ./Src/MNVIC_Program.o
  .comment       0x0000000000000000       0x44 ./Src/MNVIC_Program.o
  .debug_frame   0x0000000000000000       0xf8 ./Src/MNVIC_Program.o
@@ -265,35 +271,35 @@ Discarded input sections
  .text          0x0000000000000000        0x0 ./Src/MUSART_Program.o
  .data          0x0000000000000000        0x0 ./Src/MUSART_Program.o
  .bss           0x0000000000000000        0x0 ./Src/MUSART_Program.o
- .text.MUSART_voidInit
+ .text.MUSART_vInit
                 0x0000000000000000      0x270 ./Src/MUSART_Program.o
- .text.MUSART_voidEnable
+ .text.MUSART_vEnable
                 0x0000000000000000       0x20 ./Src/MUSART_Program.o
- .text.MUSART_voidDisable
+ .text.MUSART_vDisable
                 0x0000000000000000       0x20 ./Src/MUSART_Program.o
- .text.MUSART_voidTransmitByte
+ .text.MUSART_vTransmitByte
                 0x0000000000000000       0x46 ./Src/MUSART_Program.o
- .text.MUSART_voidTransmitString
+ .text.MUSART_vTransmitString
                 0x0000000000000000       0x3c ./Src/MUSART_Program.o
  .text.MUSART_u8ReceiveByteSynchNonBlocking
                 0x0000000000000000       0x32 ./Src/MUSART_Program.o
- .text.MUSART_u8ReceiveStringSynchNonBlocking
+ .text.MUSART_vReceiveStringSynchNonBlocking
                 0x0000000000000000       0x48 ./Src/MUSART_Program.o
  .text.MUSART_u8ReceiveByteSynchBlocking
                 0x0000000000000000       0x58 ./Src/MUSART_Program.o
- .text.MUSART_u8ReceiveStringSynchBlocking
+ .text.MUSART_vReceiveStringSynchBlocking
                 0x0000000000000000       0x48 ./Src/MUSART_Program.o
  .text.MUSART_u8ReadDataRegister
                 0x0000000000000000       0x1a ./Src/MUSART_Program.o
- .text.MUSART_voidClearFlags
+ .text.MUSART_vClearFlags
                 0x0000000000000000       0x1a ./Src/MUSART_Program.o
- .text.MUSART_voidRxIntStatus
+ .text.MUSART_vRxIntStatus
                 0x0000000000000000       0x40 ./Src/MUSART_Program.o
- .text.MUSART1_voidSetCallBack
+ .text.MUSART1_vSetCallBack
                 0x0000000000000000       0x20 ./Src/MUSART_Program.o
- .text.MUSART2_voidSetCallBack
+ .text.MUSART2_vSetCallBack
                 0x0000000000000000       0x20 ./Src/MUSART_Program.o
- .text.MUSART6_voidSetCallBack
+ .text.MUSART6_vSetCallBack
                 0x0000000000000000       0x20 ./Src/MUSART_Program.o
  .debug_macro   0x0000000000000000      0xaae ./Src/MUSART_Program.o
  .debug_macro   0x0000000000000000       0x2e ./Src/MUSART_Program.o
@@ -1118,14 +1124,14 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x000000000000056e       0xd4 ./Src/main.o
  .debug_line    0x0000000000000642       0x7b ./Startup/startup_stm32f401ccux.o
 
-.debug_str      0x0000000000000000     0x4438
+.debug_str      0x0000000000000000     0x4418
  .debug_str     0x0000000000000000     0x3318 ./Src/MSTK_Program.o
                                        0x335c (size before relaxing)
- .debug_str     0x0000000000003318      0xe2f ./Src/MUSART_Program.o
-                                       0x3f10 (size before relaxing)
- .debug_str     0x0000000000004147      0x2c2 ./Src/main.o
+ .debug_str     0x0000000000003318      0xe0f ./Src/MUSART_Program.o
+                                       0x3ef0 (size before relaxing)
+ .debug_str     0x0000000000004127      0x2c2 ./Src/main.o
                                        0x34d3 (size before relaxing)
- .debug_str     0x0000000000004409       0x2f ./Startup/startup_stm32f401ccux.o
+ .debug_str     0x00000000000043e9       0x2f ./Startup/startup_stm32f401ccux.o
                                          0x7b (size before relaxing)
 
 .debug_frame    0x0000000000000000      0x428
