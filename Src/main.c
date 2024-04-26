@@ -45,7 +45,7 @@ int main(void)
 {
 	APP_vInit();
     /* Loop forever */
-	u16 APP_u16READ = 1;
+	u16 APP_u16READ = 0;
 	for(;;) {
 		APP_u16READ = MADC_u16ReadSingleConversion();
 	}
