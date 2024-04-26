@@ -32,7 +32,27 @@ typedef struct {
 /* ADC1 Base Address: 0x4001 2000 */
 #define MADC1_BASE_ADDRESS			0x40012000
 #define ADC1						((ADC_t*)MADC1_BASE_ADDRESS)
-#define ADC1_CCR					*((volatile u32*)0x40015004)
+#define ADC_CCR						*((volatile u32*)0x40015004)
+
+
+/**********************************************/
+/*        Single or Multichannel Modes        */
+/**********************************************/
+#define MADC_SINGLE_CONVERSION_MODE		0b0
+#define MADC_SCAN_CONVERSION_MODE		0b1
+
+/**********************************************/
+/*            ADC Conversion Modes            */
+/**********************************************/
+#define MADC_NORMAL_CONVERSION			0b00
+#define MADC_CONTINUOUS_CONVERSION		0b01
+#define MADC_DISCONTINUOUS_CONVERSION	0b10
+
+/**********************************************/
+/*         End Of Conversion Location         */
+/**********************************************/
+#define MADC_EOC_REGULAR_SEQUENCE_END       0b0
+#define MADC_EOC_REGULAR_CONVERSION_END     0b1
 
 /**********************************************/
 /*            Clock Prescale Values           */
@@ -41,6 +61,65 @@ typedef struct {
 #define MADC_CLK_DIV_BY_4			0b01
 #define MADC_CLK_DIV_BY_6			0b10
 #define MADC_CLK_DIV_BY_8			0b11
+
+/**********************************************/
+/*            Data Allignment Modes           */
+/**********************************************/
+#define MADC_ALLIGN_RIGHT		          0
+#define MADC_ALLIGN_LEFT       			  1
+
+/**********************************************/
+/*              Resolution Sizes              */
+/**********************************************/
+#define MADC_RESOLUTION_12_BITS             0b00
+#define MADC_RESOLUTION_10_BITS             0b01
+#define MADC_RESOLUTION_08_BITS             0b10
+#define MADC_RESOLUTION_06_BITS             0b11
+
+/**********************************************/
+/*         External Trigger Detection         */
+/**********************************************/
+#define MADC_TRIG_EDGE_DISABLED     		0b00
+#define MADC_TRIG_EDGE_RISING       		0b01
+#define MADC_TRIG_EDGE_FALLING      		0b10
+#define MADC_TRIG_EDGE_BOTH         		0b11
+
+/**********************************************/
+/*     Regular External Trigger Detection     */
+/**********************************************/
+#define MADC_EVENT_TRIG_REGULAR_TIM1CC1     0b0000
+#define MADC_EVENT_TRIG_REGULAR_TIM1CC2     0b0001
+#define MADC_EVENT_TRIG_REGULAR_TIM1CC3     0b0010
+#define MADC_EVENT_TRIG_REGULAR_TIM2CC2     0b0011
+#define MADC_EVENT_TRIG_REGULAR_TIM2CC3     0b0100
+#define MADC_EVENT_TRIG_REGULAR_TIM2CC4     0b0101
+#define MADC_EVENT_TRIG_REGULAR_TIM2TRGO    0b0110
+#define MADC_EVENT_TRIG_REGULAR_TIM3CC1     0b0111
+#define MADC_EVENT_TRIG_REGULAR_TIM3TRGO    0b1000
+#define MADC_EVENT_TRIG_REGULAR_TIM4CC4     0b1001
+#define MADC_EVENT_TRIG_REGULAR_TIM5CC1     0b1010
+#define MADC_EVENT_TRIG_REGULAR_TIM5CC2     0b1011
+#define MADC_EVENT_TRIG_REGULAR_TIM5CC3     0b1100
+#define MADC_EVENT_TRIG_REGULAR_EXTI11      0b1111
+
+/**********************************************/
+/*     Injected External Trigger Detection    */
+/**********************************************/
+#define MADC_EVENT_TRIG_INJECTED_TIM1CC4    0b0000
+#define MADC_EVENT_TRIG_INJECTED_TIM1TRGO   0b0001
+#define MADC_EVENT_TRIG_INJECTED_TIM2CC1    0b0010
+#define MADC_EVENT_TRIG_INJECTED_TIM2TRGO   0b0011
+#define MADC_EVENT_TRIG_INJECTED_TIM3CC2    0b0100
+#define MADC_EVENT_TRIG_INJECTED_TIM3CC4    0b0101
+#define MADC_EVENT_TRIG_INJECTED_TIM4CC1    0b0110
+#define MADC_EVENT_TRIG_INJECTED_TIM4CC2    0b0111
+#define MADC_EVENT_TRIG_INJECTED_TIM4CC3    0b1000
+#define MADC_EVENT_TRIG_INJECTED_TIM4TRGO   0b1001
+#define MADC_EVENT_TRIG_INJECTED_TIM5CC4    0b1010
+#define MADC_EVENT_TRIG_INJECTED_TIM5TRGO   0b1011
+#define MADC_EVENT_TRIG_INJECTED_EXTI15     0b1111
+
+
 
 /**********************************************/
 /*               SR BITS Mapping              */

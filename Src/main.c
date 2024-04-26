@@ -23,9 +23,30 @@
 #include "MRCC_Interface.h"
 #include "MGPIO_Interface.h"
 #include "MUSART_Interface.h"
+#include "MADC_Interface.h"
+
+
+void APP_vInit(void) {
+	/* CLOCK CONFIGURATION */
+	MRCC_vInitSysAndBusClock();
+	/* CLOCK BUSSES ENABLE */
+	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOAEN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
+	/* PIN CONFIGURATION */
+	MGPIO_vSetPinMode(GPIOA, MGPIO_PIN00, MGPIO_MODE_ANALOG);
+	/* ADC CONFIGURATION */
+	MADC_vGeneralInit();
+	MADC_vSetSequence(MADC_REGULAR_GROUP, MADC_CHANNEL0, MADC_SEQUENCE_1);
+	MADC_vEnable(MADC_ENABLE, MADC_DISABLE);
+}
 
 int main(void)
 {
+	APP_vInit();
     /* Loop forever */
-	for(;;);
+	u16 APP_u16READ = 0;
+	for(;;) {
+		APP_u16READ = MADC_u16ReadSingleConversion();
+	}
 }
