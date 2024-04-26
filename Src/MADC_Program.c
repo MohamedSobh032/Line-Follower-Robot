@@ -118,7 +118,7 @@ void MADC_vSetExternalTrigger(u8 Copy_u8Group, u8 Copy_u8TriggeringEdge, u8 Copy
 }
 
 void MADC_vEnableInjectedInterrupt(void) {
-
+	// TODO
 }
 
 void MADC_vEnableRegularInterrupt(void);
