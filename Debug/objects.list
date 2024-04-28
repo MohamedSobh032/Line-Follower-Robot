@@ -1,4 +1,5 @@
 "./Src/MADC_Program.o"
+"./Src/MDMA_Program.o"
 "./Src/MGPIO_Program.o"
 "./Src/MNVIC_Program.o"
 "./Src/MRCC_Program.o"

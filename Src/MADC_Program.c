@@ -10,22 +10,36 @@
 #include "MADC_Private.h"
 #include "MADC_Interface.h"
 #include "MADC_Config.h"
+
 /*****************************************************/
-/* Func. Name: MADC_vGeneralInit                     */
+/* Func. Name: MADC_vInit                            */
 /* i/p arguments: nothing                            */
 /* o/p arguments: nothing                            */
 /* Desc. : This API Initializes General ADC Settings */
 /*****************************************************/
-void MADC_vGeneralInit(void) {
+void MADC_vInit(void) {
 	/* Set the Prescaler of the ADC CLK */
 	WRITE_BITS(ADC_CCR, MADC_CLOCK_PRESCALER, TWO_BITS, MADC_CCR_ADCPRE0_BIT);
+
 	/* Set the Data Allignment */
 	if (MADC_DATA_ALLIGNMENT == MADC_ALLIGN_RIGHT) { CLR_BIT(ADC1->CR2, MADC_CR2_ALLIGN_BIT); }
 	else 										   { SET_BIT(ADC1->CR2, MADC_CR2_ALLIGN_BIT); }
+
 	/* Set the Resolution of the ADC */
 	WRITE_BITS(ADC1->CR1, MADC_RESOLUTION, TWO_BITS, MADC_CR1_RES0_BIT);
-	/* Clear Status Register */
-	ADC1->SR = 0;
+
+	/* Set the Scanning Mode */
+	#if MADC_SCANNING_MODE == MADC_SINGLE_CONVERSION_MODE
+		CLR_BIT(ADC1->CR1, MADC_CR1_SCAN_BIT);
+		/* Clear the EOC After Each Regular Conversion (BY DEFAULT IT IS SINGLE CONVERSION) */
+		CLR_BIT(ADC1->CR2, MADC_CR2_EOCS_BIT);
+	#elif MADC_SCANNING_MODE == MADC_SCAN_CONVERSION_MODE
+		SET_BIT(ADC1->CR1, MADC_CR1_SCAN_BIT);
+		if (MADC_END_OF_CONVERSION_LOCATION == MADC_EOC_REGULAR_SEQUENCE_END) { CLR_BIT(ADC1->CR2, MADC_CR2_EOCS_BIT); }
+		else																  { SET_BIT(ADC1->CR2, MADC_CR2_EOCS_BIT); }
+	#endif
+
+	/*************************************** REGULAR GROUP INIT ***************************************/
 	/* Set the Conversion Mode of Regular Group */
 	#if MADC_REGULAR_CONVERSION_MODE == MADC_NORMAL_CONVERSION
 		CLR_BIT(ADC1->CR1, MADC_CR1_DISCEN_BIT);
@@ -38,6 +52,18 @@ void MADC_vGeneralInit(void) {
 		CLR_BIT(ADC1->CR2, MADC_CR2_CONT_BIT);
 		WRITE_BITS(ADC1->CR1, MADC_DISCONTINUOUS_LENGTH, THREE_BITS, MADC_CR1_DISCNUM0_BIT);
 	#endif
+
+	#if MADC_REGULAR_EXTERNAL_TRIGGER == MADC_ENABLE
+		WRITE_BITS(ADC1->CR2, MADC_REGULAR_EXTERNAL_TRIGGER_EDGE, TWO_BITS, MADC_CR2_EXTEN0_BIT);
+		WRITE_BITS(ADC1->CR2, MADC_REGULAR_EXTERNAL_TRIGGER_SOURCE, FOUR_BITS, MADC_CR2_EXTSEL0_BIT);
+	#else
+		WRITE_BITS(ADC1->CR2, MADC_TRIG_EDGE_DISABLED, TWO_BITS, MADC_CR2_EXTEN0_BIT);
+	#endif
+	/**************************************************************************************************/
+
+
+
+	/*************************************** INJECTED GROUP INIT ***************************************/
 	/* Set the Conversion Mode of Injected Group */
 	#if MADC_INJECTED_CONVERSION_MODE == MADC_NORMAL_CONVERSION
 		CLR_BIT(ADC1->CR1, MADC_CR1_JDISCEN_BIT);
@@ -51,24 +77,6 @@ void MADC_vGeneralInit(void) {
 		WRITE_BITS(ADC1->CR1, MADC_DISCONTINUOUS_LENGTH, THREE_BITS, MADC_CR1_DISCNUM0_BIT);
 	#endif
 
-	/* Set the Scanning Mode */
-	#if MADC_SCANNING_MODE == MADC_SINGLE_CONVERSION_MODE
-		CLR_BIT(ADC1->CR1, MADC_CR1_SCAN_BIT);
-		/* Clear the EOC After Each Regular Conversion (BY DEFAULT IT IS SINGLE CONVERSION) */
-		CLR_BIT(ADC1->CR2, MADC_CR2_EOCS_BIT);
-	#elif MADC_SCANNING_MODE == MADC_SCAN_CONVERSION_MODE
-		SET_BIT(ADC1->CR1, MADC_CR1_SCAN_BIT);
-		if (MADC_END_OF_CONVERSION_LOCATION == MADC_EOC_REGULAR_SEQUENCE_END) { CLR_BIT(ADC1->CR2, MADC_CR2_EOCS_BIT); }
-		else																  { SET_BIT(ADC1->CR2, MADC_CR2_EOCS_BIT); }
-	#endif
-
-	#if MADC_REGULAR_EXTERNAL_TRIGGER == MADC_ENABLE
-		WRITE_BITS(ADC1->CR2, MADC_REGULAR_EXTERNAL_TRIGGER_EDGE, TWO_BITS, MADC_CR2_EXTEN0_BIT);
-		WRITE_BITS(ADC1->CR2, MADC_REGULAR_EXTERNAL_TRIGGER_SOURCE, FOUR_BITS, MADC_CR2_EXTSEL0_BIT);
-	#else
-		WRITE_BITS(ADC1->CR2, MADC_TRIG_EDGE_DISABLED, TWO_BITS, MADC_CR2_EXTEN0_BIT);
-	#endif
-
 	#if MADC_INJECTED_EXTERNAL_TRIGGER == MADC_ENABLE
 		WRITE_BITS(ADC1->CR2, MADC_INJECTED_EXTERNAL_TRIGGER_EDGE, TWO_BITS, MADC_CR2_JEXTEN0_BIT);
 		WRITE_BITS(ADC1->CR2, MADC_INJECTED_EXTERNAL_TRIGGER_SOURCE, FOUR_BITS, MADC_CR2_JEXTSEL0_BIT);
@@ -79,9 +87,13 @@ void MADC_vGeneralInit(void) {
 	/* Set Automatic Injection */
 	if (MADC_AUTOMATIC_INJECTION == MADC_ENABLE) { SET_BIT(ADC1->CR1, MADC_CR1_JAUTO_BIT); }
 	else										 { CLR_BIT(ADC1->CR1, MADC_CR1_JAUTO_BIT); }
+	/**************************************************************************************************/
 
 	/* Set ADC to Power Down Mode */
 	CLR_BIT(ADC1->CR2, MADC_CR2_ADON_BIT);
+
+	/* Clear Status Register */
+	ADC1->SR = 0;
 }
 
 /**********************************************************/
@@ -131,22 +143,20 @@ void MADC_vEnable(u8 Copy_u8EnableReg, u8 Copy_u8EnableInj) {
 	}
 }
 
-
-/****************************************************************/
-/* Func. Name: MADC_vEnableInjectedInterrupt                    */
-/* i/p arguments: Copy_u8Group: MADC_<Group>_GROUP			    */
-/* i/p arguments: Copy_u8EnableValue: MADC_<Enable or Disable>  */
-/* o/p arguments: nothing                                       */
-/* Desc. : This API Sets or Resets Interrupt for Selected Group */
-/****************************************************************/
-void MADC_vSetInterrupt(u8 Copy_u8Group, u8 Copy_u8EnableValue) {
-	if (Copy_u8Group == MADC_REGULAR_GROUP) {
-		if (Copy_u8EnableValue == MADC_ENABLE) { SET_BIT(ADC1->CR1, MADC_CR1_EOCIE_BIT); }
-		else						  { CLR_BIT(ADC1->CR1, MADC_CR1_EOCIE_BIT); }
-	} else {
-		if (Copy_u8EnableValue == MADC_ENABLE) { SET_BIT(ADC1->CR1, MADC_CR1_JEOCIE_BIT); }
-		else						  { CLR_BIT(ADC1->CR1, MADC_CR1_JEOCIE_BIT); }
+/******************************************************************/
+/* Func. Name: MADC_vSetRegularDMA                                */
+/* i/p arguments: Copy_u8Status: MADC_<Status>                    */
+/* o/p arguments: Address of the Data Register                    */
+/* Desc. : This API Enables Requesting DMA (STREAM 0 - CHANNEL 0) */
+/******************************************************************/
+volatile u32* MADC_vSetRegularDMA(u8 Copy_u8Status) {
+	if (Copy_u8Status == MADC_ENABLE) {
+		SET_BIT(ADC1->CR2, MADC_CR2_DMA_BIT);
+		SET_BIT(ADC1->CR2, MADC_CR2_DDS_BIT);
+		ADC1->SR = 0;
 	}
+	else { CLR_BIT(ADC1->CR2, MADC_CR2_DMA_BIT); }
+	return &(ADC1->DR);
 }
 
 /************************************************************************/
@@ -157,7 +167,7 @@ void MADC_vSetInterrupt(u8 Copy_u8Group, u8 Copy_u8EnableValue) {
 /* Desc. : This API Sets the Sample Time in Clocks for Selected Channel */
 /************************************************************************/
 void MADC_vSetSamplingTime(MADC_CHANNEL Channel, u8 Copy_u8SampleTime) {
-	WRITE_BITS(ADC1->SMPR[1 - (Channel % 10)], Copy_u8SampleTime, THREE_BITS, ((Channel % 10) + 3));
+	WRITE_BITS(ADC1->SMPR[1 - (Channel % 10)], Copy_u8SampleTime, THREE_BITS, ((Channel % 10) * 3));
 }
 
 /****************************************************************/
@@ -168,11 +178,8 @@ void MADC_vSetSamplingTime(MADC_CHANNEL Channel, u8 Copy_u8SampleTime) {
 /* Desc. : This API Sets the Number of Channels to be Converted */
 /****************************************************************/
 void MADC_vSetNumberOfConversions(u8 Copy_u8Group, u8 Copy_u8Conversions) {
-	if (Copy_u8Group == MADC_REGULAR_GROUP) {
-		WRITE_BITS(ADC1->SQR[0], Copy_u8Conversions, FOUR_BITS, MADC_SQR1_L0_BIT);
-	} else {
-		WRITE_BITS(ADC1->JSQR, Copy_u8Conversions, TWO_BITS, MADC_JSQR_JL0_BIT);
-	}
+	if (Copy_u8Group == MADC_REGULAR_GROUP) { WRITE_BITS(ADC1->SQR[0], Copy_u8Conversions, FOUR_BITS, MADC_SQR1_L0_BIT);  }
+	else 									{ WRITE_BITS(ADC1->JSQR  , Copy_u8Conversions, TWO_BITS , MADC_JSQR_JL0_BIT); }
 }
 
 /************************************************************************************/
@@ -194,6 +201,23 @@ void MADC_vSetSequence(u8 Copy_u8Group, MADC_CHANNEL Channel, u8 Copy_u8SeqNumbe
 		}
 	} else {
 		WRITE_BITS(ADC1->JSQR, Channel, FIVE_BITS, Copy_u8SeqNumber * 5);
+	}
+}
+
+/****************************************************************/
+/* Func. Name: MADC_vEnableInjectedInterrupt                    */
+/* i/p arguments: Copy_u8Group: MADC_<Group>_GROUP			    */
+/* i/p arguments: Copy_u8EnableValue: MADC_<Enable or Disable>  */
+/* o/p arguments: nothing                                       */
+/* Desc. : This API Sets or Resets Interrupt for Selected Group */
+/****************************************************************/
+void MADC_vSetInterrupt(u8 Copy_u8Group, u8 Copy_u8EnableValue) {
+	if (Copy_u8Group == MADC_REGULAR_GROUP) {
+		if (Copy_u8EnableValue == MADC_ENABLE) { SET_BIT(ADC1->CR1, MADC_CR1_EOCIE_BIT); }
+		else						  { CLR_BIT(ADC1->CR1, MADC_CR1_EOCIE_BIT); }
+	} else {
+		if (Copy_u8EnableValue == MADC_ENABLE) { SET_BIT(ADC1->CR1, MADC_CR1_JEOCIE_BIT); }
+		else						  { CLR_BIT(ADC1->CR1, MADC_CR1_JEOCIE_BIT); }
 	}
 }
 

@@ -1,0 +1,3 @@
+../Src/MDMA_Program.c:23:6:MDMA_vDirectInit	1
+../Src/MDMA_Program.c:52:6:MDMA_vBurstInit	1
+../Src/MDMA_Program.c:83:6:MDMA_vStart	1

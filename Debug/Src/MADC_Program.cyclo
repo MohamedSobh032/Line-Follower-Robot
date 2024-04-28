@@ -1,8 +1,9 @@
-../Src/MADC_Program.c:19:6:MADC_vGeneralInit	1
-../Src/MADC_Program.c:93:6:MADC_vAWDInit	3
-../Src/MADC_Program.c:123:6:MADC_vEnable	3
-../Src/MADC_Program.c:142:6:MADC_vSetInterrupt	4
-../Src/MADC_Program.c:159:6:MADC_vSetSamplingTime	1
-../Src/MADC_Program.c:170:6:MADC_vSetNumberOfConversions	2
-../Src/MADC_Program.c:186:6:MADC_vSetSequence	4
-../Src/MADC_Program.c:207:5:MADC_u16ReadSingleConversion	2
+../Src/MADC_Program.c:20:6:MADC_vInit	1
+../Src/MADC_Program.c:105:6:MADC_vAWDInit	3
+../Src/MADC_Program.c:135:6:MADC_vEnable	3
+../Src/MADC_Program.c:152:15:MADC_vSetRegularDMA	2
+../Src/MADC_Program.c:169:6:MADC_vSetSamplingTime	1
+../Src/MADC_Program.c:180:6:MADC_vSetNumberOfConversions	2
+../Src/MADC_Program.c:193:6:MADC_vSetSequence	4
+../Src/MADC_Program.c:214:6:MADC_vSetInterrupt	4
+../Src/MADC_Program.c:231:5:MADC_u16ReadSingleConversion	2

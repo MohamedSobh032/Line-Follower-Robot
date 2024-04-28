@@ -24,20 +24,37 @@
 #include "MGPIO_Interface.h"
 #include "MUSART_Interface.h"
 #include "MADC_Interface.h"
+#include "MDMA_Interface.h"
 
+
+u16 APP_u16IRData[2];
 
 void APP_vInit(void) {
-	/* CLOCK CONFIGURATION */
+	/* INIT CLOCK AND PERIPHERALS CLOCK */
 	MRCC_vInitSysAndBusClock();
-	/* CLOCK BUSSES ENABLE */
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOAEN);
-	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
-	/* PIN CONFIGURATION */
+	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
+	/* INIT ALL NEEDED PINS */
 	MGPIO_vSetPinMode(GPIOA, MGPIO_PIN00, MGPIO_MODE_ANALOG);
-	/* ADC CONFIGURATION */
-	MADC_vGeneralInit();
+	MGPIO_vSetPinMode(GPIOA, MGPIO_PIN01, MGPIO_MODE_ANALOG);
+	/* INIT ADC SETTINGS */
+	MADC_vInit();
+	MADC_vSetNumberOfConversions(MADC_REGULAR_GROUP, MADC_TWO_CONVERSIONS);
+	MADC_vSetSamplingTime(MADC_CHANNEL0, MADC_SAMPLING_CYCLES_3);
+	MADC_vSetSamplingTime(MADC_CHANNEL1, MADC_SAMPLING_CYCLES_3);
 	MADC_vSetSequence(MADC_REGULAR_GROUP, MADC_CHANNEL0, MADC_SEQUENCE_1);
+	MADC_vSetSequence(MADC_REGULAR_GROUP, MADC_CHANNEL1, MADC_SEQUENCE_2);
+
+	volatile u32* DMAsrcAddr = MADC_vSetRegularDMA(MADC_ENABLE);
+	/* Enable DMA */
+	MDMA_DirectInitType dma = {MDMA_DISABLE, MDMA_DIRECTION_PER_MEM, MDMA_ENABLE,
+								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_LOW, MDMA_CHANNEL_0};
+	MDMA_TransferStruct dmat = {(u32*)DMAsrcAddr, (u32*)APP_u16IRData, 2, MDMA_SIZE_HWORD};
+	MDMA_vDirectInit(DMA2, MDMA_STREAM_0, &dma);
+
+	MDMA_vStart(DMA2, MDMA_STREAM_0, &dmat);
+
 	MADC_vEnable(MADC_ENABLE, MADC_DISABLE);
 }
 
@@ -45,8 +62,5 @@ int main(void)
 {
 	APP_vInit();
     /* Loop forever */
-	u16 APP_u16READ = 0;
-	for(;;) {
-		APP_u16READ = MADC_u16ReadSingleConversion();
-	}
+	for(;;) {}
 }

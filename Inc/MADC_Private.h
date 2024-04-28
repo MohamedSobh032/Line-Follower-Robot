@@ -120,7 +120,6 @@ typedef struct {
 #define MADC_EVENT_TRIG_INJECTED_EXTI15     0b1111
 
 
-
 /**********************************************/
 /*               SR BITS Mapping              */
 /**********************************************/
