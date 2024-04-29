@@ -25,7 +25,7 @@ void (*MUSART6_CallBack)(void) = (void*)0;
 /* o/p arguments: nothing                              				   */
 /* Desc. : This API initializes USARTx with Specifications 			   */
 /***********************************************************************/
-void MUSART_vInit(USART_t* USARTx, MUSART_InitType* A_InitStruct, MUSART_ClockInitTypeDef* A_ClockInitStruct) {
+void MUSART_vInit(USART_t* USARTx, MUSART_InitTypeDef* A_InitStruct, MUSART_ClockInitTypeDef* A_ClockInitStruct) {
 	/* Set The Baudrate */
 	switch (A_InitStruct->Oversampling)
 	{
@@ -39,7 +39,7 @@ void MUSART_vInit(USART_t* USARTx, MUSART_InitType* A_InitStruct, MUSART_ClockIn
 				  (A_InitStruct->Parity_Enable << MUSART_CR1_PCE_BIT)      |
 				  (A_InitStruct->Parity_Selection << MUSART_CR1_PS_BIT)    ;
 	/* Set The Direction of Transferring Data */
-	WRITE_BITS(USARTx->CR1,A_InitStruct->TransferDirection,TWO_BITS,MUSART_CR1_RE_BIT);
+	WRITE_BITS(USARTx->CR1, A_InitStruct->TransferDirection, TWO_BITS, MUSART_CR1_RE_BIT);
 	/* Set The Second Control Register */
 	USARTx->CR2 =   (A_InitStruct->StopBits << MUSART_CR2_STOP_BIT)				   |
 					(A_ClockInitStruct->ClockOutput << MUSART_CR2_CLKEN_BIT)       |
@@ -69,6 +69,17 @@ void MUSART_vDisable(USART_t* USARTx)
 { CLR_BIT(USARTx->CR1,MUSART_CR1_UE_BIT); }
 
 /******************************************************/
+/* Func. Name: MUSART_u32EnableRxDMA                  */
+/* i/p arguemnts: USARTx: USART1, USART2, USART6      */
+/* o/p arguments: nothing                             */
+/* Desc. : This API Enables USARTx Receiving with DMA */
+/******************************************************/
+volatile u32* MUSART_u32EnableRxDMA(USART_t* USARTx) {
+	SET_BIT(USARTx->CR3, MUSART_CR3_DMAR_BIT);
+	return &(USARTx->DR);
+}
+
+/******************************************************/
 /* Func. Name: MUSART_vTransmitByte                   */
 /* i/p arguemnts: USARTx: USART1, USART2, USART6      */
 /* i/p arguemnts: Copy_u8Byte: Byte to be Transmitted */
@@ -76,10 +87,10 @@ void MUSART_vDisable(USART_t* USARTx)
 /* Desc. : This API Transmit Byte using USARTx 		  */
 /******************************************************/
 void MUSART_vTransmitByte(USART_t* USARTx, u8 Copy_u8Byte) {
-	while (GET_BIT(USARTx->SR,MUSART_SR_TXE_BIT)==0);
+	while (GET_BIT(USARTx->SR, MUSART_SR_TXE_BIT) == 0);
 	USARTx->DR= Copy_u8Byte;
-	while (GET_BIT(USARTx->SR,MUSART_SR_TC_BIT)==0);
-	CLR_BIT(USARTx->SR,MUSART_SR_TC_BIT);
+	while (GET_BIT(USARTx->SR, MUSART_SR_TC_BIT) == 0);
+	CLR_BIT(USARTx->SR, MUSART_SR_TC_BIT);
 }
 
 /**********************************************************/
@@ -105,7 +116,7 @@ void MUSART_vTransmitString(USART_t* USARTx, u8* Copy_u8String) {
 /****************************************************/
 u8 MUSART_u8ReceiveByteSynchNonBlocking(USART_t* USARTx, u8* Copy_u8Data) {
 	/* If there is data, return it */
-	if (GET_BIT(USARTx->SR,MUSART_SR_RXNE_BIT)) { *Copy_u8Data = USARTx->DR; return 1;}
+	if (GET_BIT(USARTx->SR,MUSART_SR_RXNE_BIT)) { *Copy_u8Data = USARTx->DR; return 1; }
 	return 0;
 }
 
@@ -118,7 +129,7 @@ u8 MUSART_u8ReceiveByteSynchNonBlocking(USART_t* USARTx, u8* Copy_u8Data) {
 void MUSART_vReceiveStringSynchNonBlocking(USART_t* USARTx, u8* Copy_u8String) {
 	u8 Local_u8Counter = 0;
 	u8 Local_u8DataRecieved = 0;
-	while(MUSART_u8ReceiveByteSynchNonBlocking(USARTx,&Local_u8DataRecieved))
+	while(MUSART_u8ReceiveByteSynchNonBlocking(USARTx, &Local_u8DataRecieved))
 	{
 		Copy_u8String[Local_u8Counter] = Local_u8DataRecieved;
 		Local_u8Counter++;
@@ -212,11 +223,11 @@ void USART1_IRQHandler(void) {
 }
 
 void USART2_IRQHandler(void) {
-	USART2->SR = 0 ;
+	USART2->SR = 0;
 	MUSART2_CallBack();
 }
 
 void USART6_IRQHandler(void) {
-	USART6->SR = 0 ;
+	USART6->SR = 0;
 	MUSART6_CallBack();
 }

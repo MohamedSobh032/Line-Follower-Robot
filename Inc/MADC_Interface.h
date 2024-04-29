@@ -40,7 +40,7 @@ void MADC_vInit(void);
 void MADC_vAWDInit(MADC_AWDTypeDef* A_InitStruct);
 void MADC_vEnable(u8 Copy_u8EnableReg, u8 Copy_u8EnableInj);
 
-volatile u32* MADC_vSetRegularDMA(u8 Copy_u8Status);
+volatile u32* MADC_u32SetRegularDMA(u8 Copy_u8Status);
 
 void MADC_vSetSamplingTime(MADC_CHANNEL Channel, u8 Copy_u8SampleTime);
 void MADC_vSetNumberOfConversions(u8 Copy_u8Group, u8 Copy_u8Conversions);

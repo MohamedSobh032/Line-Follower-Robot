@@ -1,7 +1,7 @@
 ../Src/MADC_Program.c:20:6:MADC_vInit	4	static
 ../Src/MADC_Program.c:105:6:MADC_vAWDInit	16	static
 ../Src/MADC_Program.c:135:6:MADC_vEnable	16	static
-../Src/MADC_Program.c:152:15:MADC_vSetRegularDMA	16	static
+../Src/MADC_Program.c:152:15:MADC_u32SetRegularDMA	16	static
 ../Src/MADC_Program.c:169:6:MADC_vSetSamplingTime	24	static
 ../Src/MADC_Program.c:180:6:MADC_vSetNumberOfConversions	16	static
 ../Src/MADC_Program.c:193:6:MADC_vSetSequence	16	static

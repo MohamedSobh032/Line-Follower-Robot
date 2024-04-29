@@ -1,7 +1,7 @@
 ../Src/MADC_Program.c:20:6:MADC_vInit	1
 ../Src/MADC_Program.c:105:6:MADC_vAWDInit	3
 ../Src/MADC_Program.c:135:6:MADC_vEnable	3
-../Src/MADC_Program.c:152:15:MADC_vSetRegularDMA	2
+../Src/MADC_Program.c:152:15:MADC_u32SetRegularDMA	2
 ../Src/MADC_Program.c:169:6:MADC_vSetSamplingTime	1
 ../Src/MADC_Program.c:180:6:MADC_vSetNumberOfConversions	2
 ../Src/MADC_Program.c:193:6:MADC_vSetSequence	4

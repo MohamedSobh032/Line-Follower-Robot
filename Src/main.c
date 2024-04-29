@@ -26,41 +26,86 @@
 #include "MADC_Interface.h"
 #include "MDMA_Interface.h"
 
+#include "main.h"
+
+
 
 u16 APP_u16IRData[2];
+u8 APP_u8String[APP_MOBILE_MESSAGE_LENGTH];
 
 void APP_vInit(void) {
-	/* INIT CLOCK AND PERIPHERALS CLOCK */
+	/********************* CLOCK CONFIGURATIONS AND BUSSES/PERIPHERALS ENABLE *********************/
+	/* INIT CLOCK AND BUSSES CLOCK */
 	MRCC_vInitSysAndBusClock();
+	/* INIT ALL NEEDED PERIPHERALS CLOCK */
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOAEN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
-	/* INIT ALL NEEDED PINS */
-	MGPIO_vSetPinMode(GPIOA, MGPIO_PIN00, MGPIO_MODE_ANALOG);
-	MGPIO_vSetPinMode(GPIOA, MGPIO_PIN01, MGPIO_MODE_ANALOG);
-	/* INIT ADC SETTINGS */
-	MADC_vInit();
-	MADC_vSetNumberOfConversions(MADC_REGULAR_GROUP, MADC_TWO_CONVERSIONS);
-	MADC_vSetSamplingTime(MADC_CHANNEL0, MADC_SAMPLING_CYCLES_3);
-	MADC_vSetSamplingTime(MADC_CHANNEL1, MADC_SAMPLING_CYCLES_3);
-	MADC_vSetSequence(MADC_REGULAR_GROUP, MADC_CHANNEL0, MADC_SEQUENCE_1);
-	MADC_vSetSequence(MADC_REGULAR_GROUP, MADC_CHANNEL1, MADC_SEQUENCE_2);
+	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
+	/**********************************************************************************************/
 
-	volatile u32* DMAsrcAddr = MADC_vSetRegularDMA(MADC_ENABLE);
+	/************************************* PINS CONFIGURATION *************************************/
+	/* INIT ANALOG READ PINS */
+	MGPIO_vSetPinMode(APP_IR0, MGPIO_MODE_ANALOG);
+	MGPIO_vSetPinMode(APP_IR1, MGPIO_MODE_ANALOG);
+	/* INIT USART TRANSMIT RECEIVE PINS */
+	MGPIO_vSetPinMode(APP_MOBILE_USART_TX, MGPIO_MODE_ALTERNATE);
+	MGPIO_vSetPinMode(APP_MOBILE_USART_RX, MGPIO_MODE_ALTERNATE);
+	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_TX, APP_MOBILE_USART_AF);
+	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_RX, APP_MOBILE_USART_AF);
+	/**********************************************************************************************/
+
+	/************************************* ADC CONFIGURATIONS *************************************/
+	/* INITIALIZE ADC */
+	MADC_vInit();
+	/* SET THE NUMBER OF CONVERSIONS TO THE NUMBER OF IRS IN THE ARRAY */
+	MADC_vSetNumberOfConversions(MADC_REGULAR_GROUP, MADC_TWO_CONVERSIONS);
+	/* SET ALL OF THEIR SAMPLE TIMES */
+	MADC_vSetSamplingTime(APP_IR0_CHANNEL, MADC_SAMPLING_CYCLES_3);
+	MADC_vSetSamplingTime(APP_IR1_CHANNEL, MADC_SAMPLING_CYCLES_3);
+	/* SET THEIR SEQUENCE */
+	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR0_CHANNEL, MADC_SEQUENCE_1);
+	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR1_CHANNEL, MADC_SEQUENCE_2);
+	/**********************************************************************************************/
+
+	/********************************* DMA CONFIGURATIONS FOR ADC *********************************/
+	volatile u32* DMAsrcAddr = MADC_u32SetRegularDMA(MADC_ENABLE);
 	/* Enable DMA */
 	MDMA_DirectInitType dma = {MDMA_DISABLE, MDMA_DIRECTION_PER_MEM, MDMA_ENABLE,
-								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_LOW, MDMA_CHANNEL_0};
+								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_VHIGH, MDMA_CHANNEL_0};
 	MDMA_TransferStruct dmat = {(u32*)DMAsrcAddr, (u32*)APP_u16IRData, 2, MDMA_SIZE_HWORD};
 	MDMA_vDirectInit(DMA2, MDMA_STREAM_0, &dma);
-
 	MDMA_vStart(DMA2, MDMA_STREAM_0, &dmat);
-
 	MADC_vEnable(MADC_ENABLE, MADC_DISABLE);
+	/**********************************************************************************************/
+
+	/************************************ USART CONFIGURATIONS ************************************/
+	/* Initialize USART */
+	MUSART_InitTypeDef uart = {9600, MUSART_DATAWIDTH_8BIT,
+							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
+							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
+							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
+	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE,0,0,0};
+	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
+	MUSART_vEnable(APP_MOBILE_USART);
+	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
+	/**********************************************************************************************/
+
+	/******************************** DMA CONFIGURATIONS FOR USART ********************************/
+	dmat.SrcAddr = (u32*)MUSART_u32EnableRxDMA(APP_MOBILE_USART);
+	dmat.DstAddr = (u32*)APP_u8String;
+	dmat.Length = APP_MOBILE_MESSAGE_LENGTH;
+	dmat.Size = MDMA_SIZE_BYTE;
+	dma.Channel = MDMA_CHANNEL_4;
+	dma.PriorityLevel = MDMA_PRIORITY_HIGH;
+	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
+	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
+	/**********************************************************************************************/
 }
 
 int main(void)
 {
 	APP_vInit();
     /* Loop forever */
-	for(;;) {}
+	while(1);
 }

@@ -144,12 +144,12 @@ void MADC_vEnable(u8 Copy_u8EnableReg, u8 Copy_u8EnableInj) {
 }
 
 /******************************************************************/
-/* Func. Name: MADC_vSetRegularDMA                                */
+/* Func. Name: MADC_u32SetRegularDMA                              */
 /* i/p arguments: Copy_u8Status: MADC_<Status>                    */
 /* o/p arguments: Address of the Data Register                    */
 /* Desc. : This API Enables Requesting DMA (STREAM 0 - CHANNEL 0) */
 /******************************************************************/
-volatile u32* MADC_vSetRegularDMA(u8 Copy_u8Status) {
+volatile u32* MADC_u32SetRegularDMA(u8 Copy_u8Status) {
 	if (Copy_u8Status == MADC_ENABLE) {
 		SET_BIT(ADC1->CR2, MADC_CR2_DMA_BIT);
 		SET_BIT(ADC1->CR2, MADC_CR2_DDS_BIT);

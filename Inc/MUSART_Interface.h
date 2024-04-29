@@ -39,7 +39,7 @@ typedef struct {
 	u8  TransferDirection;
 	u8  HardwareFlowControl;
 	u8  Oversampling;
-}MUSART_InitType;
+}MUSART_InitTypeDef;
 
 typedef struct {
 	u8 ClockOutput;
@@ -49,9 +49,11 @@ typedef struct {
 }MUSART_ClockInitTypeDef;
 
 
-void MUSART_vInit(USART_t* USARTx, MUSART_InitType* A_InitStruct, MUSART_ClockInitTypeDef* A_ClockInitStruct);
+void MUSART_vInit(USART_t* USARTx, MUSART_InitTypeDef* A_InitStruct, MUSART_ClockInitTypeDef* A_ClockInitStruct);
 void MUSART_vEnable(USART_t* USARTx);
 void MUSART_vDisable(USART_t* USARTx);
+
+volatile u32* MUSART_u32EnableRxDMA(USART_t* USARTx);
 
 void MUSART_vTransmitByte(USART_t* USARTx, u8 Copy_u8Byte);
 void MUSART_vTransmitString(USART_t* USARTx, u8* Copy_u8String);
