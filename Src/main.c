@@ -72,8 +72,8 @@ void APP_vInit(void) {
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_TX, APP_MOBILE_USART_AF);
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_RX, APP_MOBILE_USART_AF);
 	/* INIT TIMER PWM PIN */
-	MGPIO_vSetPinMode(GPIOB, MGPIO_PIN04, MGPIO_MODE_ALTERNATE);
-	MGPIO_vSetPinAFDirection(GPIOB, MGPIO_PIN04, MGPIO_AF02);
+	MGPIO_vSetPinMode(APP_TIM_PWM_PIN, MGPIO_MODE_ALTERNATE);
+	MGPIO_vSetPinAFDirection(APP_TIM_PWM_PIN, APP_TIM_PWM_AF);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -140,5 +140,7 @@ int main(void) {
 	APP_vInit();
 
     /* Loop forever */
-	while(1) { }
+	while(1) {
+
+	}
 }
