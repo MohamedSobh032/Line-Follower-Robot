@@ -25,12 +25,14 @@
 #include "MUSART_Interface.h"
 #include "MADC_Interface.h"
 #include "MDMA_Interface.h"
-
+#include "MGPT_Interface.h"
 #include "main.h"
 
-
-
 u16 APP_u16IRData[2];
+/* NOTE THAT:
+ * THE RECEIVED STRING FROM THE BLUETOOTH MUST BE EXACTLY EQUAL TO THIS LENGTH
+ * OR THIS LENGTH - 2, AS THERE ARE 2 DATA BYTES "\r\n" TRANSMITTED AUTOMATICALLY BY THE BLUETOOTH
+ */
 u8 APP_u8String[APP_MOBILE_MESSAGE_LENGTH];
 
 void APP_vInit(void) {
@@ -39,9 +41,11 @@ void APP_vInit(void) {
 	MRCC_vInitSysAndBusClock();
 	/* INIT ALL NEEDED PERIPHERALS CLOCK */
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOAEN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOBEN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_APB1, MRCC_APB1_TIM3EN);
 	/**********************************************************************************************/
 
 	/************************************* PINS CONFIGURATION *************************************/
@@ -53,6 +57,9 @@ void APP_vInit(void) {
 	MGPIO_vSetPinMode(APP_MOBILE_USART_RX, MGPIO_MODE_ALTERNATE);
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_TX, APP_MOBILE_USART_AF);
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_RX, APP_MOBILE_USART_AF);
+	/* INIT TIMER PWM PIN */
+	MGPIO_vSetPinMode(GPIOB, MGPIO_PIN04, MGPIO_MODE_ALTERNATE);
+	MGPIO_vSetPinAFDirection(GPIOB, MGPIO_PIN04, MGPIO_AF02);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -85,7 +92,7 @@ void APP_vInit(void) {
 							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
 							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
 							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
-	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE,0,0,0};
+	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE,0,0,0};		/* Disable USART's Clock */
 	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
 	MUSART_vEnable(APP_MOBILE_USART);
 	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
@@ -101,11 +108,19 @@ void APP_vInit(void) {
 	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
 	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
 	/**********************************************************************************************/
+
+	/*********************************** GPT PWM CONFIGURATIONS ***********************************/
+	MGPT_PWMInitTypeDef gpt = {MGPT_CHANNEL_1, MGPT_PWM_MODE_1, 10000, 1,
+							MGPT_ALLIGNMENT_EDGE_MODE, 0, MGPT_CHANNEL_OUTPUT_ACTIVE_HIGH};
+	MGPT_vPWMInit(GPT3, &gpt);
+
+	/**********************************************************************************************/
 }
 
-int main(void)
-{
+int main(void) {
+
 	APP_vInit();
+
     /* Loop forever */
-	while(1);
+	while(1) { }
 }

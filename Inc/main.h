@@ -6,13 +6,11 @@
 /********************************** APPLICATION CODE SETTING **********************************/
 /* DEFINE RECEIVED STRING FROM MOBILE APPLICATION LENGTH */
 #define APP_MOBILE_MESSAGE_LENGTH			6U
-
 /**********************************************************************************************/
 
 
 
 /************************************** HARDWARE SETTING **************************************/
-
 /* DEFINE IR ARRAY PINS */
 #define APP_IR0			GPIOA, MGPIO_PIN00
 #define APP_IR1			GPIOA, MGPIO_PIN01
@@ -35,7 +33,6 @@
 #define APP_MOBILE_USART_RX		GPIOA, MGPIO_PIN10
 	/* DEFINE THE DIRECTION */
 #define APP_MOBILE_USART_AF		MGPIO_AF07
-
 /**********************************************************************************************/
 
 #endif /* _MAIN_H_ */

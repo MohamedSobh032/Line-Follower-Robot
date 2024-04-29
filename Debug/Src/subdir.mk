@@ -8,6 +8,7 @@ C_SRCS += \
 ../Src/MADC_Program.c \
 ../Src/MDMA_Program.c \
 ../Src/MGPIO_Program.c \
+../Src/MGPT_Program.c \
 ../Src/MNVIC_Program.c \
 ../Src/MRCC_Program.c \
 ../Src/MSTK_Program.c \
@@ -20,6 +21,7 @@ OBJS += \
 ./Src/MADC_Program.o \
 ./Src/MDMA_Program.o \
 ./Src/MGPIO_Program.o \
+./Src/MGPT_Program.o \
 ./Src/MNVIC_Program.o \
 ./Src/MRCC_Program.o \
 ./Src/MSTK_Program.o \
@@ -32,6 +34,7 @@ C_DEPS += \
 ./Src/MADC_Program.d \
 ./Src/MDMA_Program.d \
 ./Src/MGPIO_Program.d \
+./Src/MGPT_Program.d \
 ./Src/MNVIC_Program.d \
 ./Src/MRCC_Program.d \
 ./Src/MSTK_Program.d \
@@ -48,7 +51,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/MADC_Program.cyclo ./Src/MADC_Program.d ./Src/MADC_Program.o ./Src/MADC_Program.su ./Src/MDMA_Program.cyclo ./Src/MDMA_Program.d ./Src/MDMA_Program.o ./Src/MDMA_Program.su ./Src/MGPIO_Program.cyclo ./Src/MGPIO_Program.d ./Src/MGPIO_Program.o ./Src/MGPIO_Program.su ./Src/MNVIC_Program.cyclo ./Src/MNVIC_Program.d ./Src/MNVIC_Program.o ./Src/MNVIC_Program.su ./Src/MRCC_Program.cyclo ./Src/MRCC_Program.d ./Src/MRCC_Program.o ./Src/MRCC_Program.su ./Src/MSTK_Program.cyclo ./Src/MSTK_Program.d ./Src/MSTK_Program.o ./Src/MSTK_Program.su ./Src/MUSART_Program.cyclo ./Src/MUSART_Program.d ./Src/MUSART_Program.o ./Src/MUSART_Program.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/MADC_Program.cyclo ./Src/MADC_Program.d ./Src/MADC_Program.o ./Src/MADC_Program.su ./Src/MDMA_Program.cyclo ./Src/MDMA_Program.d ./Src/MDMA_Program.o ./Src/MDMA_Program.su ./Src/MGPIO_Program.cyclo ./Src/MGPIO_Program.d ./Src/MGPIO_Program.o ./Src/MGPIO_Program.su ./Src/MGPT_Program.cyclo ./Src/MGPT_Program.d ./Src/MGPT_Program.o ./Src/MGPT_Program.su ./Src/MNVIC_Program.cyclo ./Src/MNVIC_Program.d ./Src/MNVIC_Program.o ./Src/MNVIC_Program.su ./Src/MRCC_Program.cyclo ./Src/MRCC_Program.d ./Src/MRCC_Program.o ./Src/MRCC_Program.su ./Src/MSTK_Program.cyclo ./Src/MSTK_Program.d ./Src/MSTK_Program.o ./Src/MSTK_Program.su ./Src/MUSART_Program.cyclo ./Src/MUSART_Program.d ./Src/MUSART_Program.o ./Src/MUSART_Program.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

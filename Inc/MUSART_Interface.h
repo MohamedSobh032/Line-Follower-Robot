@@ -111,5 +111,4 @@ void MUSART6_vSetCallBack(void (*ptr)(void));
 #define MUSART_STOP_TWO_BIT					2
 #define MUSART_STOP_ONE_HALF_BIT			3
 
-
 #endif /* MUSART_INTERFACE_H_ */

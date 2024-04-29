@@ -46,7 +46,7 @@ typedef struct {
 	u8 MINC;
 	u8 PriorityLevel;
 	u8 Channel;
-}MDMA_DirectInitType;
+} MDMA_DirectInitType;
 
 typedef struct {
 	u8 TransferDirection;
@@ -57,14 +57,14 @@ typedef struct {
 	u8 MBurst;
 	u8 Channel;
 	u8 FIFOSize;
-}MDMA_BurstInitType;
+} MDMA_BurstInitType;
 
 typedef struct {
 	u32* SrcAddr;
 	u32* DstAddr;
 	u16 Length;
 	u8 Size;
-}MDMA_TransferStruct;
+} MDMA_TransferStruct;
 
 
 void MDMA_vDirectInit(DMA_t* DMAx, u8 Copy_u8Stream, MDMA_DirectInitType* A_InitStruct);
