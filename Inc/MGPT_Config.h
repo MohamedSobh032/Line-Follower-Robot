@@ -9,6 +9,7 @@
 #ifndef _MGPT_CONFIG_H_
 #define _MGPT_CONFIG_H_
 
-
+/* CLOCK = 8 MHz */
+#define __MGPT_PCLK__			8000000
 
 #endif /* _MGPT_CONFIG_H_ */

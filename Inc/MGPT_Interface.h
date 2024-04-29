@@ -48,7 +48,6 @@ typedef struct {
 #define MGPT5_BASE_ADDRESS			0x40000C00
 #define GPT5						((GPT_t*)MGPT5_BASE_ADDRESS)
 
-
 /**********************************************/
 /*     TIMER PWM INITIALIZATION STRUCTURE     */
 /**********************************************/
@@ -63,8 +62,19 @@ typedef struct {
 } MGPT_PWMInitTypeDef;
 
 
+
+/**********************************************/
+/*           TIME COUNTER FUNCTIONS           */
+/**********************************************/
+void MGPT_vTimeCounterInit(GPT_t* GPTx, u8 Copy_u8TickTime, void (*ptr)(void));
+/**********************************************/
+/*                PWM FUNCTIONS               */
+/**********************************************/
 void MGPT_vPWMInit(GPT_t* GPTx, MGPT_PWMInitTypeDef* A_InitStruct);
 void MGPT_vSetPWMDutyCycle(GPT_t* GPTx, u8 Copy_u8Channel, u32 Copy_u32DutyCycle);
+
+
+
 
 /**********************************************/
 /*                 GPT STATUS                 */
@@ -105,6 +115,15 @@ void MGPT_vSetPWMDutyCycle(GPT_t* GPTx, u8 Copy_u8Channel, u32 Copy_u32DutyCycle
 /**********************************************/
 #define MGPT_DIRECTION_UP_COUNTER			0b0
 #define MGPT_DIRECITON_DOWN_COUNTER			0b1
+
+/**********************************************/
+/*                 TICK TIMES                 */
+/**********************************************/
+#define MGPT_TICK_TIME_MICRO_SECOND			0b00
+#define MGPT_TICK_TIME_100_MICRO_SECONDS	0b01
+#define MGPT_TICK_TIME_MILLI_SECOND			0b10
+#define MGPT_TICK_TIME_10_MILLI_SECONDS		0b11
+
 
 
 #endif /* _MGPT_INTERFACE_H_ */

@@ -1,2 +1,7 @@
-../Src/MGPT_Program.c:23:6:MGPT_vPWMInit	15
-../Src/MGPT_Program.c:95:6:MGPT_vSetPWMDutyCycle	1
+../Src/MGPT_Program.c:26:6:MGPT_vTimeCounterInit	9
+../Src/MGPT_Program.c:62:6:MGPT_vPWMInit	15
+../Src/MGPT_Program.c:134:6:MGPT_vSetPWMDutyCycle	1
+../Src/MGPT_Program.c:143:6:TIM2_IRQHandler	1
+../Src/MGPT_Program.c:149:6:TIM3_IRQHandler	1
+../Src/MGPT_Program.c:154:6:TIM4_IRQHandler	1
+../Src/MGPT_Program.c:159:6:TIM5_IRQHandler	1

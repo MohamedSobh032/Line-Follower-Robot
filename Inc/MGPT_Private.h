@@ -18,6 +18,10 @@
 #define MGPT_CR1_CMS1_BIT				6
 #define MGPT_CR1_ARPE_BIT				7
 
+/**********************************************/
+/*              DIER BITS Mapping             */
+/**********************************************/
+#define MGPT_DIER_UIE_BIT				0
 
 /**********************************************/
 /*             CCMR1 BITS Mapping             */

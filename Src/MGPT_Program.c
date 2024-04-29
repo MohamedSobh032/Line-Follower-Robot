@@ -13,6 +13,45 @@
 #include "MGPT_Config.h"
 #include "MGPT_Interface.h"
 
+
+void (*MGPT_CALLBACKS[4])(void) = {(void*)0};
+
+/*****************************************************************/
+/* Func. Name: MGPT_vTimeCounterInit                             */
+/* i/p arguments: GPTx: TIM2 --> TIM5 ONLY                       */
+/* i/p arguments: A_InitStruct: Initialization Structure         */
+/* o/p arguments: nothing                                        */
+/* Desc. : This API Initializes the Selected Timer to Count Time */
+/*****************************************************************/
+void MGPT_vTimeCounterInit(GPT_t* GPTx, u8 Copy_u8TickTime, void (*ptr)(void)) {
+	/* SET THE PRESCALER TO THE WANTED VALUE */
+	switch (Copy_u8TickTime) {
+		case MGPT_TICK_TIME_MICRO_SECOND:      GPTx->PSC = (__MGPT_PCLK__ / 1000000) - 1; break;
+		case MGPT_TICK_TIME_100_MICRO_SECONDS: GPTx->PSC = (__MGPT_PCLK__ / 10000)   - 1; break;
+		case MGPT_TICK_TIME_MILLI_SECOND:      GPTx->PSC = (__MGPT_PCLK__ / 1000)    - 1; break;
+		case MGPT_TICK_TIME_10_MILLI_SECONDS:  GPTx->PSC = (__MGPT_PCLK__ / 100)     - 1; break;
+		default: 							   GPTx->PSC = (__MGPT_PCLK__ / 1000000) - 1; break;
+	}
+
+	/* SET THE TIMER AS AN UPCOUNTER */
+	CLR_BIT(GPTx->CR1, MGPT_CR1_DIR_BIT);
+
+	/* SET THE ARR REGISTER TO MAXIMUM VALUE */
+	GPTx->ARR = 1000000;
+
+	/* SET THE CALL BACK FUNCTION */
+	if (GPTx == GPT2)      { MGPT_CALLBACKS[0] = ptr; }
+	else if (GPTx == GPT3) { MGPT_CALLBACKS[1] = ptr; }
+	else if (GPTx == GPT4) { MGPT_CALLBACKS[2] = ptr; }
+	else if (GPTx == GPT5) { MGPT_CALLBACKS[3] = ptr; }
+
+	/* ENABLE INTERRUPT */
+	SET_BIT(GPTx->DIER, MGPT_DIER_UIE_BIT);
+
+	/* START COUNTING */
+	SET_BIT(GPTx->CR1, MGPT_CR1_CEN_BIT);
+}
+
 /***************************************************************/
 /* Func. Name: MGPT_vPWMInit                                   */
 /* i/p arguments: GPTx: TIM2 --> TIM5 ONLY                     */
@@ -94,4 +133,30 @@ void MGPT_vPWMInit(GPT_t* GPTx, MGPT_PWMInitTypeDef* A_InitStruct) {
 /**************************************************************************/
 void MGPT_vSetPWMDutyCycle(GPT_t* GPTx, u8 Copy_u8Channel, u32 Copy_u32DutyCycle) {
 	GPTx->CCR[Copy_u8Channel] = Copy_u32DutyCycle;
+}
+
+
+
+/**********************************************/
+/*             INTERRUPT HANDLERS             */
+/**********************************************/
+void TIM2_IRQHandler(void) {
+	GPT2->SR = 0;
+	GPT2->CNT = 0;
+	MGPT_CALLBACKS[0]();
+}
+
+void TIM3_IRQHandler(void) {
+	GPT3->SR = 0;
+	MGPT_CALLBACKS[1]();
+}
+
+void TIM4_IRQHandler(void) {
+	GPT4->SR = 0;
+	MGPT_CALLBACKS[2]();
+}
+
+void TIM5_IRQHandler(void) {
+	GPT5->SR = 0;
+	MGPT_CALLBACKS[3]();
 }

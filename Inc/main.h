@@ -33,6 +33,17 @@
 #define APP_MOBILE_USART_RX		GPIOA, MGPIO_PIN10
 	/* DEFINE THE DIRECTION */
 #define APP_MOBILE_USART_AF		MGPIO_AF07
+
+/* PWM TIMER GENERATOR */
+#define APP_TIM_PWM				GPT3
+#define APP_CHANNEL_PWM			MGPT_CHANNEL_1
+#define APP_PWM_PERIOD			10000
+#define APP_PWM_PRESCALER		1
+
+/* TIME COUNTER TIMER */
+#define APP_TIM_COUNTER				GPT2
+#define APP_TIM_COUNTER_TICK_TIME	MGPT_TICK_TIME_MICRO_SECOND
+#define APP_TIM_COUNTER_INT_ID		28
 /**********************************************************************************************/
 
 #endif /* _MAIN_H_ */

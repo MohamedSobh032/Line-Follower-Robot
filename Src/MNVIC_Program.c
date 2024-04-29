@@ -26,19 +26,19 @@ void MNVIC_vInit(void) {
 /********************************************************************/
 /* Func. Name: MNVIC_vSetPeripheralInterruptPriority                */
 /* i/p arguments: Copy_u8PeripheralID: The Peripheral to be Changed */
-/* i/p arguments: Copy_u8GroupID                                    */
-/* i/p arguments: Copy_u8SubGroupID                                 */
+/* i/p arguments: GroupID                                           */
+/* i/p arguments: SubGroupID                                        */
 /* o/p arguments: Nothing                                           */
 /* Desc. : This API Sets a Peripheral to a Group and Subgroup       */
 /********************************************************************/
-void MNVIC_vSetPeripheralInterruptPriority(u8 Copy_u8PeripheralID, u8 Copy_u8GroupID, u8 Copy_u8SubGroupID) {
+void MNVIC_vSetPeripheralInterruptPriority(u8 Copy_u8PeripheralID, MNVIC_GROUP GroupID, MNVIC_SUBGROUP SubGroupID) {
 	u8 Local_u8Priority;
 	switch (_MNVIC_PRIORITY_CONFIGURATION_) {
-		case MNVIC_PRIORITY_SIXTEEN_GROUPS_ZERO_SUBGROUPS: Local_u8Priority = Copy_u8GroupID; 											break;
-		case MNVIC_PRIORITY_EIGHT_GROUPS_TWO_SUBGROUPS:    Local_u8Priority = (Copy_u8GroupID << 1) | (ONE_BIT    & Copy_u8SubGroupID); break;
-		case MNVIC_PRIORITY_FOUR_GROUPS_FOUR_SUBGROUPS:    Local_u8Priority = (Copy_u8GroupID << 2) | (TWO_BITS   & Copy_u8SubGroupID); break;
-		case MNVIC_PRIORITY_TWO_GROUPS_EIGHT_SUBGROUPS:    Local_u8Priority = (Copy_u8GroupID << 3) | (THREE_BITS & Copy_u8SubGroupID); break;
-		case MNVIC_PRIORITY_ZERO_GROUPS_SIXTEEN_SUBGROUPS: Local_u8Priority = (Copy_u8GroupID << 4) | (FOUR_BITS  & Copy_u8SubGroupID); break;
+		case MNVIC_PRIORITY_SIXTEEN_GROUPS_ZERO_SUBGROUPS: Local_u8Priority = GroupID; 									  break;
+		case MNVIC_PRIORITY_EIGHT_GROUPS_TWO_SUBGROUPS:    Local_u8Priority = (GroupID << 1) | (ONE_BIT    & SubGroupID); break;
+		case MNVIC_PRIORITY_FOUR_GROUPS_FOUR_SUBGROUPS:    Local_u8Priority = (GroupID << 2) | (TWO_BITS   & SubGroupID); break;
+		case MNVIC_PRIORITY_TWO_GROUPS_EIGHT_SUBGROUPS:    Local_u8Priority = (GroupID << 3) | (THREE_BITS & SubGroupID); break;
+		case MNVIC_PRIORITY_ZERO_GROUPS_SIXTEEN_SUBGROUPS: Local_u8Priority = (GroupID << 4) | (FOUR_BITS  & SubGroupID); break;
 		default: break;
 	}
     NVIC->IPR[Copy_u8PeripheralID] = Local_u8Priority << 4;

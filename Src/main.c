@@ -35,6 +35,12 @@ u16 APP_u16IRData[2];
  */
 u8 APP_u8String[APP_MOBILE_MESSAGE_LENGTH];
 
+
+void test() {
+	(void)(1+2);
+}
+
+
 void APP_vInit(void) {
 	/********************* CLOCK CONFIGURATIONS AND BUSSES/PERIPHERALS ENABLE *********************/
 	/* INIT CLOCK AND BUSSES CLOCK */
@@ -45,7 +51,15 @@ void APP_vInit(void) {
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_APB1, MRCC_APB1_TIM2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB1, MRCC_APB1_TIM3EN);
+	/**********************************************************************************************/
+
+	/********************** NESTED VECTOR INTERRUPT CONTROLLER CONFIGURATION **********************/
+	MNVIC_vInit();
+	/* SET COUNTER TIMER TO HIGHEST PRIORITY */
+	MNVIC_vSetPeripheralInterruptPriority(APP_TIM_COUNTER_INT_ID, MNVIC_GROUP_ZERO, MNVIC_SUBGROUP_ZERO);
+	MNVIC_vEnablePeripheralInterrupt(APP_TIM_COUNTER_INT_ID);
 	/**********************************************************************************************/
 
 	/************************************* PINS CONFIGURATION *************************************/
@@ -110,10 +124,14 @@ void APP_vInit(void) {
 	/**********************************************************************************************/
 
 	/*********************************** GPT PWM CONFIGURATIONS ***********************************/
-	MGPT_PWMInitTypeDef gpt = {MGPT_CHANNEL_1, MGPT_PWM_MODE_1, 10000, 1,
-							MGPT_ALLIGNMENT_EDGE_MODE, 0, MGPT_CHANNEL_OUTPUT_ACTIVE_HIGH};
-	MGPT_vPWMInit(GPT3, &gpt);
+	MGPT_PWMInitTypeDef gpt = {APP_CHANNEL_PWM, MGPT_PWM_MODE_1, APP_PWM_PERIOD,
+						APP_PWM_PRESCALER, MGPT_ALLIGNMENT_EDGE_MODE, MGPT_DIRECTION_UP_COUNTER,
+						MGPT_CHANNEL_OUTPUT_ACTIVE_HIGH};
+	MGPT_vPWMInit(APP_TIM_PWM, &gpt);
+	/**********************************************************************************************/
 
+	/******************************* GPT TIME COUNTER CONFIGURATIONS ******************************/
+	MGPT_vTimeCounterInit(GPT2, APP_TIM_COUNTER_TICK_TIME, test);
 	/**********************************************************************************************/
 }
 
