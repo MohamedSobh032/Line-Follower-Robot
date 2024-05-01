@@ -2,31 +2,23 @@
 #define _MAIN_H_
 
 
-
-/********************************** APPLICATION CODE SETTING **********************************/
-/* DEFINE RECEIVED STRING FROM MOBILE APPLICATION LENGTH */
-#define APP_MOBILE_MESSAGE_LENGTH			6U
-/**********************************************************************************************/
-
-
-
 /************************************** HARDWARE SETTING **************************************/
-/* DEFINE IR ARRAY PINS */
+	/* NUMBER OF IR's */
+#define APP_IR_ARRAY_COUNT		5
+	/* DEFINE IR ARRAY PINS */
 #define APP_IR0			GPIOA, MGPIO_PIN00
 #define APP_IR1			GPIOA, MGPIO_PIN01
 #define APP_IR2			GPIOA, MGPIO_PIN02
 #define APP_IR3			GPIOA, MGPIO_PIN03
 #define APP_IR4			GPIOA, MGPIO_PIN04
-#define APP_IR5			GPIOA, MGPIO_PIN05
 	/* DEFINE THE CHANNELS */
 #define APP_IR0_CHANNEL	MADC_CHANNEL0
 #define APP_IR1_CHANNEL	MADC_CHANNEL1
 #define APP_IR2_CHANNEL	MADC_CHANNEL2
 #define APP_IR3_CHANNEL	MADC_CHANNEL3
 #define APP_IR4_CHANNEL	MADC_CHANNEL4
-#define APP_IR5_CHANNEL	MADC_CHANNEL5
 
-/* DEFINE USART FOR MOBILE APPLICATION */
+	/* DEFINE USART FOR MOBILE APPLICATION */
 #define APP_MOBILE_USART		USART1
 	/* DEFINE THE PINS */
 #define APP_MOBILE_USART_TX		GPIOA, MGPIO_PIN09
@@ -34,19 +26,39 @@
 	/* DEFINE THE DIRECTION */
 #define APP_MOBILE_USART_AF		MGPIO_AF07
 
-/* PWM TIMER GENERATOR */
-#define APP_TIM_PWM				GPT3
-#define APP_CHANNEL_PWM			MGPT_CHANNEL_1
-#define APP_PWM_PERIOD			10000
+	/* PWM TIMER GENERATOR */
+		/* PWM 1 */
+#define APP_TIM_PWM_R			GPT3
+#define APP_CHANNEL_PWM_R		MGPT_CHANNEL_1
+		/* PWM 2 */
+#define APP_TIM_PWM_L			GPT4
+#define APP_CHANNEL_PWM_L		MGPT_CHANNEL_1
+		/* GENERAL */
+#define APP_PWM_PERIOD			4095
 #define APP_PWM_PRESCALER		1
 	/* DEFINE THE PINS */
-#define APP_TIM_PWM_PIN			GPIOB, MGPIO_PIN04
-#define APP_TIM_PWM_AF			MGPIO_AF02
+		/* PWM 1 */
+#define APP_TIM_PWM_R_PIN		GPIOB, MGPIO_PIN04
+#define APP_TIM_PWM_R_AF		MGPIO_AF02
+		/* PWM 2 */
+#define APP_TIM_PWM_L_PIN		GPIOB, MGPIO_PIN06
+#define APP_TIM_PWM_L_AF		MGPIO_AF02
 
-/* TIME COUNTER TIMER */
-#define APP_TIM_COUNTER				GPT2
-#define APP_TIM_COUNTER_TICK_TIME	MGPT_TICK_TIME_MICRO_SECOND
-#define APP_TIM_COUNTER_INT_ID		28
+	/* TIME COUNTER TIMER */
+//#define APP_TIM_COUNTER				GPT2
+//#define APP_TIM_COUNTER_TICK_TIME	MGPT_TICK_TIME_MICRO_SECOND
+//#define APP_TIM_COUNTER_INT_ID		28
+/**********************************************************************************************/
+
+
+/********************************** APPLICATION CODE SETTING **********************************/
+/* DEFINE RECEIVED STRING FROM MOBILE APPLICATION LENGTH */
+#define APP_MOBILE_MESSAGE_LENGTH			6U
+/* PWM MOVE FUNCTIONS */
+#define APP_CAR_MOVE_FULL_FORCE				APP_PWM_PERIOD
+#define APP_CAR_MOVE_ZERO_FORCE				0
+/* DEFINE AVERAGE SPEED FOR THE MOTORS */
+#define APP_AVERAGE_SPEED					(APP_PWM_PERIOD/2)
 /**********************************************************************************************/
 
 #endif /* _MAIN_H_ */
