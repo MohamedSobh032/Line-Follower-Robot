@@ -51,28 +51,25 @@ void APP_vPIDcontrol(void);					/* LINE FOLLOWING FUNCTION USING PID CONCEPT */
 
 /************************************* APPLICATION - MAIN *************************************/
 int main(void) {
-
-	/* INITIALIZE THE WHOLE MCU */
+	/* INITIALIZE THE MCU */
 	APP_vInit();
-
 	/* CALIBRATE */
 	APP_vCalibrate();
-
     /* Loop forever */
 	while(1) {
 		/* CASE WHERE IT IS EXTREME RIGHT TURN */
-		if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
+		if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
 				APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
-			APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
-			APP_s32SpeedRight = APP_PWM_PERIOD;
+			APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
+			APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
 			APP_vDriveMotors();
 			continue;
 		}
 		/* CASE WHERE IT IS EXTREME LEFT TURN */
-		else if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
-				APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
-			APP_s32SpeedLeft = APP_PWM_PERIOD;
-			APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+		else if (APP_u16IRData[0] < APP_u16IRThreshold[0] &&
+				APP_u16IRData[APP_IR_ARRAY_COUNT-1] > APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
+			APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+			APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
 			APP_vDriveMotors();
 			continue;
 		}
@@ -229,8 +226,8 @@ void APP_vCalibrate(void) {
 
 void APP_vPIDcontrol(void) {
 	/* GET PID CONSTANTS */
-	APP_f32Kp = 0.0006 * (1000 - (f32)APP_u16IRData[2]);
-	APP_f32Kd = 10 * APP_f32Kp;
+	APP_f32Kp = 0.0006 * (1000.0 - APP_u16IRData[2]);
+	APP_f32Kd = 10.0 * APP_f32Kp;
 	APP_f32Ki = 0.0001;
 	/* GET CURRENT ERROR */
 	APP_s32Error = APP_u16IRData[1] - APP_u16IRData[3];
@@ -244,9 +241,9 @@ void APP_vPIDcontrol(void) {
 	s32 APP_s32PID = (APP_f32Kp * APP_s32P) + (APP_f32Kd * APP_s32D) + (APP_f32Ki * APP_s32I);
 	APP_s32SpeedLeft = APP_AVERAGE_SPEED - APP_s32PID;
 	APP_s32SpeedRight = APP_AVERAGE_SPEED + APP_s32PID;
-	if (APP_s32SpeedLeft > APP_CAR_MOVE_FULL_FORCE) 		{ APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE; }
-	else if (APP_s32SpeedLeft < APP_CAR_MOVE_ZERO_FORCE) 	{ APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE; }
-	if (APP_s32SpeedRight > APP_CAR_MOVE_FULL_FORCE) 		{ APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE; }
-	else if (APP_s32SpeedRight < APP_CAR_MOVE_ZERO_FORCE) 	{ APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE; }
+	if (APP_s32SpeedLeft > APP_CAR_MOVE_FULL_FORCE) 	  { APP_s32SpeedLeft  = APP_CAR_MOVE_FULL_FORCE; }
+	else if (APP_s32SpeedLeft < APP_CAR_MOVE_ZERO_FORCE)  { APP_s32SpeedLeft  = APP_CAR_MOVE_ZERO_FORCE; }
+	if (APP_s32SpeedRight > APP_CAR_MOVE_FULL_FORCE) 	  { APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE; }
+	else if (APP_s32SpeedRight < APP_CAR_MOVE_ZERO_FORCE) { APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE; }
 	APP_vDriveMotors();
 }

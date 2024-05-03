@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00001a3b  00000000  00000000  00015c50  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   000014ca  00000000  00000000  0001768b  2**0
+ 18 .debug_line   000014c7  00000000  00000000  0001768b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000081b5  00000000  00000000  00018b55  2**0
+ 19 .debug_str    000081b5  00000000  00000000  00018b52  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00000c50  00000000  00000000  00020d0c  2**2
+ 20 .debug_frame  00000c50  00000000  00000000  00020d08  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000006f  00000000  00000000  0002195c  2**0
+ 21 .debug_line_str 0000006f  00000000  00000000  00021958  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2997,40 +2997,37 @@ void APP_vPIDcontrol(void);					/* LINE FOLLOWING FUNCTION USING PID CONCEPT */
 int main(void) {
  80019a8:	b580      	push	{r7, lr}
  80019aa:	af00      	add	r7, sp, #0
-
-	/* INITIALIZE THE WHOLE MCU */
+	/* INITIALIZE THE MCU */
 	APP_vInit();
  80019ac:	f000 f840 	bl	8001a30 <APP_vInit>
-
 	/* CALIBRATE */
 	APP_vCalibrate();
  80019b0:	f000 f98a 	bl	8001cc8 <APP_vCalibrate>
-
     /* Loop forever */
 	while(1) {
 		/* CASE WHERE IT IS EXTREME RIGHT TURN */
-		if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
+		if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
  80019b4:	4b1a      	ldr	r3, [pc, #104]	; (8001a20 <main+0x78>)
  80019b6:	881a      	ldrh	r2, [r3, #0]
  80019b8:	4b1a      	ldr	r3, [pc, #104]	; (8001a24 <main+0x7c>)
  80019ba:	881b      	ldrh	r3, [r3, #0]
  80019bc:	429a      	cmp	r2, r3
- 80019be:	d805      	bhi.n	80019cc <main+0x24>
+ 80019be:	d90f      	bls.n	80019e0 <main+0x38>
 				APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
  80019c0:	4b17      	ldr	r3, [pc, #92]	; (8001a20 <main+0x78>)
  80019c2:	891a      	ldrh	r2, [r3, #8]
  80019c4:	4b17      	ldr	r3, [pc, #92]	; (8001a24 <main+0x7c>)
  80019c6:	891b      	ldrh	r3, [r3, #8]
-		if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
+		if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
  80019c8:	429a      	cmp	r2, r3
  80019ca:	d209      	bcs.n	80019e0 <main+0x38>
-			APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+			APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
  80019cc:	4b16      	ldr	r3, [pc, #88]	; (8001a28 <main+0x80>)
- 80019ce:	2200      	movs	r2, #0
- 80019d0:	601a      	str	r2, [r3, #0]
-			APP_s32SpeedRight = APP_PWM_PERIOD;
- 80019d2:	4b16      	ldr	r3, [pc, #88]	; (8001a2c <main+0x84>)
- 80019d4:	f640 72ff 	movw	r2, #4095	; 0xfff
+ 80019ce:	f640 72ff 	movw	r2, #4095	; 0xfff
+ 80019d2:	601a      	str	r2, [r3, #0]
+			APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+ 80019d4:	4b15      	ldr	r3, [pc, #84]	; (8001a2c <main+0x84>)
+ 80019d6:	2200      	movs	r2, #0
  80019d8:	601a      	str	r2, [r3, #0]
 			APP_vDriveMotors();
  80019da:	f000 f95b 	bl	8001c94 <APP_vDriveMotors>
@@ -3038,28 +3035,28 @@ int main(void) {
  80019de:	e01d      	b.n	8001a1c <main+0x74>
 		}
 		/* CASE WHERE IT IS EXTREME LEFT TURN */
-		else if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
+		else if (APP_u16IRData[0] < APP_u16IRThreshold[0] &&
  80019e0:	4b0f      	ldr	r3, [pc, #60]	; (8001a20 <main+0x78>)
  80019e2:	881a      	ldrh	r2, [r3, #0]
  80019e4:	4b0f      	ldr	r3, [pc, #60]	; (8001a24 <main+0x7c>)
  80019e6:	881b      	ldrh	r3, [r3, #0]
  80019e8:	429a      	cmp	r2, r3
- 80019ea:	d805      	bhi.n	80019f8 <main+0x50>
-				APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
+ 80019ea:	d20f      	bcs.n	8001a0c <main+0x64>
+				APP_u16IRData[APP_IR_ARRAY_COUNT-1] > APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
  80019ec:	4b0c      	ldr	r3, [pc, #48]	; (8001a20 <main+0x78>)
  80019ee:	891a      	ldrh	r2, [r3, #8]
  80019f0:	4b0c      	ldr	r3, [pc, #48]	; (8001a24 <main+0x7c>)
  80019f2:	891b      	ldrh	r3, [r3, #8]
-		else if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
+		else if (APP_u16IRData[0] < APP_u16IRThreshold[0] &&
  80019f4:	429a      	cmp	r2, r3
- 80019f6:	d209      	bcs.n	8001a0c <main+0x64>
-			APP_s32SpeedLeft = APP_PWM_PERIOD;
+ 80019f6:	d909      	bls.n	8001a0c <main+0x64>
+			APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
  80019f8:	4b0b      	ldr	r3, [pc, #44]	; (8001a28 <main+0x80>)
- 80019fa:	f640 72ff 	movw	r2, #4095	; 0xfff
- 80019fe:	601a      	str	r2, [r3, #0]
-			APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
- 8001a00:	4b0a      	ldr	r3, [pc, #40]	; (8001a2c <main+0x84>)
- 8001a02:	2200      	movs	r2, #0
+ 80019fa:	2200      	movs	r2, #0
+ 80019fc:	601a      	str	r2, [r3, #0]
+			APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
+ 80019fe:	4b0b      	ldr	r3, [pc, #44]	; (8001a2c <main+0x84>)
+ 8001a00:	f640 72ff 	movw	r2, #4095	; 0xfff
  8001a04:	601a      	str	r2, [r3, #0]
 			APP_vDriveMotors();
  8001a06:	f000 f945 	bl	8001c94 <APP_vDriveMotors>
@@ -3076,7 +3073,7 @@ int main(void) {
  8001a16:	d2cd      	bcs.n	80019b4 <main+0xc>
 			APP_vPIDcontrol();
  8001a18:	f000 f9f2 	bl	8001e00 <APP_vPIDcontrol>
-		if (APP_u16IRData[0] > APP_u16IRThreshold[0] ||
+		if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
  8001a1c:	e7ca      	b.n	80019b4 <main+0xc>
  8001a1e:	bf00      	nop
  8001a20:	20000040 	.word	0x20000040
@@ -3627,147 +3624,151 @@ void APP_vPIDcontrol(void) {
  8001e02:	b082      	sub	sp, #8
  8001e04:	af00      	add	r7, sp, #0
 	/* GET PID CONSTANTS */
-	APP_f32Kp = 0.0006 * (1000 - (f32)APP_u16IRData[2]);
+	APP_f32Kp = 0.0006 * (1000.0 - APP_u16IRData[2]);
  8001e06:	4b4e      	ldr	r3, [pc, #312]	; (8001f40 <APP_vPIDcontrol+0x140>)
  8001e08:	889b      	ldrh	r3, [r3, #4]
- 8001e0a:	ee07 3a90 	vmov	s15, r3
- 8001e0e:	eef8 7a67 	vcvt.f32.u32	s15, s15
- 8001e12:	ed9f 7a4c 	vldr	s14, [pc, #304]	; 8001f44 <APP_vPIDcontrol+0x144>
- 8001e16:	ee77 7a67 	vsub.f32	s15, s14, s15
- 8001e1a:	ee17 0a90 	vmov	r0, s15
- 8001e1e:	f7fe fb3f 	bl	80004a0 <__aeabi_f2d>
- 8001e22:	a345      	add	r3, pc, #276	; (adr r3, 8001f38 <APP_vPIDcontrol+0x138>)
- 8001e24:	e9d3 2300 	ldrd	r2, r3, [r3]
- 8001e28:	f7fe fb92 	bl	8000550 <__aeabi_dmul>
- 8001e2c:	4602      	mov	r2, r0
- 8001e2e:	460b      	mov	r3, r1
- 8001e30:	4610      	mov	r0, r2
- 8001e32:	4619      	mov	r1, r3
- 8001e34:	f7fe fdbe 	bl	80009b4 <__aeabi_d2f>
- 8001e38:	4603      	mov	r3, r0
- 8001e3a:	4a43      	ldr	r2, [pc, #268]	; (8001f48 <APP_vPIDcontrol+0x148>)
- 8001e3c:	6013      	str	r3, [r2, #0]
-	APP_f32Kd = 10 * APP_f32Kp;
- 8001e3e:	4b42      	ldr	r3, [pc, #264]	; (8001f48 <APP_vPIDcontrol+0x148>)
- 8001e40:	edd3 7a00 	vldr	s15, [r3]
- 8001e44:	eeb2 7a04 	vmov.f32	s14, #36	; 0x41200000  10.0
- 8001e48:	ee67 7a87 	vmul.f32	s15, s15, s14
- 8001e4c:	4b3f      	ldr	r3, [pc, #252]	; (8001f4c <APP_vPIDcontrol+0x14c>)
- 8001e4e:	edc3 7a00 	vstr	s15, [r3]
+ 8001e0a:	4618      	mov	r0, r3
+ 8001e0c:	f7fe fb36 	bl	800047c <__aeabi_i2d>
+ 8001e10:	4602      	mov	r2, r0
+ 8001e12:	460b      	mov	r3, r1
+ 8001e14:	f04f 0000 	mov.w	r0, #0
+ 8001e18:	494a      	ldr	r1, [pc, #296]	; (8001f44 <APP_vPIDcontrol+0x144>)
+ 8001e1a:	f7fe f9e1 	bl	80001e0 <__aeabi_dsub>
+ 8001e1e:	4602      	mov	r2, r0
+ 8001e20:	460b      	mov	r3, r1
+ 8001e22:	4610      	mov	r0, r2
+ 8001e24:	4619      	mov	r1, r3
+ 8001e26:	a344      	add	r3, pc, #272	; (adr r3, 8001f38 <APP_vPIDcontrol+0x138>)
+ 8001e28:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 8001e2c:	f7fe fb90 	bl	8000550 <__aeabi_dmul>
+ 8001e30:	4602      	mov	r2, r0
+ 8001e32:	460b      	mov	r3, r1
+ 8001e34:	4610      	mov	r0, r2
+ 8001e36:	4619      	mov	r1, r3
+ 8001e38:	f7fe fdbc 	bl	80009b4 <__aeabi_d2f>
+ 8001e3c:	4603      	mov	r3, r0
+ 8001e3e:	4a42      	ldr	r2, [pc, #264]	; (8001f48 <APP_vPIDcontrol+0x148>)
+ 8001e40:	6013      	str	r3, [r2, #0]
+	APP_f32Kd = 10.0 * APP_f32Kp;
+ 8001e42:	4b41      	ldr	r3, [pc, #260]	; (8001f48 <APP_vPIDcontrol+0x148>)
+ 8001e44:	edd3 7a00 	vldr	s15, [r3]
+ 8001e48:	eeb2 7a04 	vmov.f32	s14, #36	; 0x41200000  10.0
+ 8001e4c:	ee67 7a87 	vmul.f32	s15, s15, s14
+ 8001e50:	4b3e      	ldr	r3, [pc, #248]	; (8001f4c <APP_vPIDcontrol+0x14c>)
+ 8001e52:	edc3 7a00 	vstr	s15, [r3]
 	APP_f32Ki = 0.0001;
- 8001e52:	4b3f      	ldr	r3, [pc, #252]	; (8001f50 <APP_vPIDcontrol+0x150>)
- 8001e54:	4a3f      	ldr	r2, [pc, #252]	; (8001f54 <APP_vPIDcontrol+0x154>)
- 8001e56:	601a      	str	r2, [r3, #0]
+ 8001e56:	4b3e      	ldr	r3, [pc, #248]	; (8001f50 <APP_vPIDcontrol+0x150>)
+ 8001e58:	4a3e      	ldr	r2, [pc, #248]	; (8001f54 <APP_vPIDcontrol+0x154>)
+ 8001e5a:	601a      	str	r2, [r3, #0]
 	/* GET CURRENT ERROR */
 	APP_s32Error = APP_u16IRData[1] - APP_u16IRData[3];
- 8001e58:	4b39      	ldr	r3, [pc, #228]	; (8001f40 <APP_vPIDcontrol+0x140>)
- 8001e5a:	885b      	ldrh	r3, [r3, #2]
- 8001e5c:	461a      	mov	r2, r3
- 8001e5e:	4b38      	ldr	r3, [pc, #224]	; (8001f40 <APP_vPIDcontrol+0x140>)
- 8001e60:	88db      	ldrh	r3, [r3, #6]
- 8001e62:	1ad3      	subs	r3, r2, r3
- 8001e64:	4a3c      	ldr	r2, [pc, #240]	; (8001f58 <APP_vPIDcontrol+0x158>)
- 8001e66:	6013      	str	r3, [r2, #0]
+ 8001e5c:	4b38      	ldr	r3, [pc, #224]	; (8001f40 <APP_vPIDcontrol+0x140>)
+ 8001e5e:	885b      	ldrh	r3, [r3, #2]
+ 8001e60:	461a      	mov	r2, r3
+ 8001e62:	4b37      	ldr	r3, [pc, #220]	; (8001f40 <APP_vPIDcontrol+0x140>)
+ 8001e64:	88db      	ldrh	r3, [r3, #6]
+ 8001e66:	1ad3      	subs	r3, r2, r3
+ 8001e68:	4a3b      	ldr	r2, [pc, #236]	; (8001f58 <APP_vPIDcontrol+0x158>)
+ 8001e6a:	6013      	str	r3, [r2, #0]
 	/* GET PID VARIABLES */
 	APP_s32P = APP_s32Error;
- 8001e68:	4b3b      	ldr	r3, [pc, #236]	; (8001f58 <APP_vPIDcontrol+0x158>)
- 8001e6a:	681b      	ldr	r3, [r3, #0]
- 8001e6c:	4a3b      	ldr	r2, [pc, #236]	; (8001f5c <APP_vPIDcontrol+0x15c>)
- 8001e6e:	6013      	str	r3, [r2, #0]
+ 8001e6c:	4b3a      	ldr	r3, [pc, #232]	; (8001f58 <APP_vPIDcontrol+0x158>)
+ 8001e6e:	681b      	ldr	r3, [r3, #0]
+ 8001e70:	4a3a      	ldr	r2, [pc, #232]	; (8001f5c <APP_vPIDcontrol+0x15c>)
+ 8001e72:	6013      	str	r3, [r2, #0]
 	APP_s32I += APP_s32Error;
- 8001e70:	4b3b      	ldr	r3, [pc, #236]	; (8001f60 <APP_vPIDcontrol+0x160>)
- 8001e72:	681a      	ldr	r2, [r3, #0]
- 8001e74:	4b38      	ldr	r3, [pc, #224]	; (8001f58 <APP_vPIDcontrol+0x158>)
- 8001e76:	681b      	ldr	r3, [r3, #0]
- 8001e78:	4413      	add	r3, r2
- 8001e7a:	4a39      	ldr	r2, [pc, #228]	; (8001f60 <APP_vPIDcontrol+0x160>)
- 8001e7c:	6013      	str	r3, [r2, #0]
+ 8001e74:	4b3a      	ldr	r3, [pc, #232]	; (8001f60 <APP_vPIDcontrol+0x160>)
+ 8001e76:	681a      	ldr	r2, [r3, #0]
+ 8001e78:	4b37      	ldr	r3, [pc, #220]	; (8001f58 <APP_vPIDcontrol+0x158>)
+ 8001e7a:	681b      	ldr	r3, [r3, #0]
+ 8001e7c:	4413      	add	r3, r2
+ 8001e7e:	4a38      	ldr	r2, [pc, #224]	; (8001f60 <APP_vPIDcontrol+0x160>)
+ 8001e80:	6013      	str	r3, [r2, #0]
 	APP_s32D = APP_s32Error - APP_s32PrevError;
- 8001e7e:	4b36      	ldr	r3, [pc, #216]	; (8001f58 <APP_vPIDcontrol+0x158>)
- 8001e80:	681a      	ldr	r2, [r3, #0]
- 8001e82:	4b38      	ldr	r3, [pc, #224]	; (8001f64 <APP_vPIDcontrol+0x164>)
- 8001e84:	681b      	ldr	r3, [r3, #0]
- 8001e86:	1ad3      	subs	r3, r2, r3
- 8001e88:	4a37      	ldr	r2, [pc, #220]	; (8001f68 <APP_vPIDcontrol+0x168>)
- 8001e8a:	6013      	str	r3, [r2, #0]
+ 8001e82:	4b35      	ldr	r3, [pc, #212]	; (8001f58 <APP_vPIDcontrol+0x158>)
+ 8001e84:	681a      	ldr	r2, [r3, #0]
+ 8001e86:	4b37      	ldr	r3, [pc, #220]	; (8001f64 <APP_vPIDcontrol+0x164>)
+ 8001e88:	681b      	ldr	r3, [r3, #0]
+ 8001e8a:	1ad3      	subs	r3, r2, r3
+ 8001e8c:	4a36      	ldr	r2, [pc, #216]	; (8001f68 <APP_vPIDcontrol+0x168>)
+ 8001e8e:	6013      	str	r3, [r2, #0]
 	/* SET THE PREVIOUS ERROR */
 	APP_s32PrevError = APP_s32Error;
- 8001e8c:	4b32      	ldr	r3, [pc, #200]	; (8001f58 <APP_vPIDcontrol+0x158>)
- 8001e8e:	681b      	ldr	r3, [r3, #0]
- 8001e90:	4a34      	ldr	r2, [pc, #208]	; (8001f64 <APP_vPIDcontrol+0x164>)
- 8001e92:	6013      	str	r3, [r2, #0]
+ 8001e90:	4b31      	ldr	r3, [pc, #196]	; (8001f58 <APP_vPIDcontrol+0x158>)
+ 8001e92:	681b      	ldr	r3, [r3, #0]
+ 8001e94:	4a33      	ldr	r2, [pc, #204]	; (8001f64 <APP_vPIDcontrol+0x164>)
+ 8001e96:	6013      	str	r3, [r2, #0]
 	/* CALCULATE PID VALUE */
 	s32 APP_s32PID = (APP_f32Kp * APP_s32P) + (APP_f32Kd * APP_s32D) + (APP_f32Ki * APP_s32I);
- 8001e94:	4b31      	ldr	r3, [pc, #196]	; (8001f5c <APP_vPIDcontrol+0x15c>)
- 8001e96:	681b      	ldr	r3, [r3, #0]
- 8001e98:	ee07 3a90 	vmov	s15, r3
- 8001e9c:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8001ea0:	4b29      	ldr	r3, [pc, #164]	; (8001f48 <APP_vPIDcontrol+0x148>)
- 8001ea2:	edd3 7a00 	vldr	s15, [r3]
- 8001ea6:	ee27 7a27 	vmul.f32	s14, s14, s15
- 8001eaa:	4b2f      	ldr	r3, [pc, #188]	; (8001f68 <APP_vPIDcontrol+0x168>)
- 8001eac:	681b      	ldr	r3, [r3, #0]
- 8001eae:	ee07 3a90 	vmov	s15, r3
- 8001eb2:	eef8 6ae7 	vcvt.f32.s32	s13, s15
- 8001eb6:	4b25      	ldr	r3, [pc, #148]	; (8001f4c <APP_vPIDcontrol+0x14c>)
- 8001eb8:	edd3 7a00 	vldr	s15, [r3]
- 8001ebc:	ee66 7aa7 	vmul.f32	s15, s13, s15
- 8001ec0:	ee37 7a27 	vadd.f32	s14, s14, s15
- 8001ec4:	4b26      	ldr	r3, [pc, #152]	; (8001f60 <APP_vPIDcontrol+0x160>)
- 8001ec6:	681b      	ldr	r3, [r3, #0]
- 8001ec8:	ee07 3a90 	vmov	s15, r3
- 8001ecc:	eef8 6ae7 	vcvt.f32.s32	s13, s15
- 8001ed0:	4b1f      	ldr	r3, [pc, #124]	; (8001f50 <APP_vPIDcontrol+0x150>)
- 8001ed2:	edd3 7a00 	vldr	s15, [r3]
- 8001ed6:	ee66 7aa7 	vmul.f32	s15, s13, s15
- 8001eda:	ee77 7a27 	vadd.f32	s15, s14, s15
- 8001ede:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 8001ee2:	ee17 3a90 	vmov	r3, s15
- 8001ee6:	607b      	str	r3, [r7, #4]
+ 8001e98:	4b30      	ldr	r3, [pc, #192]	; (8001f5c <APP_vPIDcontrol+0x15c>)
+ 8001e9a:	681b      	ldr	r3, [r3, #0]
+ 8001e9c:	ee07 3a90 	vmov	s15, r3
+ 8001ea0:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8001ea4:	4b28      	ldr	r3, [pc, #160]	; (8001f48 <APP_vPIDcontrol+0x148>)
+ 8001ea6:	edd3 7a00 	vldr	s15, [r3]
+ 8001eaa:	ee27 7a27 	vmul.f32	s14, s14, s15
+ 8001eae:	4b2e      	ldr	r3, [pc, #184]	; (8001f68 <APP_vPIDcontrol+0x168>)
+ 8001eb0:	681b      	ldr	r3, [r3, #0]
+ 8001eb2:	ee07 3a90 	vmov	s15, r3
+ 8001eb6:	eef8 6ae7 	vcvt.f32.s32	s13, s15
+ 8001eba:	4b24      	ldr	r3, [pc, #144]	; (8001f4c <APP_vPIDcontrol+0x14c>)
+ 8001ebc:	edd3 7a00 	vldr	s15, [r3]
+ 8001ec0:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 8001ec4:	ee37 7a27 	vadd.f32	s14, s14, s15
+ 8001ec8:	4b25      	ldr	r3, [pc, #148]	; (8001f60 <APP_vPIDcontrol+0x160>)
+ 8001eca:	681b      	ldr	r3, [r3, #0]
+ 8001ecc:	ee07 3a90 	vmov	s15, r3
+ 8001ed0:	eef8 6ae7 	vcvt.f32.s32	s13, s15
+ 8001ed4:	4b1e      	ldr	r3, [pc, #120]	; (8001f50 <APP_vPIDcontrol+0x150>)
+ 8001ed6:	edd3 7a00 	vldr	s15, [r3]
+ 8001eda:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 8001ede:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 8001ee2:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 8001ee6:	ee17 3a90 	vmov	r3, s15
+ 8001eea:	607b      	str	r3, [r7, #4]
 	APP_s32SpeedLeft = APP_AVERAGE_SPEED - APP_s32PID;
- 8001ee8:	687b      	ldr	r3, [r7, #4]
- 8001eea:	f5c3 63ff 	rsb	r3, r3, #2040	; 0x7f8
- 8001eee:	3307      	adds	r3, #7
- 8001ef0:	461a      	mov	r2, r3
- 8001ef2:	4b1e      	ldr	r3, [pc, #120]	; (8001f6c <APP_vPIDcontrol+0x16c>)
- 8001ef4:	601a      	str	r2, [r3, #0]
+ 8001eec:	687b      	ldr	r3, [r7, #4]
+ 8001eee:	f5c3 63ff 	rsb	r3, r3, #2040	; 0x7f8
+ 8001ef2:	3307      	adds	r3, #7
+ 8001ef4:	461a      	mov	r2, r3
+ 8001ef6:	4b1d      	ldr	r3, [pc, #116]	; (8001f6c <APP_vPIDcontrol+0x16c>)
+ 8001ef8:	601a      	str	r2, [r3, #0]
 	APP_s32SpeedRight = APP_AVERAGE_SPEED + APP_s32PID;
- 8001ef6:	687b      	ldr	r3, [r7, #4]
- 8001ef8:	f203 73ff 	addw	r3, r3, #2047	; 0x7ff
- 8001efc:	461a      	mov	r2, r3
- 8001efe:	4b1c      	ldr	r3, [pc, #112]	; (8001f70 <APP_vPIDcontrol+0x170>)
- 8001f00:	601a      	str	r2, [r3, #0]
+ 8001efa:	687b      	ldr	r3, [r7, #4]
+ 8001efc:	f203 73ff 	addw	r3, r3, #2047	; 0x7ff
+ 8001f00:	461a      	mov	r2, r3
+ 8001f02:	4b1b      	ldr	r3, [pc, #108]	; (8001f70 <APP_vPIDcontrol+0x170>)
+ 8001f04:	601a      	str	r2, [r3, #0]
 	if (APP_s32SpeedLeft > APP_CAR_MOVE_FULL_FORCE) 		{ APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE; }
- 8001f02:	4b1a      	ldr	r3, [pc, #104]	; (8001f6c <APP_vPIDcontrol+0x16c>)
- 8001f04:	681b      	ldr	r3, [r3, #0]
- 8001f06:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
- 8001f0a:	d303      	bcc.n	8001f14 <APP_vPIDcontrol+0x114>
- 8001f0c:	4b17      	ldr	r3, [pc, #92]	; (8001f6c <APP_vPIDcontrol+0x16c>)
- 8001f0e:	f640 72ff 	movw	r2, #4095	; 0xfff
- 8001f12:	601a      	str	r2, [r3, #0]
+ 8001f06:	4b19      	ldr	r3, [pc, #100]	; (8001f6c <APP_vPIDcontrol+0x16c>)
+ 8001f08:	681b      	ldr	r3, [r3, #0]
+ 8001f0a:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
+ 8001f0e:	d303      	bcc.n	8001f18 <APP_vPIDcontrol+0x118>
+ 8001f10:	4b16      	ldr	r3, [pc, #88]	; (8001f6c <APP_vPIDcontrol+0x16c>)
+ 8001f12:	f640 72ff 	movw	r2, #4095	; 0xfff
+ 8001f16:	601a      	str	r2, [r3, #0]
 	else if (APP_s32SpeedLeft < APP_CAR_MOVE_ZERO_FORCE) 	{ APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE; }
 	if (APP_s32SpeedRight > APP_CAR_MOVE_FULL_FORCE) 		{ APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE; }
- 8001f14:	4b16      	ldr	r3, [pc, #88]	; (8001f70 <APP_vPIDcontrol+0x170>)
- 8001f16:	681b      	ldr	r3, [r3, #0]
- 8001f18:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
- 8001f1c:	d303      	bcc.n	8001f26 <APP_vPIDcontrol+0x126>
- 8001f1e:	4b14      	ldr	r3, [pc, #80]	; (8001f70 <APP_vPIDcontrol+0x170>)
- 8001f20:	f640 72ff 	movw	r2, #4095	; 0xfff
- 8001f24:	601a      	str	r2, [r3, #0]
+ 8001f18:	4b15      	ldr	r3, [pc, #84]	; (8001f70 <APP_vPIDcontrol+0x170>)
+ 8001f1a:	681b      	ldr	r3, [r3, #0]
+ 8001f1c:	f5b3 5f80 	cmp.w	r3, #4096	; 0x1000
+ 8001f20:	d303      	bcc.n	8001f2a <APP_vPIDcontrol+0x12a>
+ 8001f22:	4b13      	ldr	r3, [pc, #76]	; (8001f70 <APP_vPIDcontrol+0x170>)
+ 8001f24:	f640 72ff 	movw	r2, #4095	; 0xfff
+ 8001f28:	601a      	str	r2, [r3, #0]
 	else if (APP_s32SpeedRight < APP_CAR_MOVE_ZERO_FORCE) 	{ APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE; }
 	APP_vDriveMotors();
- 8001f26:	f7ff feb5 	bl	8001c94 <APP_vDriveMotors>
+ 8001f2a:	f7ff feb3 	bl	8001c94 <APP_vDriveMotors>
 }
- 8001f2a:	bf00      	nop
- 8001f2c:	3708      	adds	r7, #8
- 8001f2e:	46bd      	mov	sp, r7
- 8001f30:	bd80      	pop	{r7, pc}
- 8001f32:	bf00      	nop
- 8001f34:	f3af 8000 	nop.w
+ 8001f2e:	bf00      	nop
+ 8001f30:	3708      	adds	r7, #8
+ 8001f32:	46bd      	mov	sp, r7
+ 8001f34:	bd80      	pop	{r7, pc}
+ 8001f36:	bf00      	nop
  8001f38:	30553261 	.word	0x30553261
  8001f3c:	3f43a92a 	.word	0x3f43a92a
  8001f40:	20000040 	.word	0x20000040
- 8001f44:	447a0000 	.word	0x447a0000
+ 8001f44:	408f4000 	.word	0x408f4000
  8001f48:	20000068 	.word	0x20000068
  8001f4c:	2000006c 	.word	0x2000006c
  8001f50:	20000070 	.word	0x20000070
