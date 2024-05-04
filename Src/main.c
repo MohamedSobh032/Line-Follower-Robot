@@ -49,37 +49,66 @@ void APP_vPIDcontrol(void);					/* LINE FOLLOWING FUNCTION USING PID CONCEPT */
 /**********************************************************************************************/
 
 
-/************************************* APPLICATION - MAIN *************************************/
+
 int main(void) {
-	/* INITIALIZE THE MCU */
+
+	/*************************************** INITIALIZATION ***************************************/
 	APP_vInit();
-	/* CALIBRATE */
-	APP_vCalibrate();
-    /* Loop forever */
-	while(1) {
-		/* CASE WHERE IT IS EXTREME RIGHT TURN */
-		if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
-				APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
-			APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
-			APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
-			APP_vDriveMotors();
-			continue;
+	/**********************************************************************************************/
+
+
+	/********************************** CHOOSE WHICH CODE TO RUN **********************************/
+	u8 APP_u8Flag = 0;
+	while (true) {
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP1)) {
+			APP_u8Flag = APP_LINE_FOLLOWING;
+			break;
 		}
-		/* CASE WHERE IT IS EXTREME LEFT TURN */
-		else if (APP_u16IRData[0] < APP_u16IRThreshold[0] &&
-				APP_u16IRData[APP_IR_ARRAY_COUNT-1] > APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
-			APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
-			APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
-			APP_vDriveMotors();
-			continue;
-		}
-		/* NORMAL PID CONTROL */
-		else if (APP_u16IRData[2] < APP_u16IRThreshold[2]) {
-			APP_vPIDcontrol();
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP2)) {
+			APP_u8Flag = APP_MAZE_SOLVING;
+			break;
 		}
 	}
+	/**********************************************************************************************/
+
+
+	/***************************************** CALIBRATION ****************************************/
+	APP_vCalibrate();
+	/**********************************************************************************************/
+
+	/********************************** LINE FOLLOWING ALGORITHM **********************************/
+	if (APP_u8Flag == APP_LINE_FOLLOWING) {
+		while(1) {
+			/* CASE WHERE IT IS EXTREME RIGHT TURN */
+			if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
+					APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
+				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
+				APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+				APP_vDriveMotors();
+				continue;
+			}
+			/* CASE WHERE IT IS EXTREME LEFT TURN */
+			else if (APP_u16IRData[0] < APP_u16IRThreshold[0] &&
+					APP_u16IRData[APP_IR_ARRAY_COUNT-1] > APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
+				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
+				APP_vDriveMotors();
+				continue;
+			}
+			/* NORMAL PID CONTROL */
+			else if (APP_u16IRData[2] < APP_u16IRThreshold[2]) {
+				//APP_vPIDcontrol();
+			}
+		}
+	}
+	/**********************************************************************************************/
+
+	/********************************** LINE FOLLOWING ALGORITHM **********************************/
+	else if (APP_u8Flag == APP_MAZE_SOLVING) {
+		// TODO -- IMPLEMENT MAZE SOLVING ALGORTHIM
+	}
+	/**********************************************************************************************/
 }
-/**********************************************************************************************/
 
 
 
@@ -100,9 +129,6 @@ void APP_vInit(void) {
 
 	/********************** NESTED VECTOR INTERRUPT CONTROLLER CONFIGURATION **********************/
 	MNVIC_vInit();
-	/* SET COUNTER TIMER TO HIGHEST PRIORITY */
-	//MNVIC_vSetPeripheralInterruptPriority(APP_TIM_COUNTER_INT_ID, MNVIC_GROUP_ZERO, MNVIC_SUBGROUP_ZERO);
-	//MNVIC_vEnablePeripheralInterrupt(APP_TIM_COUNTER_INT_ID);
 	/**********************************************************************************************/
 
 	/************************************* PINS CONFIGURATION *************************************/
@@ -122,6 +148,11 @@ void APP_vInit(void) {
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_R_PIN, APP_TIM_PWM_R_AF);
 	MGPIO_vSetPinMode(APP_TIM_PWM_L_PIN, MGPIO_MODE_ALTERNATE);
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_L_PIN, APP_TIM_PWM_L_AF);
+	/* INIT BUTTON PINS */
+	MGPIO_vSetPinMode(APP_BUTTON_APP1, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_APP1, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinMode(APP_BUTTON_APP2, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_APP2, MGPIO_INPUT_TYPE_PULLUP);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -239,8 +270,8 @@ void APP_vPIDcontrol(void) {
 	APP_s32PrevError = APP_s32Error;
 	/* CALCULATE PID VALUE */
 	s32 APP_s32PID = (APP_f32Kp * APP_s32P) + (APP_f32Kd * APP_s32D) + (APP_f32Ki * APP_s32I);
-	APP_s32SpeedLeft = APP_AVERAGE_SPEED - APP_s32PID;
-	APP_s32SpeedRight = APP_AVERAGE_SPEED + APP_s32PID;
+	APP_s32SpeedLeft = APP_AVERAGE_SPEED + APP_s32PID;
+	APP_s32SpeedRight = APP_AVERAGE_SPEED - APP_s32PID;
 	if (APP_s32SpeedLeft > APP_CAR_MOVE_FULL_FORCE) 	  { APP_s32SpeedLeft  = APP_CAR_MOVE_FULL_FORCE; }
 	else if (APP_s32SpeedLeft < APP_CAR_MOVE_ZERO_FORCE)  { APP_s32SpeedLeft  = APP_CAR_MOVE_ZERO_FORCE; }
 	if (APP_s32SpeedRight > APP_CAR_MOVE_FULL_FORCE) 	  { APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE; }

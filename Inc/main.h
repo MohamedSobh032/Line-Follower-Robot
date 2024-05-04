@@ -26,6 +26,10 @@
 	/* DEFINE THE DIRECTION */
 #define APP_MOBILE_USART_AF		MGPIO_AF07
 
+	/* BUTTON PINS */
+#define APP_BUTTON_APP1			GPIOB, MGPIO_PIN00
+#define APP_BUTTON_APP2			GPIOB, MGPIO_PIN01
+
 	/* PWM TIMER GENERATOR */
 		/* PWM 1 */
 #define APP_TIM_PWM_R			GPT3
@@ -43,15 +47,15 @@
 		/* PWM 2 */
 #define APP_TIM_PWM_L_PIN		GPIOB, MGPIO_PIN06
 #define APP_TIM_PWM_L_AF		MGPIO_AF02
-
-	/* TIME COUNTER TIMER */
-//#define APP_TIM_COUNTER				GPT2
-//#define APP_TIM_COUNTER_TICK_TIME	MGPT_TICK_TIME_MICRO_SECOND
-//#define APP_TIM_COUNTER_INT_ID		28
 /**********************************************************************************************/
 
 
 /********************************** APPLICATION CODE SETTING **********************************/
+/* ENUM ALGORTHIM DEFINITION */
+typedef enum {
+	APP_LINE_FOLLOWING = 0,
+	APP_MAZE_SOLVING = 1
+} APP_ALGORITHM;
 /* DEFINE RECEIVED STRING FROM MOBILE APPLICATION LENGTH */
 #define APP_MOBILE_MESSAGE_LENGTH			6U
 /* PWM MOVE FUNCTIONS */
