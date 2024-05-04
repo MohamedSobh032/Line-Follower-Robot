@@ -28,16 +28,17 @@
 #include "MDMA_Interface.h"
 #include "main.h"
 
-
-u16 APP_u16IRData[APP_IR_ARRAY_COUNT];			/* IR ARRAY CURRENT MEASURED VALUES 			   */
-u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];		/* IR ARRAY THRESHOLD VALUES 					   */
-u32 APP_s32SpeedLeft = 0;						/* LEFT MOTOR SPEED VALUE IN TERMS OF PERIODICITY  */
-u32 APP_s32SpeedRight = 0;						/* RIGHT MOTOR SPEED VALUE IN TERMS OF PERIODICITY */
-u8 APP_u8String[APP_MOBILE_MESSAGE_LENGTH];		/* DATA FROM MOBILE APPLICATION 				   */
+/************************************ VARIABLE DEFINITIONS ************************************/
+u16 APP_u16IRData[APP_IR_ARRAY_COUNT];		/* IR ARRAY CURRENT MEASURED VALUES 		 */
+u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];	/* IR ARRAY THRESHOLD VALUES 				 */
+u32 APP_s32SpeedLeft = 0;					/* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
+u32 APP_s32SpeedRight = 0;					/* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
+u8 APP_u8String[APP_MOBILE_MESSAGE_LENGTH];	/* DATA FROM MOBILE APPLICATION 			 */
 			/* PID VARIABLES */
-f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;			/* PID CONTROLLER CONSTANTS						   */
-s32 APP_s32Error, APP_s32PrevError = 0;			/* ERROR TO BE ACCUMULATED, DIFFERENTIATED		   */
-s32 APP_s32P, APP_s32I, APP_s32D;				/* PID CONTROL VARIABLES						   */
+f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;		/* PID CONTROLLER CONSTANTS					 */
+s32 APP_s32Error, APP_s32PrevError = 0;		/* ERROR TO BE ACCUMULATED, DIFFERENTIATED	 */
+s32 APP_s32P, APP_s32I, APP_s32D;			/* PID CONTROL VARIABLES					 */
+/**********************************************************************************************/
 
 
 
@@ -76,20 +77,24 @@ int main(void) {
 	APP_vCalibrate();
 	/**********************************************************************************************/
 
+
 	/********************************** LINE FOLLOWING ALGORITHM **********************************/
 	if (APP_u8Flag == APP_LINE_FOLLOWING) {
 		while(1) {
-			/* CASE WHERE IT IS EXTREME RIGHT TURN */
-			if (APP_u16IRData[0] > APP_u16IRThreshold[0] &&
-					APP_u16IRData[APP_IR_ARRAY_COUNT-1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
+			/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
+			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
+					(APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1])) {
+				continue;
+			}
+			/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
+			else if (APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1]) {
 				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
 				APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
 				APP_vDriveMotors();
 				continue;
 			}
-			/* CASE WHERE IT IS EXTREME LEFT TURN */
-			else if (APP_u16IRData[0] < APP_u16IRThreshold[0] &&
-					APP_u16IRData[APP_IR_ARRAY_COUNT-1] > APP_u16IRThreshold[APP_IR_ARRAY_COUNT-1]) {
+			/* EXTREME LEFT --> (BLACK AT 0) && (WHITE AT 4 (IT IS WHITE HERE)) */
+			else if (APP_u16IRData[0] < APP_u16IRThreshold[0]) {
 				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
 				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
 				APP_vDriveMotors();
@@ -97,11 +102,12 @@ int main(void) {
 			}
 			/* NORMAL PID CONTROL */
 			else if (APP_u16IRData[2] < APP_u16IRThreshold[2]) {
-				//APP_vPIDcontrol();
+				continue;
 			}
 		}
 	}
 	/**********************************************************************************************/
+
 
 	/********************************** LINE FOLLOWING ALGORITHM **********************************/
 	else if (APP_u8Flag == APP_MAZE_SOLVING) {
@@ -122,7 +128,6 @@ void APP_vInit(void) {
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
-	MRCC_vEnablePeriphClock(MRCC_BUS_APB1, MRCC_APB1_TIM2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB1, MRCC_APB1_TIM3EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB1, MRCC_APB1_TIM4EN);
 	/**********************************************************************************************/
