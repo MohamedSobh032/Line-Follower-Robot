@@ -29,28 +29,28 @@
 #include "main.h"
 
 /************************************ VARIABLE DEFINITIONS ************************************/
-u16 APP_u16IRData[APP_IR_ARRAY_COUNT];		/* IR ARRAY CURRENT MEASURED VALUES 		 */
-u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];	/* IR ARRAY THRESHOLD VALUES 				 */
+u16 APP_u16IRData[APP_IR_ARRAY_COUNT];		/* IR ARRAY CURRENT MEASURED VALUES          */
+u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];	/* IR ARRAY THRESHOLD VALUES                 */
 u32 APP_s32SpeedLeft = 0;					/* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
 u32 APP_s32SpeedRight = 0;					/* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
 			/* MOBILE VARIABLES */
 u8 APP_u8Direction[APP_MOBILE_MSG_LEN]; 	/* DATA DIRECTION FROM MOBILE APPLICATION    */
 u8 APP_u8Control;							/* MOVEMENT CONTROL FROM MOBILE APPLICATION  */
 			/*   PID VARIABLES   */
-f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;		/* PID CONTROLLER CONSTANTS					 */
-s32 APP_s32Error, APP_s32PrevError = 0;		/* ERROR TO BE ACCUMULATED, DIFFERENTIATED	 */
-s32 APP_s32P, APP_s32I, APP_s32D;			/* PID CONTROL VARIABLES					 */
+f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;		/* PID CONTROLLER CONSTANTS                  */
+s32 APP_s32Error, APP_s32PrevError = 0;		/* ERROR TO BE ACCUMULATED, DIFFERENTIATED   */
+s32 APP_s32P, APP_s32I, APP_s32D;			/* PID CONTROL VARIABLES                     */
 /**********************************************************************************************/
 
 
 
 /************************************ FUNCTION DEFINITIONS ************************************/
-void APP_vInit(void);						/* INITIALIZATION FUNCTION    			  	 */
+void APP_vInit(void);						/* INITIALIZATION FUNCTION                   */
 void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
-				APP_WHEEL_DIR Left_Dir);	/* MOTOR DRIVER FUNCTION       				 */
-void APP_vCalibrateLineFollowing(void);		/* CALIBRATION TO GET THRESHOLD 			 */
+				APP_WHEEL_DIR Left_Dir);	/* MOTOR DRIVER FUNCTION                     */
+void APP_vCalibrateLineFollowing(void);		/* CALIBRATION TO GET THRESHOLD              */
 void APP_vCalibrateMazeSolving(void);		/* CALIBRATION WITH MOBILE TO GET PATH       */
-void APP_vReturnToPointZero(void);			/* RESET THE FACE DIRECTION OF THE CAR		 */
+void APP_vReturnToPointZero(void);			/* RESET THE FACE DIRECTION OF THE CAR       */
 void APP_vPIDcontrol(void);					/* LINE FOLLOWING FUNCTION USING PID CONCEPT */
 /**********************************************************************************************/
 
