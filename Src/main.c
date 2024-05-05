@@ -33,8 +33,10 @@ u16 APP_u16IRData[APP_IR_ARRAY_COUNT];		/* IR ARRAY CURRENT MEASURED VALUES 		 *
 u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];	/* IR ARRAY THRESHOLD VALUES 				 */
 u32 APP_s32SpeedLeft = 0;					/* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
 u32 APP_s32SpeedRight = 0;					/* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
-u8 APP_u8String[APP_MOBILE_MESSAGE_LENGTH];	/* DATA FROM MOBILE APPLICATION 			 */
-			/* PID VARIABLES */
+			/* MOBILE VARIABLES */
+u8 APP_u8Direction[APP_MOBILE_MSG_LEN]; 	/* DATA DIRECTION FROM MOBILE APPLICATION    */
+u8 APP_u8Control;							/* MOVEMENT CONTROL FROM MOBILE APPLICATION  */
+			/*   PID VARIABLES   */
 f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;		/* PID CONTROLLER CONSTANTS					 */
 s32 APP_s32Error, APP_s32PrevError = 0;		/* ERROR TO BE ACCUMULATED, DIFFERENTIATED	 */
 s32 APP_s32P, APP_s32I, APP_s32D;			/* PID CONTROL VARIABLES					 */
@@ -44,8 +46,11 @@ s32 APP_s32P, APP_s32I, APP_s32D;			/* PID CONTROL VARIABLES					 */
 
 /************************************ FUNCTION DEFINITIONS ************************************/
 void APP_vInit(void);						/* INITIALIZATION FUNCTION    			  	 */
-void APP_vDriveMotors(void);				/* MOTOR DRIVER FUNCTION       				 */
-void APP_vCalibrate(void);					/* CALIBRATION TO GET THRESHOLD 			 */
+void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
+				APP_WHEEL_DIR Left_Dir);	/* MOTOR DRIVER FUNCTION       				 */
+void APP_vCalibrateLineFollowing(void);		/* CALIBRATION TO GET THRESHOLD 			 */
+void APP_vCalibrateMazeSolving(void);		/* CALIBRATION WITH MOBILE TO GET PATH       */
+void APP_vReturnToPointZero(void);			/* RESET THE FACE DIRECTION OF THE CAR		 */
 void APP_vPIDcontrol(void);					/* LINE FOLLOWING FUNCTION USING PID CONCEPT */
 /**********************************************************************************************/
 
@@ -73,14 +78,13 @@ int main(void) {
 	/**********************************************************************************************/
 
 
-	/***************************************** CALIBRATION ****************************************/
-	APP_vCalibrate();
-	/**********************************************************************************************/
-
-
 	/********************************** LINE FOLLOWING ALGORITHM **********************************/
 	if (APP_u8Flag == APP_LINE_FOLLOWING) {
-		while(1) {
+		/* CALIBRATION OF LINE FOLLOWING */
+		APP_vCalibrateLineFollowing();
+		/* RETURN TO POINT ZERO */
+		APP_vReturnToPointZero();
+		while (true) {
 			/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
 			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
 					(APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1])) {
@@ -90,14 +94,14 @@ int main(void) {
 			else if (APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1]) {
 				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
 				APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
-				APP_vDriveMotors();
+				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 				continue;
 			}
 			/* EXTREME LEFT --> (BLACK AT 0) && (WHITE AT 4 (IT IS WHITE HERE)) */
 			else if (APP_u16IRData[0] < APP_u16IRThreshold[0]) {
 				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
 				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
-				APP_vDriveMotors();
+				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 				continue;
 			}
 			/* NORMAL PID CONTROL */
@@ -111,6 +115,10 @@ int main(void) {
 
 	/********************************** LINE FOLLOWING ALGORITHM **********************************/
 	else if (APP_u8Flag == APP_MAZE_SOLVING) {
+		/* CALIBRATION FOR MAZE SOLVING */
+		APP_vCalibrateMazeSolving();
+		/* RETURN TO POINT ZERO */
+		APP_vReturnToPointZero();
 		// TODO -- IMPLEMENT MAZE SOLVING ALGORTHIM
 	}
 	/**********************************************************************************************/
@@ -158,6 +166,15 @@ void APP_vInit(void) {
 	MGPIO_vSetPinInputType(APP_BUTTON_APP1, MGPIO_INPUT_TYPE_PULLUP);
 	MGPIO_vSetPinMode(APP_BUTTON_APP2, MGPIO_MODE_INPUT);
 	MGPIO_vSetPinInputType(APP_BUTTON_APP2, MGPIO_INPUT_TYPE_PULLUP);
+	/* INIT DIRECTION PINS */
+	MGPIO_vSetPinMode(APP_DIRECTION_R, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_DIRECTION_R, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_DIRECTION_R, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinMode(APP_DIRECTION_L, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_DIRECTION_L, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_DIRECTION_L, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinValue(APP_DIRECTION_R, MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinValue(APP_DIRECTION_L, MGPIO_OUTPUT_LOW);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -190,29 +207,6 @@ void APP_vInit(void) {
 	MADC_vEnable(MADC_ENABLE, MADC_DISABLE);
 	/**********************************************************************************************/
 
-	/************************************ USART CONFIGURATIONS ************************************/
-	/* Initialize USART */
-	MUSART_InitTypeDef uart = {9600, MUSART_DATAWIDTH_8BIT,
-							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
-							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
-							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
-	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE,0,0,0};		/* Disable USART's Clock */
-	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
-	MUSART_vEnable(APP_MOBILE_USART);
-	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
-	/**********************************************************************************************/
-
-	/******************************** DMA CONFIGURATIONS FOR USART ********************************/
-	dmat.SrcAddr = (u32*)MUSART_u32EnableRxDMA(APP_MOBILE_USART);
-	dmat.DstAddr = (u32*)APP_u8String;
-	dmat.Length = APP_MOBILE_MESSAGE_LENGTH;
-	dmat.Size = MDMA_SIZE_BYTE;
-	dma.Channel = MDMA_CHANNEL_4;
-	dma.PriorityLevel = MDMA_PRIORITY_HIGH;
-	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
-	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
-	/**********************************************************************************************/
-
 	/*********************************** GPT PWM CONFIGURATIONS ***********************************/
 	MGPT_PWMInitTypeDef gpt = {APP_CHANNEL_PWM_R, MGPT_PWM_MODE_1, APP_PWM_PERIOD,
 						APP_PWM_PRESCALER, MGPT_ALLIGNMENT_EDGE_MODE, MGPT_DIRECTION_UP_COUNTER,
@@ -224,18 +218,17 @@ void APP_vInit(void) {
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, APP_CAR_MOVE_ZERO_FORCE);
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, APP_CAR_MOVE_ZERO_FORCE);
 	/**********************************************************************************************/
-
-	/******************************* GPT TIME COUNTER CONFIGURATIONS ******************************/
-	//MGPT_vTimeCounterInit(GPT2, APP_TIM_COUNTER_TICK_TIME, test);
-	/**********************************************************************************************/
 }
 
-void APP_vDriveMotors(void) {
+void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
+				APP_WHEEL_DIR Left_Dir) {
+	MGPIO_vSetPinValue(APP_DIRECTION_R, Right_Dir);
+	MGPIO_vSetPinValue(APP_DIRECTION_L, Left_Dir);
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, (u32)APP_s32SpeedRight);
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, (u32)APP_s32SpeedLeft);
 }
 
-void APP_vCalibrate(void) {
+void APP_vCalibrateLineFollowing(void) {
 	u16 minVal[APP_IR_ARRAY_COUNT];
 	u16 maxVal[APP_IR_ARRAY_COUNT];
 	/* INITIALIZE THE MINIMUM AND MAXIMUM */
@@ -246,7 +239,9 @@ void APP_vCalibrate(void) {
 		maxVal[i] = APP_u16IRData[i];
 	}
 	/* SET THE MOTOR TO MAX SPEED TO ROTATE THE ROBOT  TO GET MULTIPLE VALUES */
-	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, APP_PWM_PERIOD);
+    APP_s32SpeedRight = APP_AVERAGE_SPEED;
+    APP_s32SpeedLeft = APP_AVERAGE_SPEED;
+    APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
 	/* START CALIBRATION PROCESS */
 	for (greatcounter = 0; greatcounter < 3000; greatcounter++) {
 		for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
@@ -256,11 +251,59 @@ void APP_vCalibrate(void) {
 	}
 	/* SET THE THRESHOLD */
 	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
-	/* SET THE SPEED BACK TO ZERO */
-	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, APP_CAR_MOVE_ZERO_FORCE);
+}
+
+void APP_vCalibrateMazeSolving(void) {
+	/************************************ USART CONFIGURATIONS ************************************/
+	/* Initialize USART */
+	MUSART_InitTypeDef uart = {9600, MUSART_DATAWIDTH_8BIT,
+							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
+							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
+							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
+	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE, 0, 0, 0};	/* Disable USART's Clock */
+	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
+	MUSART_vEnable(APP_MOBILE_USART);
+	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
+	/**********************************************************************************************/
+
+	/************************* DMA CONFIGURATION FOR USART CONTROL BUFFER *************************/
+	MDMA_DirectInitType dma = {MDMA_DISABLE, MDMA_DIRECTION_PER_MEM, MDMA_ENABLE,
+								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_HIGH, MDMA_CHANNEL_4};
+	MDMA_TransferStruct dmat = {(u32*)MUSART_u32EnableRxDMA(APP_MOBILE_USART),
+								(u32*)(&APP_u8Control), 1, MDMA_SIZE_BYTE};
+	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
+	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
+	/**********************************************************************************************/
+
+	/********************************** CALIBRATION FOR DIRECTION *********************************/
+	// TODO -- ALLOW THE MOBILE TO FULLY CONTROL THE CAR SO IT CAN CALIBRATE
+
+	/* ALLOW THE CAR IT SELF TO CALIBRATE */
+	APP_vCalibrateLineFollowing();
+	/**********************************************************************************************/
+
+	/************************ DMA CONFIGURATION FOR USART DIRECTION BUFFER ************************/
+	dmat.DstAddr = (u32*)APP_u8Direction;
+	dmat.Length = APP_MOBILE_MSG_LEN;
+	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
+	/**********************************************************************************************/
+}
+
+void APP_vReturnToPointZero(void) {
+	/* ROTATE THE CAR */
+	APP_s32SpeedRight = APP_AVERAGE_SPEED;
+	APP_s32SpeedLeft = APP_AVERAGE_SPEED;
+	APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
+	/* KEEP ROTATING UNTILL REACHING THE BLACK LINE IN THE MIDDLE SENSOR */
+	while (APP_u16IRData[2] > APP_u16IRThreshold[2]);
+	/* STOP THE CAR */
+	APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+	APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+	APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 }
 
 void APP_vPIDcontrol(void) {
+	// FIXME -- USAGE FAULT APPEARS DUE TO FLOATING POINT
 	/* GET PID CONSTANTS */
 	APP_f32Kp = 0.0006 * (1000.0 - APP_u16IRData[2]);
 	APP_f32Kd = 10.0 * APP_f32Kp;
@@ -281,5 +324,5 @@ void APP_vPIDcontrol(void) {
 	else if (APP_s32SpeedLeft < APP_CAR_MOVE_ZERO_FORCE)  { APP_s32SpeedLeft  = APP_CAR_MOVE_ZERO_FORCE; }
 	if (APP_s32SpeedRight > APP_CAR_MOVE_FULL_FORCE) 	  { APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE; }
 	else if (APP_s32SpeedRight < APP_CAR_MOVE_ZERO_FORCE) { APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE; }
-	APP_vDriveMotors();
+	APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 }

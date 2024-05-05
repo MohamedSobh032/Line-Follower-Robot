@@ -13,7 +13,6 @@
 #define CLR_BIT(REG_NAME, BIT_NUM)      			  			REG_NAME = REG_NAME & (~(1 << BIT_NUM))
 #define TOG_BIT(REG_NAME, BIT_NUM)      			  			REG_NAME = REG_NAME ^ (1 << BIT_NUM)
 #define GET_BIT(REG_NAME, BIT_NUM)      			  			((REG_NAME >> BIT_NUM) & 1)
-#define WRT_BIT(REG_NAME, BIT_NUM, BIT_VALUE)					(BIT_VALUE == 1) ? SET_BIT(REG_NAME, BIT_NUM) : CLR_BIT(REG_NAME, BIT_NUM)
 #define WRITE_BITS(REG_NAME, VALUE, NUM_OF_BITS, START_BIT) 	REG_NAME = ((u32)(VALUE << START_BIT)) | (REG_NAME & (~((u32)(NUM_OF_BITS << START_BIT))))
 
 typedef enum {

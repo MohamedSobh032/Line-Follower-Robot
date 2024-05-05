@@ -1,5 +1,7 @@
-../Src/main.c:54:5:main	16	static
-../Src/main.c:121:6:APP_vInit	72	static
-../Src/main.c:233:6:APP_vDriveMotors	8	static
-../Src/main.c:238:6:APP_vCalibrate	40	static
-../Src/main.c:263:6:APP_vPIDcontrol	16	static
+../Src/main.c:59:5:main	16	static
+../Src/main.c:129:6:APP_vInit	56	static
+../Src/main.c:223:6:APP_vDriveMotors	16	static
+../Src/main.c:231:6:APP_vCalibrateLineFollowing	40	static
+../Src/main.c:256:6:APP_vCalibrateMazeSolving	48	static
+../Src/main.c:292:6:APP_vReturnToPointZero	8	static
+../Src/main.c:305:6:APP_vPIDcontrol	16	static
