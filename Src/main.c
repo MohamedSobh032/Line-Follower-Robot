@@ -34,7 +34,7 @@ u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];	/* IR ARRAY THRESHOLD VALUES        
 u32 APP_s32SpeedLeft = 0;                   /* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
 u32 APP_s32SpeedRight = 0;                  /* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
 			/* MOBILE VARIABLES */
-u8 APP_u8Direction[APP_MOBILE_MSG_LEN];     /* DATA DIRECTION FROM MOBILE APPLICATION    */
+u8 APP_u8DirBuffer[APP_MOBILE_MSG_LEN];     /* DATA DIRECTION FROM MOBILE APPLICATION    */
 u8 APP_u8Control;                           /* MOVEMENT CONTROL FROM MOBILE APPLICATION  */
 			/*   PID VARIABLES   */
 f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;        /* PID CONTROLLER CONSTANTS                  */
@@ -64,14 +64,14 @@ int main(void) {
 
 
 	/********************************** CHOOSE WHICH CODE TO RUN **********************************/
-	u8 APP_u8Flag = 0;
+	APP_ALGORITHM AlgorithmFlag = 0;
 	while (true) {
 		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP1)) {
-			APP_u8Flag = APP_LINE_FOLLOWING;
+			AlgorithmFlag = APP_LINE_FOLLOWING;
 			break;
 		}
 		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP2)) {
-			APP_u8Flag = APP_MAZE_SOLVING;
+			AlgorithmFlag = APP_MAZE_SOLVING;
 			break;
 		}
 	}
@@ -79,7 +79,7 @@ int main(void) {
 
 
 	/********************************** LINE FOLLOWING ALGORITHM **********************************/
-	if (APP_u8Flag == APP_LINE_FOLLOWING) {
+	if (AlgorithmFlag == APP_LINE_FOLLOWING) {
 		/* CALIBRATION OF LINE FOLLOWING */
 		APP_vCalibrateLineFollowing();
 		/* RETURN TO POINT ZERO */
@@ -88,6 +88,7 @@ int main(void) {
 			/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
 			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
 					(APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1])) {
+				// TODO -- SHOULD KEEP FORWARD
 				continue;
 			}
 			/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
@@ -106,6 +107,7 @@ int main(void) {
 			}
 			/* NORMAL PID CONTROL */
 			else if (APP_u16IRData[2] < APP_u16IRThreshold[2]) {
+				// TODO -- SHOULD KEEP FORWARD
 				continue;
 			}
 		}
@@ -113,8 +115,8 @@ int main(void) {
 	/**********************************************************************************************/
 
 
-	/********************************** LINE FOLLOWING ALGORITHM **********************************/
-	else if (APP_u8Flag == APP_MAZE_SOLVING) {
+	/*********************************** MAZE SOLVING ALGORITHM ***********************************/
+	else if (AlgorithmFlag == APP_MAZE_SOLVING) {
 		/* CALIBRATION FOR MAZE SOLVING */
 		APP_vCalibrateMazeSolving();
 		/* RETURN TO POINT ZERO */
@@ -125,7 +127,15 @@ int main(void) {
 }
 
 
-
+/**
+ * @brief Initialize the application.
+ *
+ * This function configures clock settings, enables necessary peripherals, configures pins,
+ * initializes ADC, DMA, and PWM for car control.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vInit(void) {
 	/********************* CLOCK CONFIGURATIONS AND BUSSES/PERIPHERALS ENABLE *********************/
 	/* INIT CLOCK AND BUSSES CLOCK */
@@ -220,14 +230,37 @@ void APP_vInit(void) {
 	/**********************************************************************************************/
 }
 
-void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
-				APP_WHEEL_DIR Left_Dir) {
+/**
+ * @brief Drive the motors by setting their direction and speed.
+ *
+ * This function sets the direction and speed of the motors to achieve the desired movement.
+ * It first sets the direction of the right and left wheels using the provided parameters,
+ * then it sets the speed of each wheel using PWM signals.
+ *
+ * @param Right_Dir Direction of the right wheel.
+ * @param Left_Dir Direction of the left wheel.
+ * @note The direction can be forward, backward, or stop.
+ * @note The speed of the wheels should be set before calling this function.
+ */
+void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
+	/* SET THE WHEELS DIRECTION */
 	MGPIO_vSetPinValue(APP_DIRECTION_R, Right_Dir);
 	MGPIO_vSetPinValue(APP_DIRECTION_L, Left_Dir);
+	/* SET THE WHEELS SPEED */
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, (u32)APP_s32SpeedRight);
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, (u32)APP_s32SpeedLeft);
 }
 
+/**
+ * @brief Calibrate the line following sensors.
+ *
+ * This function calibrates the line following sensors by determining the minimum and maximum
+ * values for each sensor reading. It rotates the robot to gather multiple readings from each sensor,
+ * then calculates the threshold values to be used for line detection.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vCalibrateLineFollowing(void) {
 	u16 minVal[APP_IR_ARRAY_COUNT];
 	u16 maxVal[APP_IR_ARRAY_COUNT];
@@ -253,6 +286,19 @@ void APP_vCalibrateLineFollowing(void) {
 	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
 }
 
+/**
+ * @brief Calibrate maze solving parameters.
+ *
+ * This function initializes USART communication, configures DMA for USART control buffer,
+ * performs calibration for direction, and then configures DMA for USART direction buffer.
+ *
+ * @note Calibration for direction may involve allowing the mobile device to control the car or
+ *       allowing the car itself to perform calibration.
+ * @note After calibration, the function calibrates line following sensors.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vCalibrateMazeSolving(void) {
 	/************************************ USART CONFIGURATIONS ************************************/
 	/* Initialize USART */
@@ -283,12 +329,21 @@ void APP_vCalibrateMazeSolving(void) {
 	/**********************************************************************************************/
 
 	/************************ DMA CONFIGURATION FOR USART DIRECTION BUFFER ************************/
-	dmat.DstAddr = (u32*)APP_u8Direction;
+	dmat.DstAddr = (u32*)APP_u8DirBuffer;
 	dmat.Length = APP_MOBILE_MSG_LEN;
 	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
 	/**********************************************************************************************/
 }
 
+/**
+ * @brief Return the car to point zero.
+ *
+ * This function rotates the car until it reaches the black line detected by the middle sensor.
+ * Once the black line is detected, the car stops.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vReturnToPointZero(void) {
 	/* ROTATE THE CAR */
 	APP_s32SpeedRight = APP_AVERAGE_SPEED;
@@ -302,6 +357,15 @@ void APP_vReturnToPointZero(void) {
 	APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 }
 
+/**
+ * @brief Perform PID control for car movement.
+ *
+ * This function calculates the PID control value based on the error between the sensor readings.
+ * It adjusts the speed of the left and right wheels accordingly to maintain the desired path.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vPIDcontrol(void) {
 	// FIXME -- USAGE FAULT APPEARS DUE TO FLOATING POINT
 	/* GET PID CONSTANTS */

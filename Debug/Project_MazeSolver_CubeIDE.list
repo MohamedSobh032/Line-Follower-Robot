@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  12 .comment      00000043  00000000  00000000  00012154  2**0
                   CONTENTS, READONLY
- 13 .debug_info   00002c84  00000000  00000000  00012197  2**0
+ 13 .debug_info   00002c92  00000000  00000000  00012197  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00000b38  00000000  00000000  00014e1b  2**0
+ 14 .debug_abbrev 00000b3a  00000000  00000000  00014e29  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000348  00000000  00000000  00015958  2**3
+ 15 .debug_aranges 00000348  00000000  00000000  00015968  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000255  00000000  00000000  00015ca0  2**0
+ 16 .debug_rnglists 00000255  00000000  00000000  00015cb0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00001a4d  00000000  00000000  00015ef5  2**0
+ 17 .debug_macro  00001a4d  00000000  00000000  00015f05  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00001548  00000000  00000000  00017942  2**0
+ 18 .debug_line   00001548  00000000  00000000  00017952  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    0000828d  00000000  00000000  00018e8a  2**0
+ 19 .debug_str    0000829d  00000000  00000000  00018e9a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00000c7c  00000000  00000000  00021118  2**2
+ 20 .debug_frame  00000c7c  00000000  00000000  00021138  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000006f  00000000  00000000  00021d94  2**0
+ 21 .debug_line_str 0000006f  00000000  00000000  00021db4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -3155,7 +3155,7 @@ void USART6_IRQHandler(void) {
  8001a5c:	2000003c 	.word	0x2000003c
 
 08001a60 <main>:
-void APP_vPIDcontrol(void);					/* LINE FOLLOWING FUNCTION USING PID CONCEPT */
+void APP_vPIDcontrol(void);                 /* LINE FOLLOWING FUNCTION USING PID CONCEPT */
 /**********************************************************************************************/
 
 
@@ -3172,7 +3172,7 @@ int main(void) {
 
 
 	/********************************** CHOOSE WHICH CODE TO RUN **********************************/
-	u8 APP_u8Flag = 0;
+	APP_ALGORITHM AlgorithmFlag = 0;
  8001a6a:	2300      	movs	r3, #0
  8001a6c:	71fb      	strb	r3, [r7, #7]
 	while (true) {
@@ -3183,7 +3183,7 @@ int main(void) {
  8001a76:	4603      	mov	r3, r0
  8001a78:	2b00      	cmp	r3, #0
  8001a7a:	d102      	bne.n	8001a82 <main+0x22>
-			APP_u8Flag = APP_LINE_FOLLOWING;
+			AlgorithmFlag = APP_LINE_FOLLOWING;
  8001a7c:	2300      	movs	r3, #0
  8001a7e:	71fb      	strb	r3, [r7, #7]
 			break;
@@ -3196,7 +3196,7 @@ int main(void) {
  8001a8a:	4603      	mov	r3, r0
  8001a8c:	2b00      	cmp	r3, #0
  8001a8e:	d1ee      	bne.n	8001a6e <main+0xe>
-			APP_u8Flag = APP_MAZE_SOLVING;
+			AlgorithmFlag = APP_MAZE_SOLVING;
  8001a90:	2301      	movs	r3, #1
  8001a92:	71fb      	strb	r3, [r7, #7]
 	}
@@ -3204,7 +3204,7 @@ int main(void) {
 
 
 	/********************************** LINE FOLLOWING ALGORITHM **********************************/
-	if (APP_u8Flag == APP_LINE_FOLLOWING) {
+	if (AlgorithmFlag == APP_LINE_FOLLOWING) {
  8001a94:	79fb      	ldrb	r3, [r7, #7]
  8001a96:	2b00      	cmp	r3, #0
  8001a98:	d13b      	bne.n	8001b12 <main+0xb2>
@@ -3231,6 +3231,7 @@ int main(void) {
 			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
  8001ab6:	429a      	cmp	r2, r3
  8001ab8:	d329      	bcc.n	8001b0e <main+0xae>
+				// TODO -- SHOULD KEEP FORWARD
 				continue;
 			}
 			/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
@@ -3295,8 +3296,8 @@ int main(void) {
 	/**********************************************************************************************/
 
 
-	/********************************** LINE FOLLOWING ALGORITHM **********************************/
-	else if (APP_u8Flag == APP_MAZE_SOLVING) {
+	/*********************************** MAZE SOLVING ALGORITHM ***********************************/
+	else if (AlgorithmFlag == APP_MAZE_SOLVING) {
  8001b12:	79fb      	ldrb	r3, [r7, #7]
  8001b14:	2b01      	cmp	r3, #1
  8001b16:	d103      	bne.n	8001b20 <main+0xc0>
@@ -3323,9 +3324,11 @@ int main(void) {
  8001b3c:	2000005c 	.word	0x2000005c
 
 08001b40 <APP_vInit>:
-
-
-
+ * initializes ADC, DMA, and PWM for car control.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vInit(void) {
  8001b40:	b590      	push	{r4, r7, lr}
  8001b42:	b08b      	sub	sp, #44	; 0x2c
@@ -3654,9 +3657,12 @@ void APP_vInit(void) {
  8001d94:	40000800 	.word	0x40000800
 
 08001d98 <APP_vDriveMotors>:
-
-void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
-				APP_WHEEL_DIR Left_Dir) {
+ * @param Right_Dir Direction of the right wheel.
+ * @param Left_Dir Direction of the left wheel.
+ * @note The direction can be forward, backward, or stop.
+ * @note The speed of the wheels should be set before calling this function.
+ */
+void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
  8001d98:	b580      	push	{r7, lr}
  8001d9a:	b082      	sub	sp, #8
  8001d9c:	af00      	add	r7, sp, #0
@@ -3665,6 +3671,7 @@ void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
  8001da2:	71fb      	strb	r3, [r7, #7]
  8001da4:	4613      	mov	r3, r2
  8001da6:	71bb      	strb	r3, [r7, #6]
+	/* SET THE WHEELS DIRECTION */
 	MGPIO_vSetPinValue(APP_DIRECTION_R, Right_Dir);
  8001da8:	79fb      	ldrb	r3, [r7, #7]
  8001daa:	461a      	mov	r2, r3
@@ -3677,6 +3684,7 @@ void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
  8001db8:	2103      	movs	r1, #3
  8001dba:	480a      	ldr	r0, [pc, #40]	; (8001de4 <APP_vDriveMotors+0x4c>)
  8001dbc:	f7ff f9db 	bl	8001176 <MGPIO_vSetPinValue>
+	/* SET THE WHEELS SPEED */
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, (u32)APP_s32SpeedRight);
  8001dc0:	4b09      	ldr	r3, [pc, #36]	; (8001de8 <APP_vDriveMotors+0x50>)
  8001dc2:	681b      	ldr	r3, [r3, #0]
@@ -3703,7 +3711,11 @@ void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
  8001df4:	40000800 	.word	0x40000800
 
 08001df8 <APP_vCalibrateLineFollowing>:
-
+ * then calculates the threshold values to be used for line detection.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vCalibrateLineFollowing(void) {
  8001df8:	b580      	push	{r7, lr}
  8001dfa:	b088      	sub	sp, #32
@@ -3868,7 +3880,11 @@ void APP_vCalibrateLineFollowing(void) {
  8001f30:	2000004c 	.word	0x2000004c
 
 08001f34 <APP_vCalibrateMazeSolving>:
-
+ * @note After calibration, the function calibrates line following sensors.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vCalibrateMazeSolving(void) {
  8001f34:	b580      	push	{r7, lr}
  8001f36:	b08a      	sub	sp, #40	; 0x28
@@ -3947,7 +3963,7 @@ void APP_vCalibrateMazeSolving(void) {
 	/**********************************************************************************************/
 
 	/************************ DMA CONFIGURATION FOR USART DIRECTION BUFFER ************************/
-	dmat.DstAddr = (u32*)APP_u8Direction;
+	dmat.DstAddr = (u32*)APP_u8DirBuffer;
  8001fb2:	4b0c      	ldr	r3, [pc, #48]	; (8001fe4 <APP_vCalibrateMazeSolving+0xb0>)
  8001fb4:	60bb      	str	r3, [r7, #8]
 	dmat.Length = APP_MOBILE_MSG_LEN;
@@ -3974,7 +3990,11 @@ void APP_vCalibrateMazeSolving(void) {
  8001fe4:	20000060 	.word	0x20000060
 
 08001fe8 <APP_vReturnToPointZero>:
-
+ * Once the black line is detected, the car stops.
+ *
+ * @param None
+ * @return None
+ */
 void APP_vReturnToPointZero(void) {
  8001fe8:	b580      	push	{r7, lr}
  8001fea:	af00      	add	r7, sp, #0

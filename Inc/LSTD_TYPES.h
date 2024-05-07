@@ -25,6 +25,6 @@ typedef enum {
 	true = 1
 } bool;
 
-#define NULL                (void *)0
+#define NULL                (void*)0
 
 #endif /* _LSTD_TYPES_H_ */
