@@ -5,47 +5,47 @@ Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
   0 .isr_vector   00000194  08000000  08000000  00010000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  1 .text         00001f58  08000198  08000198  00010198  2**3
+  1 .text         00001ff0  08000198  08000198  00010198  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       0000002c  080020f0  080020f0  000120f0  2**2
+  2 .rodata       0000002c  08002188  08002188  00012188  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  0800211c  0800211c  00012124  2**0
+  3 .ARM.extab    00000000  080021b4  080021b4  000121bc  2**0
                   CONTENTS
-  4 .ARM          00000000  0800211c  0800211c  00012124  2**0
+  4 .ARM          00000000  080021b4  080021b4  000121bc  2**0
                   CONTENTS
-  5 .preinit_array 00000000  0800211c  08002124  00012124  2**0
+  5 .preinit_array 00000000  080021b4  080021bc  000121bc  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  0800211c  0800211c  0001211c  2**2
+  6 .init_array   00000004  080021b4  080021b4  000121b4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08002120  08002120  00012120  2**2
+  7 .fini_array   00000004  080021b8  080021b8  000121b8  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000000  20000000  20000000  00012124  2**0
+  8 .data         00000000  20000000  20000000  000121bc  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000068  20000000  08002124  00020000  2**2
+  9 .bss          00000068  20000000  080021bc  00020000  2**2
                   ALLOC
- 10 ._user_heap_stack 00000600  20000068  08002124  00020068  2**0
+ 10 ._user_heap_stack 00000600  20000068  080021bc  00020068  2**0
                   ALLOC
- 11 .ARM.attributes 00000030  00000000  00000000  00012124  2**0
+ 11 .ARM.attributes 00000030  00000000  00000000  000121bc  2**0
                   CONTENTS, READONLY
- 12 .comment      00000043  00000000  00000000  00012154  2**0
+ 12 .comment      00000043  00000000  00000000  000121ec  2**0
                   CONTENTS, READONLY
- 13 .debug_info   00002c92  00000000  00000000  00012197  2**0
+ 13 .debug_info   00002c92  00000000  00000000  0001222f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00000b3a  00000000  00000000  00014e29  2**0
+ 14 .debug_abbrev 00000b3a  00000000  00000000  00014ec1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000348  00000000  00000000  00015968  2**3
+ 15 .debug_aranges 00000348  00000000  00000000  00015a00  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000255  00000000  00000000  00015cb0  2**0
+ 16 .debug_rnglists 00000256  00000000  00000000  00015d48  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00001a4d  00000000  00000000  00015f05  2**0
+ 17 .debug_macro  00001a59  00000000  00000000  00015f9e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00001548  00000000  00000000  00017952  2**0
+ 18 .debug_line   00001560  00000000  00000000  000179f7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    0000829d  00000000  00000000  00018e9a  2**0
+ 19 .debug_str    000082e9  00000000  00000000  00018f57  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00000c7c  00000000  00000000  00021138  2**2
+ 20 .debug_frame  00000c7c  00000000  00000000  00021240  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000006f  00000000  00000000  00021db4  2**0
+ 21 .debug_line_str 0000006f  00000000  00000000  00021ebc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -64,7 +64,7 @@ Disassembly of section .text:
  80001ae:	bd10      	pop	{r4, pc}
  80001b0:	20000000 	.word	0x20000000
  80001b4:	00000000 	.word	0x00000000
- 80001b8:	080020d8 	.word	0x080020d8
+ 80001b8:	08002170 	.word	0x08002170
 
 080001bc <frame_dummy>:
  80001bc:	b508      	push	{r3, lr}
@@ -76,7 +76,7 @@ Disassembly of section .text:
  80001ca:	bd08      	pop	{r3, pc}
  80001cc:	00000000 	.word	0x00000000
  80001d0:	20000004 	.word	0x20000004
- 80001d4:	080020d8 	.word	0x080020d8
+ 80001d4:	08002170 	.word	0x08002170
 
 080001d8 <__aeabi_drsub>:
  80001d8:	f081 4100 	eor.w	r1, r1, #2147483648	; 0x80000000
@@ -3176,8 +3176,8 @@ int main(void) {
  8001a6a:	2300      	movs	r3, #0
  8001a6c:	71fb      	strb	r3, [r7, #7]
 	while (true) {
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP1)) {
- 8001a6e:	2100      	movs	r1, #0
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_LINE_FOLLOW)) {
+ 8001a6e:	2107      	movs	r1, #7
  8001a70:	482e      	ldr	r0, [pc, #184]	; (8001b2c <main+0xcc>)
  8001a72:	f7ff fba8 	bl	80011c6 <MGPIO_u8GetPinValue>
  8001a76:	4603      	mov	r3, r0
@@ -3189,8 +3189,8 @@ int main(void) {
 			break;
  8001a80:	e008      	b.n	8001a94 <main+0x34>
 		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP2)) {
- 8001a82:	2101      	movs	r1, #1
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE)) {
+ 8001a82:	2108      	movs	r1, #8
  8001a84:	4829      	ldr	r0, [pc, #164]	; (8001b2c <main+0xcc>)
  8001a86:	f7ff fb9e 	bl	80011c6 <MGPIO_u8GetPinValue>
  8001a8a:	4603      	mov	r3, r0
@@ -3210,38 +3210,38 @@ int main(void) {
  8001a98:	d13b      	bne.n	8001b12 <main+0xb2>
 		/* CALIBRATION OF LINE FOLLOWING */
 		APP_vCalibrateLineFollowing();
- 8001a9a:	f000 f9ad 	bl	8001df8 <APP_vCalibrateLineFollowing>
+ 8001a9a:	f000 f9f9 	bl	8001e90 <APP_vCalibrateLineFollowing>
 		/* RETURN TO POINT ZERO */
 		APP_vReturnToPointZero();
- 8001a9e:	f000 faa3 	bl	8001fe8 <APP_vReturnToPointZero>
+ 8001a9e:	f000 faef 	bl	8002080 <APP_vReturnToPointZero>
 		while (true) {
 			/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
-			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
+			if ((APP_u16IRData[0] > APP_u16IRThreshold[0]) &&
  8001aa2:	4b23      	ldr	r3, [pc, #140]	; (8001b30 <main+0xd0>)
  8001aa4:	881a      	ldrh	r2, [r3, #0]
  8001aa6:	4b23      	ldr	r3, [pc, #140]	; (8001b34 <main+0xd4>)
  8001aa8:	881b      	ldrh	r3, [r3, #0]
  8001aaa:	429a      	cmp	r2, r3
- 8001aac:	d205      	bcs.n	8001aba <main+0x5a>
-					(APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1])) {
+ 8001aac:	d905      	bls.n	8001aba <main+0x5a>
+					(APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1])) {
  8001aae:	4b20      	ldr	r3, [pc, #128]	; (8001b30 <main+0xd0>)
  8001ab0:	891a      	ldrh	r2, [r3, #8]
  8001ab2:	4b20      	ldr	r3, [pc, #128]	; (8001b34 <main+0xd4>)
  8001ab4:	891b      	ldrh	r3, [r3, #8]
-			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
+			if ((APP_u16IRData[0] > APP_u16IRThreshold[0]) &&
  8001ab6:	429a      	cmp	r2, r3
- 8001ab8:	d329      	bcc.n	8001b0e <main+0xae>
+ 8001ab8:	d829      	bhi.n	8001b0e <main+0xae>
 				// TODO -- SHOULD KEEP FORWARD
 				continue;
 			}
 			/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
-			else if (APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1]) {
+			else if (APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1]) {
  8001aba:	4b1d      	ldr	r3, [pc, #116]	; (8001b30 <main+0xd0>)
  8001abc:	891a      	ldrh	r2, [r3, #8]
  8001abe:	4b1d      	ldr	r3, [pc, #116]	; (8001b34 <main+0xd4>)
  8001ac0:	891b      	ldrh	r3, [r3, #8]
  8001ac2:	429a      	cmp	r2, r3
- 8001ac4:	d20b      	bcs.n	8001ade <main+0x7e>
+ 8001ac4:	d90b      	bls.n	8001ade <main+0x7e>
 				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
  8001ac6:	4b1c      	ldr	r3, [pc, #112]	; (8001b38 <main+0xd8>)
  8001ac8:	f640 72ff 	movw	r2, #4095	; 0xfff
@@ -3253,18 +3253,18 @@ int main(void) {
 				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
  8001ad4:	2100      	movs	r1, #0
  8001ad6:	2000      	movs	r0, #0
- 8001ad8:	f000 f95e 	bl	8001d98 <APP_vDriveMotors>
+ 8001ad8:	f000 f986 	bl	8001de8 <APP_vDriveMotors>
 				continue;
  8001adc:	e018      	b.n	8001b10 <main+0xb0>
 			}
 			/* EXTREME LEFT --> (BLACK AT 0) && (WHITE AT 4 (IT IS WHITE HERE)) */
-			else if (APP_u16IRData[0] < APP_u16IRThreshold[0]) {
+			else if (APP_u16IRData[0] > APP_u16IRThreshold[0]) {
  8001ade:	4b14      	ldr	r3, [pc, #80]	; (8001b30 <main+0xd0>)
  8001ae0:	881a      	ldrh	r2, [r3, #0]
  8001ae2:	4b14      	ldr	r3, [pc, #80]	; (8001b34 <main+0xd4>)
  8001ae4:	881b      	ldrh	r3, [r3, #0]
  8001ae6:	429a      	cmp	r2, r3
- 8001ae8:	d20b      	bcs.n	8001b02 <main+0xa2>
+ 8001ae8:	d90b      	bls.n	8001b02 <main+0xa2>
 				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
  8001aea:	4b13      	ldr	r3, [pc, #76]	; (8001b38 <main+0xd8>)
  8001aec:	2200      	movs	r2, #0
@@ -3276,12 +3276,12 @@ int main(void) {
 				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
  8001af8:	2100      	movs	r1, #0
  8001afa:	2000      	movs	r0, #0
- 8001afc:	f000 f94c 	bl	8001d98 <APP_vDriveMotors>
+ 8001afc:	f000 f974 	bl	8001de8 <APP_vDriveMotors>
 				continue;
  8001b00:	e006      	b.n	8001b10 <main+0xb0>
 			}
 			/* NORMAL PID CONTROL */
-			else if (APP_u16IRData[2] < APP_u16IRThreshold[2]) {
+			else if (APP_u16IRData[2] > APP_u16IRThreshold[2]) {
  8001b02:	4b0b      	ldr	r3, [pc, #44]	; (8001b30 <main+0xd0>)
  8001b04:	889a      	ldrh	r2, [r3, #4]
  8001b06:	4b0b      	ldr	r3, [pc, #44]	; (8001b34 <main+0xd4>)
@@ -3290,7 +3290,7 @@ int main(void) {
  8001b0c:	e7c9      	b.n	8001aa2 <main+0x42>
 				continue;
  8001b0e:	bf00      	nop
-			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
+			if ((APP_u16IRData[0] > APP_u16IRThreshold[0]) &&
  8001b10:	e7c7      	b.n	8001aa2 <main+0x42>
 	}
 	/**********************************************************************************************/
@@ -3303,10 +3303,10 @@ int main(void) {
  8001b16:	d103      	bne.n	8001b20 <main+0xc0>
 		/* CALIBRATION FOR MAZE SOLVING */
 		APP_vCalibrateMazeSolving();
- 8001b18:	f000 fa0c 	bl	8001f34 <APP_vCalibrateMazeSolving>
+ 8001b18:	f000 fa58 	bl	8001fcc <APP_vCalibrateMazeSolving>
 		/* RETURN TO POINT ZERO */
 		APP_vReturnToPointZero();
- 8001b1c:	f000 fa64 	bl	8001fe8 <APP_vReturnToPointZero>
+ 8001b1c:	f000 fab0 	bl	8002080 <APP_vReturnToPointZero>
  8001b20:	2300      	movs	r3, #0
 		// TODO -- IMPLEMENT MAZE SOLVING ALGORTHIM
 	}
@@ -3378,820 +3378,905 @@ void APP_vInit(void) {
 	MGPIO_vSetPinMode(APP_IR0, MGPIO_MODE_ANALOG);
  8001b86:	2203      	movs	r2, #3
  8001b88:	2100      	movs	r1, #0
- 8001b8a:	487b      	ldr	r0, [pc, #492]	; (8001d78 <APP_vInit+0x238>)
+ 8001b8a:	488f      	ldr	r0, [pc, #572]	; (8001dc8 <APP_vInit+0x288>)
  8001b8c:	f7ff fa27 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinMode(APP_IR1, MGPIO_MODE_ANALOG);
  8001b90:	2203      	movs	r2, #3
  8001b92:	2101      	movs	r1, #1
- 8001b94:	4878      	ldr	r0, [pc, #480]	; (8001d78 <APP_vInit+0x238>)
+ 8001b94:	488c      	ldr	r0, [pc, #560]	; (8001dc8 <APP_vInit+0x288>)
  8001b96:	f7ff fa22 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinMode(APP_IR2, MGPIO_MODE_ANALOG);
  8001b9a:	2203      	movs	r2, #3
  8001b9c:	2102      	movs	r1, #2
- 8001b9e:	4876      	ldr	r0, [pc, #472]	; (8001d78 <APP_vInit+0x238>)
+ 8001b9e:	488a      	ldr	r0, [pc, #552]	; (8001dc8 <APP_vInit+0x288>)
  8001ba0:	f7ff fa1d 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinMode(APP_IR3, MGPIO_MODE_ANALOG);
  8001ba4:	2203      	movs	r2, #3
  8001ba6:	2103      	movs	r1, #3
- 8001ba8:	4873      	ldr	r0, [pc, #460]	; (8001d78 <APP_vInit+0x238>)
+ 8001ba8:	4887      	ldr	r0, [pc, #540]	; (8001dc8 <APP_vInit+0x288>)
  8001baa:	f7ff fa18 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinMode(APP_IR4, MGPIO_MODE_ANALOG);
  8001bae:	2203      	movs	r2, #3
  8001bb0:	2104      	movs	r1, #4
- 8001bb2:	4871      	ldr	r0, [pc, #452]	; (8001d78 <APP_vInit+0x238>)
+ 8001bb2:	4885      	ldr	r0, [pc, #532]	; (8001dc8 <APP_vInit+0x288>)
  8001bb4:	f7ff fa13 	bl	8000fde <MGPIO_vSetPinMode>
 	/* INIT USART TRANSMIT RECEIVE PINS */
 	MGPIO_vSetPinMode(APP_MOBILE_USART_TX, MGPIO_MODE_ALTERNATE);
  8001bb8:	2202      	movs	r2, #2
  8001bba:	2109      	movs	r1, #9
- 8001bbc:	486e      	ldr	r0, [pc, #440]	; (8001d78 <APP_vInit+0x238>)
+ 8001bbc:	4882      	ldr	r0, [pc, #520]	; (8001dc8 <APP_vInit+0x288>)
  8001bbe:	f7ff fa0e 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinMode(APP_MOBILE_USART_RX, MGPIO_MODE_ALTERNATE);
  8001bc2:	2202      	movs	r2, #2
  8001bc4:	210a      	movs	r1, #10
- 8001bc6:	486c      	ldr	r0, [pc, #432]	; (8001d78 <APP_vInit+0x238>)
+ 8001bc6:	4880      	ldr	r0, [pc, #512]	; (8001dc8 <APP_vInit+0x288>)
  8001bc8:	f7ff fa09 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_TX, APP_MOBILE_USART_AF);
  8001bcc:	2207      	movs	r2, #7
  8001bce:	2109      	movs	r1, #9
- 8001bd0:	4869      	ldr	r0, [pc, #420]	; (8001d78 <APP_vInit+0x238>)
+ 8001bd0:	487d      	ldr	r0, [pc, #500]	; (8001dc8 <APP_vInit+0x288>)
  8001bd2:	f7ff fa96 	bl	8001102 <MGPIO_vSetPinAFDirection>
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_RX, APP_MOBILE_USART_AF);
  8001bd6:	2207      	movs	r2, #7
  8001bd8:	210a      	movs	r1, #10
- 8001bda:	4867      	ldr	r0, [pc, #412]	; (8001d78 <APP_vInit+0x238>)
+ 8001bda:	487b      	ldr	r0, [pc, #492]	; (8001dc8 <APP_vInit+0x288>)
  8001bdc:	f7ff fa91 	bl	8001102 <MGPIO_vSetPinAFDirection>
 	/* INIT TIMER PWM PIN */
 	MGPIO_vSetPinMode(APP_TIM_PWM_R_PIN, MGPIO_MODE_ALTERNATE);
  8001be0:	2202      	movs	r2, #2
  8001be2:	2104      	movs	r1, #4
- 8001be4:	4865      	ldr	r0, [pc, #404]	; (8001d7c <APP_vInit+0x23c>)
+ 8001be4:	4879      	ldr	r0, [pc, #484]	; (8001dcc <APP_vInit+0x28c>)
  8001be6:	f7ff f9fa 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_R_PIN, APP_TIM_PWM_R_AF);
  8001bea:	2202      	movs	r2, #2
  8001bec:	2104      	movs	r1, #4
- 8001bee:	4863      	ldr	r0, [pc, #396]	; (8001d7c <APP_vInit+0x23c>)
+ 8001bee:	4877      	ldr	r0, [pc, #476]	; (8001dcc <APP_vInit+0x28c>)
  8001bf0:	f7ff fa87 	bl	8001102 <MGPIO_vSetPinAFDirection>
 	MGPIO_vSetPinMode(APP_TIM_PWM_L_PIN, MGPIO_MODE_ALTERNATE);
  8001bf4:	2202      	movs	r2, #2
  8001bf6:	2106      	movs	r1, #6
- 8001bf8:	4860      	ldr	r0, [pc, #384]	; (8001d7c <APP_vInit+0x23c>)
+ 8001bf8:	4874      	ldr	r0, [pc, #464]	; (8001dcc <APP_vInit+0x28c>)
  8001bfa:	f7ff f9f0 	bl	8000fde <MGPIO_vSetPinMode>
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_L_PIN, APP_TIM_PWM_L_AF);
  8001bfe:	2202      	movs	r2, #2
  8001c00:	2106      	movs	r1, #6
- 8001c02:	485e      	ldr	r0, [pc, #376]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c02:	4872      	ldr	r0, [pc, #456]	; (8001dcc <APP_vInit+0x28c>)
  8001c04:	f7ff fa7d 	bl	8001102 <MGPIO_vSetPinAFDirection>
 	/* INIT BUTTON PINS */
-	MGPIO_vSetPinMode(APP_BUTTON_APP1, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinMode(APP_BUTTON_LINE_FOLLOW, MGPIO_MODE_INPUT);
  8001c08:	2200      	movs	r2, #0
- 8001c0a:	2100      	movs	r1, #0
- 8001c0c:	485b      	ldr	r0, [pc, #364]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c0a:	2107      	movs	r1, #7
+ 8001c0c:	486f      	ldr	r0, [pc, #444]	; (8001dcc <APP_vInit+0x28c>)
  8001c0e:	f7ff f9e6 	bl	8000fde <MGPIO_vSetPinMode>
-	MGPIO_vSetPinInputType(APP_BUTTON_APP1, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinInputType(APP_BUTTON_LINE_FOLLOW, MGPIO_INPUT_TYPE_PULLUP);
  8001c12:	2201      	movs	r2, #1
- 8001c14:	2100      	movs	r1, #0
- 8001c16:	4859      	ldr	r0, [pc, #356]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c14:	2107      	movs	r1, #7
+ 8001c16:	486d      	ldr	r0, [pc, #436]	; (8001dcc <APP_vInit+0x28c>)
  8001c18:	f7ff fa4e 	bl	80010b8 <MGPIO_vSetPinInputType>
-	MGPIO_vSetPinMode(APP_BUTTON_APP2, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE, MGPIO_MODE_INPUT);
  8001c1c:	2200      	movs	r2, #0
- 8001c1e:	2101      	movs	r1, #1
- 8001c20:	4856      	ldr	r0, [pc, #344]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c1e:	2108      	movs	r1, #8
+ 8001c20:	486a      	ldr	r0, [pc, #424]	; (8001dcc <APP_vInit+0x28c>)
  8001c22:	f7ff f9dc 	bl	8000fde <MGPIO_vSetPinMode>
-	MGPIO_vSetPinInputType(APP_BUTTON_APP2, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE, MGPIO_INPUT_TYPE_PULLUP);
  8001c26:	2201      	movs	r2, #1
- 8001c28:	2101      	movs	r1, #1
- 8001c2a:	4854      	ldr	r0, [pc, #336]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c28:	2108      	movs	r1, #8
+ 8001c2a:	4868      	ldr	r0, [pc, #416]	; (8001dcc <APP_vInit+0x28c>)
  8001c2c:	f7ff fa44 	bl	80010b8 <MGPIO_vSetPinInputType>
 	/* INIT DIRECTION PINS */
-	MGPIO_vSetPinMode(APP_DIRECTION_R, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
  8001c30:	2201      	movs	r2, #1
- 8001c32:	2102      	movs	r1, #2
- 8001c34:	4851      	ldr	r0, [pc, #324]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c32:	2100      	movs	r1, #0
+ 8001c34:	4865      	ldr	r0, [pc, #404]	; (8001dcc <APP_vInit+0x28c>)
  8001c36:	f7ff f9d2 	bl	8000fde <MGPIO_vSetPinMode>
-	MGPIO_vSetPinOutputType(APP_DIRECTION_R, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
  8001c3a:	2200      	movs	r2, #0
- 8001c3c:	2102      	movs	r1, #2
- 8001c3e:	484f      	ldr	r0, [pc, #316]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c3c:	2100      	movs	r1, #0
+ 8001c3e:	4863      	ldr	r0, [pc, #396]	; (8001dcc <APP_vInit+0x28c>)
  8001c40:	f7ff f9f2 	bl	8001028 <MGPIO_vSetPinOutputType>
-	MGPIO_vSetPinOutputSpeed(APP_DIRECTION_R, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
  8001c44:	2202      	movs	r2, #2
- 8001c46:	2102      	movs	r1, #2
- 8001c48:	484c      	ldr	r0, [pc, #304]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c46:	2100      	movs	r1, #0
+ 8001c48:	4860      	ldr	r0, [pc, #384]	; (8001dcc <APP_vInit+0x28c>)
  8001c4a:	f7ff fa10 	bl	800106e <MGPIO_vSetPinOutputSpeed>
-	MGPIO_vSetPinMode(APP_DIRECTION_L, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
  8001c4e:	2201      	movs	r2, #1
- 8001c50:	2103      	movs	r1, #3
- 8001c52:	484a      	ldr	r0, [pc, #296]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c50:	2101      	movs	r1, #1
+ 8001c52:	485e      	ldr	r0, [pc, #376]	; (8001dcc <APP_vInit+0x28c>)
  8001c54:	f7ff f9c3 	bl	8000fde <MGPIO_vSetPinMode>
-	MGPIO_vSetPinOutputType(APP_DIRECTION_L, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
  8001c58:	2200      	movs	r2, #0
- 8001c5a:	2103      	movs	r1, #3
- 8001c5c:	4847      	ldr	r0, [pc, #284]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c5a:	2101      	movs	r1, #1
+ 8001c5c:	485b      	ldr	r0, [pc, #364]	; (8001dcc <APP_vInit+0x28c>)
  8001c5e:	f7ff f9e3 	bl	8001028 <MGPIO_vSetPinOutputType>
-	MGPIO_vSetPinOutputSpeed(APP_DIRECTION_L, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
  8001c62:	2202      	movs	r2, #2
- 8001c64:	2103      	movs	r1, #3
- 8001c66:	4845      	ldr	r0, [pc, #276]	; (8001d7c <APP_vInit+0x23c>)
+ 8001c64:	2101      	movs	r1, #1
+ 8001c66:	4859      	ldr	r0, [pc, #356]	; (8001dcc <APP_vInit+0x28c>)
  8001c68:	f7ff fa01 	bl	800106e <MGPIO_vSetPinOutputSpeed>
-	MGPIO_vSetPinValue(APP_DIRECTION_R, MGPIO_OUTPUT_LOW);
- 8001c6c:	2200      	movs	r2, #0
+	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
+ 8001c6c:	2201      	movs	r2, #1
  8001c6e:	2102      	movs	r1, #2
- 8001c70:	4842      	ldr	r0, [pc, #264]	; (8001d7c <APP_vInit+0x23c>)
- 8001c72:	f7ff fa80 	bl	8001176 <MGPIO_vSetPinValue>
-	MGPIO_vSetPinValue(APP_DIRECTION_L, MGPIO_OUTPUT_LOW);
+ 8001c70:	4856      	ldr	r0, [pc, #344]	; (8001dcc <APP_vInit+0x28c>)
+ 8001c72:	f7ff f9b4 	bl	8000fde <MGPIO_vSetPinMode>
+	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
  8001c76:	2200      	movs	r2, #0
- 8001c78:	2103      	movs	r1, #3
- 8001c7a:	4840      	ldr	r0, [pc, #256]	; (8001d7c <APP_vInit+0x23c>)
- 8001c7c:	f7ff fa7b 	bl	8001176 <MGPIO_vSetPinValue>
+ 8001c78:	2102      	movs	r1, #2
+ 8001c7a:	4854      	ldr	r0, [pc, #336]	; (8001dcc <APP_vInit+0x28c>)
+ 8001c7c:	f7ff f9d4 	bl	8001028 <MGPIO_vSetPinOutputType>
+	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
+ 8001c80:	2202      	movs	r2, #2
+ 8001c82:	2102      	movs	r1, #2
+ 8001c84:	4851      	ldr	r0, [pc, #324]	; (8001dcc <APP_vInit+0x28c>)
+ 8001c86:	f7ff f9f2 	bl	800106e <MGPIO_vSetPinOutputSpeed>
+	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
+ 8001c8a:	2201      	movs	r2, #1
+ 8001c8c:	2103      	movs	r1, #3
+ 8001c8e:	484f      	ldr	r0, [pc, #316]	; (8001dcc <APP_vInit+0x28c>)
+ 8001c90:	f7ff f9a5 	bl	8000fde <MGPIO_vSetPinMode>
+	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
+ 8001c94:	2200      	movs	r2, #0
+ 8001c96:	2103      	movs	r1, #3
+ 8001c98:	484c      	ldr	r0, [pc, #304]	; (8001dcc <APP_vInit+0x28c>)
+ 8001c9a:	f7ff f9c5 	bl	8001028 <MGPIO_vSetPinOutputType>
+	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
+ 8001c9e:	2202      	movs	r2, #2
+ 8001ca0:	2103      	movs	r1, #3
+ 8001ca2:	484a      	ldr	r0, [pc, #296]	; (8001dcc <APP_vInit+0x28c>)
+ 8001ca4:	f7ff f9e3 	bl	800106e <MGPIO_vSetPinOutputSpeed>
+
+	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+ 8001ca8:	2200      	movs	r2, #0
+ 8001caa:	2100      	movs	r1, #0
+ 8001cac:	4847      	ldr	r0, [pc, #284]	; (8001dcc <APP_vInit+0x28c>)
+ 8001cae:	f7ff fa62 	bl	8001176 <MGPIO_vSetPinValue>
+	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+ 8001cb2:	2200      	movs	r2, #0
+ 8001cb4:	2101      	movs	r1, #1
+ 8001cb6:	4845      	ldr	r0, [pc, #276]	; (8001dcc <APP_vInit+0x28c>)
+ 8001cb8:	f7ff fa5d 	bl	8001176 <MGPIO_vSetPinValue>
+	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+ 8001cbc:	2200      	movs	r2, #0
+ 8001cbe:	2102      	movs	r1, #2
+ 8001cc0:	4842      	ldr	r0, [pc, #264]	; (8001dcc <APP_vInit+0x28c>)
+ 8001cc2:	f7ff fa58 	bl	8001176 <MGPIO_vSetPinValue>
+	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+ 8001cc6:	2200      	movs	r2, #0
+ 8001cc8:	2103      	movs	r1, #3
+ 8001cca:	4840      	ldr	r0, [pc, #256]	; (8001dcc <APP_vInit+0x28c>)
+ 8001ccc:	f7ff fa53 	bl	8001176 <MGPIO_vSetPinValue>
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
 	/* INITIALIZE ADC */
 	MADC_vInit();
- 8001c80:	f7fe fe98 	bl	80009b4 <MADC_vInit>
+ 8001cd0:	f7fe fe70 	bl	80009b4 <MADC_vInit>
 	/* SET THE NUMBER OF CONVERSIONS TO THE NUMBER OF IRS IN THE ARRAY */
 	MADC_vSetNumberOfConversions(MADC_REGULAR_GROUP, MADC_FIVE_CONVERSIONS);
- 8001c84:	2104      	movs	r1, #4
- 8001c86:	2000      	movs	r0, #0
- 8001c88:	f7fe ffa0 	bl	8000bcc <MADC_vSetNumberOfConversions>
+ 8001cd4:	2104      	movs	r1, #4
+ 8001cd6:	2000      	movs	r0, #0
+ 8001cd8:	f7fe ff78 	bl	8000bcc <MADC_vSetNumberOfConversions>
 	/* SET ALL OF THEIR SAMPLE TIMES */
 	MADC_vSetSamplingTime(APP_IR0_CHANNEL, MADC_SAMPLING_CYCLES_3);
- 8001c8c:	2100      	movs	r1, #0
- 8001c8e:	2000      	movs	r0, #0
- 8001c90:	f7fe ff3e 	bl	8000b10 <MADC_vSetSamplingTime>
+ 8001cdc:	2100      	movs	r1, #0
+ 8001cde:	2000      	movs	r0, #0
+ 8001ce0:	f7fe ff16 	bl	8000b10 <MADC_vSetSamplingTime>
 	MADC_vSetSamplingTime(APP_IR1_CHANNEL, MADC_SAMPLING_CYCLES_3);
- 8001c94:	2100      	movs	r1, #0
- 8001c96:	2001      	movs	r0, #1
- 8001c98:	f7fe ff3a 	bl	8000b10 <MADC_vSetSamplingTime>
+ 8001ce4:	2100      	movs	r1, #0
+ 8001ce6:	2001      	movs	r0, #1
+ 8001ce8:	f7fe ff12 	bl	8000b10 <MADC_vSetSamplingTime>
 	MADC_vSetSamplingTime(APP_IR2_CHANNEL, MADC_SAMPLING_CYCLES_3);
- 8001c9c:	2100      	movs	r1, #0
- 8001c9e:	2002      	movs	r0, #2
- 8001ca0:	f7fe ff36 	bl	8000b10 <MADC_vSetSamplingTime>
+ 8001cec:	2100      	movs	r1, #0
+ 8001cee:	2002      	movs	r0, #2
+ 8001cf0:	f7fe ff0e 	bl	8000b10 <MADC_vSetSamplingTime>
 	MADC_vSetSamplingTime(APP_IR3_CHANNEL, MADC_SAMPLING_CYCLES_3);
- 8001ca4:	2100      	movs	r1, #0
- 8001ca6:	2003      	movs	r0, #3
- 8001ca8:	f7fe ff32 	bl	8000b10 <MADC_vSetSamplingTime>
+ 8001cf4:	2100      	movs	r1, #0
+ 8001cf6:	2003      	movs	r0, #3
+ 8001cf8:	f7fe ff0a 	bl	8000b10 <MADC_vSetSamplingTime>
 	MADC_vSetSamplingTime(APP_IR4_CHANNEL, MADC_SAMPLING_CYCLES_3);
- 8001cac:	2100      	movs	r1, #0
- 8001cae:	2004      	movs	r0, #4
- 8001cb0:	f7fe ff2e 	bl	8000b10 <MADC_vSetSamplingTime>
+ 8001cfc:	2100      	movs	r1, #0
+ 8001cfe:	2004      	movs	r0, #4
+ 8001d00:	f7fe ff06 	bl	8000b10 <MADC_vSetSamplingTime>
 	/* SET THEIR SEQUENCE */
 	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR0_CHANNEL, MADC_SEQUENCE_1);
- 8001cb4:	2200      	movs	r2, #0
- 8001cb6:	2100      	movs	r1, #0
- 8001cb8:	2000      	movs	r0, #0
- 8001cba:	f7fe ffaf 	bl	8000c1c <MADC_vSetSequence>
+ 8001d04:	2200      	movs	r2, #0
+ 8001d06:	2100      	movs	r1, #0
+ 8001d08:	2000      	movs	r0, #0
+ 8001d0a:	f7fe ff87 	bl	8000c1c <MADC_vSetSequence>
 	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR1_CHANNEL, MADC_SEQUENCE_2);
- 8001cbe:	2201      	movs	r2, #1
- 8001cc0:	2101      	movs	r1, #1
- 8001cc2:	2000      	movs	r0, #0
- 8001cc4:	f7fe ffaa 	bl	8000c1c <MADC_vSetSequence>
+ 8001d0e:	2201      	movs	r2, #1
+ 8001d10:	2101      	movs	r1, #1
+ 8001d12:	2000      	movs	r0, #0
+ 8001d14:	f7fe ff82 	bl	8000c1c <MADC_vSetSequence>
 	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR2_CHANNEL, MADC_SEQUENCE_3);
- 8001cc8:	2202      	movs	r2, #2
- 8001cca:	2102      	movs	r1, #2
- 8001ccc:	2000      	movs	r0, #0
- 8001cce:	f7fe ffa5 	bl	8000c1c <MADC_vSetSequence>
+ 8001d18:	2202      	movs	r2, #2
+ 8001d1a:	2102      	movs	r1, #2
+ 8001d1c:	2000      	movs	r0, #0
+ 8001d1e:	f7fe ff7d 	bl	8000c1c <MADC_vSetSequence>
 	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR3_CHANNEL, MADC_SEQUENCE_4);
- 8001cd2:	2203      	movs	r2, #3
- 8001cd4:	2103      	movs	r1, #3
- 8001cd6:	2000      	movs	r0, #0
- 8001cd8:	f7fe ffa0 	bl	8000c1c <MADC_vSetSequence>
+ 8001d22:	2203      	movs	r2, #3
+ 8001d24:	2103      	movs	r1, #3
+ 8001d26:	2000      	movs	r0, #0
+ 8001d28:	f7fe ff78 	bl	8000c1c <MADC_vSetSequence>
 	MADC_vSetSequence(MADC_REGULAR_GROUP, APP_IR4_CHANNEL, MADC_SEQUENCE_5);
- 8001cdc:	2204      	movs	r2, #4
- 8001cde:	2104      	movs	r1, #4
- 8001ce0:	2000      	movs	r0, #0
- 8001ce2:	f7fe ff9b 	bl	8000c1c <MADC_vSetSequence>
+ 8001d2c:	2204      	movs	r2, #4
+ 8001d2e:	2104      	movs	r1, #4
+ 8001d30:	2000      	movs	r0, #0
+ 8001d32:	f7fe ff73 	bl	8000c1c <MADC_vSetSequence>
 	/**********************************************************************************************/
 
 	/********************************* DMA CONFIGURATIONS FOR ADC *********************************/
 	volatile u32* DMAsrcAddr = MADC_u32SetRegularDMA(MADC_ENABLE);
- 8001ce6:	2001      	movs	r0, #1
- 8001ce8:	f7fe fee8 	bl	8000abc <MADC_u32SetRegularDMA>
- 8001cec:	6278      	str	r0, [r7, #36]	; 0x24
+ 8001d36:	2001      	movs	r0, #1
+ 8001d38:	f7fe fec0 	bl	8000abc <MADC_u32SetRegularDMA>
+ 8001d3c:	6278      	str	r0, [r7, #36]	; 0x24
 	/* Enable DMA */
 	MDMA_DirectInitType dma = {MDMA_DISABLE, MDMA_DIRECTION_PER_MEM, MDMA_ENABLE,
- 8001cee:	4a24      	ldr	r2, [pc, #144]	; (8001d80 <APP_vInit+0x240>)
- 8001cf0:	f107 031c 	add.w	r3, r7, #28
- 8001cf4:	e892 0003 	ldmia.w	r2, {r0, r1}
- 8001cf8:	6018      	str	r0, [r3, #0]
- 8001cfa:	3304      	adds	r3, #4
- 8001cfc:	8019      	strh	r1, [r3, #0]
- 8001cfe:	3302      	adds	r3, #2
- 8001d00:	0c0a      	lsrs	r2, r1, #16
- 8001d02:	701a      	strb	r2, [r3, #0]
+ 8001d3e:	4a24      	ldr	r2, [pc, #144]	; (8001dd0 <APP_vInit+0x290>)
+ 8001d40:	f107 031c 	add.w	r3, r7, #28
+ 8001d44:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 8001d48:	6018      	str	r0, [r3, #0]
+ 8001d4a:	3304      	adds	r3, #4
+ 8001d4c:	8019      	strh	r1, [r3, #0]
+ 8001d4e:	3302      	adds	r3, #2
+ 8001d50:	0c0a      	lsrs	r2, r1, #16
+ 8001d52:	701a      	strb	r2, [r3, #0]
 								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_VHIGH, MDMA_CHANNEL_0};
 	MDMA_TransferStruct dmat = {(u32*)DMAsrcAddr, (u32*)APP_u16IRData, 5, MDMA_SIZE_HWORD};
- 8001d04:	6a7b      	ldr	r3, [r7, #36]	; 0x24
- 8001d06:	613b      	str	r3, [r7, #16]
- 8001d08:	4b1e      	ldr	r3, [pc, #120]	; (8001d84 <APP_vInit+0x244>)
- 8001d0a:	617b      	str	r3, [r7, #20]
- 8001d0c:	2305      	movs	r3, #5
- 8001d0e:	833b      	strh	r3, [r7, #24]
- 8001d10:	2301      	movs	r3, #1
- 8001d12:	76bb      	strb	r3, [r7, #26]
+ 8001d54:	6a7b      	ldr	r3, [r7, #36]	; 0x24
+ 8001d56:	613b      	str	r3, [r7, #16]
+ 8001d58:	4b1e      	ldr	r3, [pc, #120]	; (8001dd4 <APP_vInit+0x294>)
+ 8001d5a:	617b      	str	r3, [r7, #20]
+ 8001d5c:	2305      	movs	r3, #5
+ 8001d5e:	833b      	strh	r3, [r7, #24]
+ 8001d60:	2301      	movs	r3, #1
+ 8001d62:	76bb      	strb	r3, [r7, #26]
 	MDMA_vDirectInit(DMA2, MDMA_STREAM_0, &dma);
- 8001d14:	f107 031c 	add.w	r3, r7, #28
- 8001d18:	461a      	mov	r2, r3
- 8001d1a:	2100      	movs	r1, #0
- 8001d1c:	481a      	ldr	r0, [pc, #104]	; (8001d88 <APP_vInit+0x248>)
- 8001d1e:	f7fe fff9 	bl	8000d14 <MDMA_vDirectInit>
+ 8001d64:	f107 031c 	add.w	r3, r7, #28
+ 8001d68:	461a      	mov	r2, r3
+ 8001d6a:	2100      	movs	r1, #0
+ 8001d6c:	481a      	ldr	r0, [pc, #104]	; (8001dd8 <APP_vInit+0x298>)
+ 8001d6e:	f7fe ffd1 	bl	8000d14 <MDMA_vDirectInit>
 	MDMA_vStart(DMA2, MDMA_STREAM_0, &dmat);
- 8001d22:	f107 0310 	add.w	r3, r7, #16
- 8001d26:	461a      	mov	r2, r3
- 8001d28:	2100      	movs	r1, #0
- 8001d2a:	4817      	ldr	r0, [pc, #92]	; (8001d88 <APP_vInit+0x248>)
- 8001d2c:	f7ff f8dd 	bl	8000eea <MDMA_vStart>
+ 8001d72:	f107 0310 	add.w	r3, r7, #16
+ 8001d76:	461a      	mov	r2, r3
+ 8001d78:	2100      	movs	r1, #0
+ 8001d7a:	4817      	ldr	r0, [pc, #92]	; (8001dd8 <APP_vInit+0x298>)
+ 8001d7c:	f7ff f8b5 	bl	8000eea <MDMA_vStart>
 	MADC_vEnable(MADC_ENABLE, MADC_DISABLE);
- 8001d30:	2100      	movs	r1, #0
- 8001d32:	2001      	movs	r0, #1
- 8001d34:	f7fe fe9a 	bl	8000a6c <MADC_vEnable>
+ 8001d80:	2100      	movs	r1, #0
+ 8001d82:	2001      	movs	r0, #1
+ 8001d84:	f7fe fe72 	bl	8000a6c <MADC_vEnable>
 	/**********************************************************************************************/
 
 	/*********************************** GPT PWM CONFIGURATIONS ***********************************/
 	MGPT_PWMInitTypeDef gpt = {APP_CHANNEL_PWM_R, MGPT_PWM_MODE_1, APP_PWM_PERIOD,
- 8001d38:	4b14      	ldr	r3, [pc, #80]	; (8001d8c <APP_vInit+0x24c>)
- 8001d3a:	463c      	mov	r4, r7
- 8001d3c:	cb0f      	ldmia	r3, {r0, r1, r2, r3}
- 8001d3e:	e884 000f 	stmia.w	r4, {r0, r1, r2, r3}
+ 8001d88:	4b14      	ldr	r3, [pc, #80]	; (8001ddc <APP_vInit+0x29c>)
+ 8001d8a:	463c      	mov	r4, r7
+ 8001d8c:	cb0f      	ldmia	r3, {r0, r1, r2, r3}
+ 8001d8e:	e884 000f 	stmia.w	r4, {r0, r1, r2, r3}
 						APP_PWM_PRESCALER, MGPT_ALLIGNMENT_EDGE_MODE, MGPT_DIRECTION_UP_COUNTER,
 						MGPT_CHANNEL_OUTPUT_ACTIVE_HIGH};
 	MGPT_vPWMInit(APP_TIM_PWM_R, &gpt);
- 8001d42:	463b      	mov	r3, r7
- 8001d44:	4619      	mov	r1, r3
- 8001d46:	4812      	ldr	r0, [pc, #72]	; (8001d90 <APP_vInit+0x250>)
- 8001d48:	f7ff fa52 	bl	80011f0 <MGPT_vPWMInit>
+ 8001d92:	463b      	mov	r3, r7
+ 8001d94:	4619      	mov	r1, r3
+ 8001d96:	4812      	ldr	r0, [pc, #72]	; (8001de0 <APP_vInit+0x2a0>)
+ 8001d98:	f7ff fa2a 	bl	80011f0 <MGPT_vPWMInit>
 	gpt.Channel = APP_CHANNEL_PWM_L;
- 8001d4c:	2300      	movs	r3, #0
- 8001d4e:	703b      	strb	r3, [r7, #0]
+ 8001d9c:	2300      	movs	r3, #0
+ 8001d9e:	703b      	strb	r3, [r7, #0]
 	MGPT_vPWMInit(APP_TIM_PWM_L, &gpt);
- 8001d50:	463b      	mov	r3, r7
- 8001d52:	4619      	mov	r1, r3
- 8001d54:	480f      	ldr	r0, [pc, #60]	; (8001d94 <APP_vInit+0x254>)
- 8001d56:	f7ff fa4b 	bl	80011f0 <MGPT_vPWMInit>
+ 8001da0:	463b      	mov	r3, r7
+ 8001da2:	4619      	mov	r1, r3
+ 8001da4:	480f      	ldr	r0, [pc, #60]	; (8001de4 <APP_vInit+0x2a4>)
+ 8001da6:	f7ff fa23 	bl	80011f0 <MGPT_vPWMInit>
 	/* SET THE SPEED TO 0 */
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, APP_CAR_MOVE_ZERO_FORCE);
- 8001d5a:	2200      	movs	r2, #0
- 8001d5c:	2100      	movs	r1, #0
- 8001d5e:	480c      	ldr	r0, [pc, #48]	; (8001d90 <APP_vInit+0x250>)
- 8001d60:	f7ff fb84 	bl	800146c <MGPT_vSetPWMDutyCycle>
+ 8001daa:	2200      	movs	r2, #0
+ 8001dac:	2100      	movs	r1, #0
+ 8001dae:	480c      	ldr	r0, [pc, #48]	; (8001de0 <APP_vInit+0x2a0>)
+ 8001db0:	f7ff fb5c 	bl	800146c <MGPT_vSetPWMDutyCycle>
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, APP_CAR_MOVE_ZERO_FORCE);
- 8001d64:	2200      	movs	r2, #0
- 8001d66:	2100      	movs	r1, #0
- 8001d68:	480a      	ldr	r0, [pc, #40]	; (8001d94 <APP_vInit+0x254>)
- 8001d6a:	f7ff fb7f 	bl	800146c <MGPT_vSetPWMDutyCycle>
+ 8001db4:	2200      	movs	r2, #0
+ 8001db6:	2100      	movs	r1, #0
+ 8001db8:	480a      	ldr	r0, [pc, #40]	; (8001de4 <APP_vInit+0x2a4>)
+ 8001dba:	f7ff fb57 	bl	800146c <MGPT_vSetPWMDutyCycle>
 	/**********************************************************************************************/
 }
- 8001d6e:	bf00      	nop
- 8001d70:	372c      	adds	r7, #44	; 0x2c
- 8001d72:	46bd      	mov	sp, r7
- 8001d74:	bd90      	pop	{r4, r7, pc}
- 8001d76:	bf00      	nop
- 8001d78:	40020000 	.word	0x40020000
- 8001d7c:	40020400 	.word	0x40020400
- 8001d80:	080020f0 	.word	0x080020f0
- 8001d84:	20000040 	.word	0x20000040
- 8001d88:	40026400 	.word	0x40026400
- 8001d8c:	080020f8 	.word	0x080020f8
- 8001d90:	40000400 	.word	0x40000400
- 8001d94:	40000800 	.word	0x40000800
+ 8001dbe:	bf00      	nop
+ 8001dc0:	372c      	adds	r7, #44	; 0x2c
+ 8001dc2:	46bd      	mov	sp, r7
+ 8001dc4:	bd90      	pop	{r4, r7, pc}
+ 8001dc6:	bf00      	nop
+ 8001dc8:	40020000 	.word	0x40020000
+ 8001dcc:	40020400 	.word	0x40020400
+ 8001dd0:	08002188 	.word	0x08002188
+ 8001dd4:	20000040 	.word	0x20000040
+ 8001dd8:	40026400 	.word	0x40026400
+ 8001ddc:	08002190 	.word	0x08002190
+ 8001de0:	40000400 	.word	0x40000400
+ 8001de4:	40000800 	.word	0x40000800
 
-08001d98 <APP_vDriveMotors>:
+08001de8 <APP_vDriveMotors>:
  * @param Right_Dir Direction of the right wheel.
  * @param Left_Dir Direction of the left wheel.
  * @note The direction can be forward, backward, or stop.
  * @note The speed of the wheels should be set before calling this function.
  */
 void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
- 8001d98:	b580      	push	{r7, lr}
- 8001d9a:	b082      	sub	sp, #8
- 8001d9c:	af00      	add	r7, sp, #0
- 8001d9e:	4603      	mov	r3, r0
- 8001da0:	460a      	mov	r2, r1
- 8001da2:	71fb      	strb	r3, [r7, #7]
- 8001da4:	4613      	mov	r3, r2
- 8001da6:	71bb      	strb	r3, [r7, #6]
+ 8001de8:	b580      	push	{r7, lr}
+ 8001dea:	b082      	sub	sp, #8
+ 8001dec:	af00      	add	r7, sp, #0
+ 8001dee:	4603      	mov	r3, r0
+ 8001df0:	460a      	mov	r2, r1
+ 8001df2:	71fb      	strb	r3, [r7, #7]
+ 8001df4:	4613      	mov	r3, r2
+ 8001df6:	71bb      	strb	r3, [r7, #6]
 	/* SET THE WHEELS DIRECTION */
-	MGPIO_vSetPinValue(APP_DIRECTION_R, Right_Dir);
- 8001da8:	79fb      	ldrb	r3, [r7, #7]
- 8001daa:	461a      	mov	r2, r3
- 8001dac:	2102      	movs	r1, #2
- 8001dae:	480d      	ldr	r0, [pc, #52]	; (8001de4 <APP_vDriveMotors+0x4c>)
- 8001db0:	f7ff f9e1 	bl	8001176 <MGPIO_vSetPinValue>
-	MGPIO_vSetPinValue(APP_DIRECTION_L, Left_Dir);
- 8001db4:	79bb      	ldrb	r3, [r7, #6]
- 8001db6:	461a      	mov	r2, r3
- 8001db8:	2103      	movs	r1, #3
- 8001dba:	480a      	ldr	r0, [pc, #40]	; (8001de4 <APP_vDriveMotors+0x4c>)
- 8001dbc:	f7ff f9db 	bl	8001176 <MGPIO_vSetPinValue>
+	if (Right_Dir == APP_CLOCK_WISE) {
+ 8001df8:	79fb      	ldrb	r3, [r7, #7]
+ 8001dfa:	2b00      	cmp	r3, #0
+ 8001dfc:	d10a      	bne.n	8001e14 <APP_vDriveMotors+0x2c>
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
+ 8001dfe:	2201      	movs	r2, #1
+ 8001e00:	2100      	movs	r1, #0
+ 8001e02:	481e      	ldr	r0, [pc, #120]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e04:	f7ff f9b7 	bl	8001176 <MGPIO_vSetPinValue>
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+ 8001e08:	2200      	movs	r2, #0
+ 8001e0a:	2101      	movs	r1, #1
+ 8001e0c:	481b      	ldr	r0, [pc, #108]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e0e:	f7ff f9b2 	bl	8001176 <MGPIO_vSetPinValue>
+ 8001e12:	e009      	b.n	8001e28 <APP_vDriveMotors+0x40>
+	} else {
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+ 8001e14:	2200      	movs	r2, #0
+ 8001e16:	2100      	movs	r1, #0
+ 8001e18:	4818      	ldr	r0, [pc, #96]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e1a:	f7ff f9ac 	bl	8001176 <MGPIO_vSetPinValue>
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
+ 8001e1e:	2201      	movs	r2, #1
+ 8001e20:	2101      	movs	r1, #1
+ 8001e22:	4816      	ldr	r0, [pc, #88]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e24:	f7ff f9a7 	bl	8001176 <MGPIO_vSetPinValue>
+	}
+
+	if (Left_Dir == APP_CLOCK_WISE) {
+ 8001e28:	79bb      	ldrb	r3, [r7, #6]
+ 8001e2a:	2b00      	cmp	r3, #0
+ 8001e2c:	d10a      	bne.n	8001e44 <APP_vDriveMotors+0x5c>
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
+ 8001e2e:	2201      	movs	r2, #1
+ 8001e30:	2102      	movs	r1, #2
+ 8001e32:	4812      	ldr	r0, [pc, #72]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e34:	f7ff f99f 	bl	8001176 <MGPIO_vSetPinValue>
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+ 8001e38:	2200      	movs	r2, #0
+ 8001e3a:	2103      	movs	r1, #3
+ 8001e3c:	480f      	ldr	r0, [pc, #60]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e3e:	f7ff f99a 	bl	8001176 <MGPIO_vSetPinValue>
+ 8001e42:	e009      	b.n	8001e58 <APP_vDriveMotors+0x70>
+	} else {
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+ 8001e44:	2200      	movs	r2, #0
+ 8001e46:	2102      	movs	r1, #2
+ 8001e48:	480c      	ldr	r0, [pc, #48]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e4a:	f7ff f994 	bl	8001176 <MGPIO_vSetPinValue>
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
+ 8001e4e:	2201      	movs	r2, #1
+ 8001e50:	2103      	movs	r1, #3
+ 8001e52:	480a      	ldr	r0, [pc, #40]	; (8001e7c <APP_vDriveMotors+0x94>)
+ 8001e54:	f7ff f98f 	bl	8001176 <MGPIO_vSetPinValue>
+	}
+
 	/* SET THE WHEELS SPEED */
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, (u32)APP_s32SpeedRight);
- 8001dc0:	4b09      	ldr	r3, [pc, #36]	; (8001de8 <APP_vDriveMotors+0x50>)
- 8001dc2:	681b      	ldr	r3, [r3, #0]
- 8001dc4:	461a      	mov	r2, r3
- 8001dc6:	2100      	movs	r1, #0
- 8001dc8:	4808      	ldr	r0, [pc, #32]	; (8001dec <APP_vDriveMotors+0x54>)
- 8001dca:	f7ff fb4f 	bl	800146c <MGPT_vSetPWMDutyCycle>
+ 8001e58:	4b09      	ldr	r3, [pc, #36]	; (8001e80 <APP_vDriveMotors+0x98>)
+ 8001e5a:	681b      	ldr	r3, [r3, #0]
+ 8001e5c:	461a      	mov	r2, r3
+ 8001e5e:	2100      	movs	r1, #0
+ 8001e60:	4808      	ldr	r0, [pc, #32]	; (8001e84 <APP_vDriveMotors+0x9c>)
+ 8001e62:	f7ff fb03 	bl	800146c <MGPT_vSetPWMDutyCycle>
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, (u32)APP_s32SpeedLeft);
- 8001dce:	4b08      	ldr	r3, [pc, #32]	; (8001df0 <APP_vDriveMotors+0x58>)
- 8001dd0:	681b      	ldr	r3, [r3, #0]
- 8001dd2:	461a      	mov	r2, r3
- 8001dd4:	2100      	movs	r1, #0
- 8001dd6:	4807      	ldr	r0, [pc, #28]	; (8001df4 <APP_vDriveMotors+0x5c>)
- 8001dd8:	f7ff fb48 	bl	800146c <MGPT_vSetPWMDutyCycle>
+ 8001e66:	4b08      	ldr	r3, [pc, #32]	; (8001e88 <APP_vDriveMotors+0xa0>)
+ 8001e68:	681b      	ldr	r3, [r3, #0]
+ 8001e6a:	461a      	mov	r2, r3
+ 8001e6c:	2100      	movs	r1, #0
+ 8001e6e:	4807      	ldr	r0, [pc, #28]	; (8001e8c <APP_vDriveMotors+0xa4>)
+ 8001e70:	f7ff fafc 	bl	800146c <MGPT_vSetPWMDutyCycle>
 }
- 8001ddc:	bf00      	nop
- 8001dde:	3708      	adds	r7, #8
- 8001de0:	46bd      	mov	sp, r7
- 8001de2:	bd80      	pop	{r7, pc}
- 8001de4:	40020400 	.word	0x40020400
- 8001de8:	2000005c 	.word	0x2000005c
- 8001dec:	40000400 	.word	0x40000400
- 8001df0:	20000058 	.word	0x20000058
- 8001df4:	40000800 	.word	0x40000800
+ 8001e74:	bf00      	nop
+ 8001e76:	3708      	adds	r7, #8
+ 8001e78:	46bd      	mov	sp, r7
+ 8001e7a:	bd80      	pop	{r7, pc}
+ 8001e7c:	40020400 	.word	0x40020400
+ 8001e80:	2000005c 	.word	0x2000005c
+ 8001e84:	40000400 	.word	0x40000400
+ 8001e88:	20000058 	.word	0x20000058
+ 8001e8c:	40000800 	.word	0x40000800
 
-08001df8 <APP_vCalibrateLineFollowing>:
+08001e90 <APP_vCalibrateLineFollowing>:
  * then calculates the threshold values to be used for line detection.
  *
  * @param None
  * @return None
  */
 void APP_vCalibrateLineFollowing(void) {
- 8001df8:	b580      	push	{r7, lr}
- 8001dfa:	b088      	sub	sp, #32
- 8001dfc:	af00      	add	r7, sp, #0
-	u16 minVal[APP_IR_ARRAY_COUNT];
-	u16 maxVal[APP_IR_ARRAY_COUNT];
+ 8001e90:	b580      	push	{r7, lr}
+ 8001e92:	b088      	sub	sp, #32
+ 8001e94:	af00      	add	r7, sp, #0
+	u16 minVal[APP_IR_ARRAY_SIZE];
+	u16 maxVal[APP_IR_ARRAY_SIZE];
 	/* INITIALIZE THE MINIMUM AND MAXIMUM */
 	u8 i = 0;
- 8001dfe:	2300      	movs	r3, #0
- 8001e00:	77fb      	strb	r3, [r7, #31]
+ 8001e96:	2300      	movs	r3, #0
+ 8001e98:	77fb      	strb	r3, [r7, #31]
 	u16 greatcounter = 0;
- 8001e02:	2300      	movs	r3, #0
- 8001e04:	83bb      	strh	r3, [r7, #28]
-	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
- 8001e06:	2300      	movs	r3, #0
- 8001e08:	77fb      	strb	r3, [r7, #31]
- 8001e0a:	e016      	b.n	8001e3a <APP_vCalibrateLineFollowing+0x42>
+ 8001e9a:	2300      	movs	r3, #0
+ 8001e9c:	83bb      	strh	r3, [r7, #28]
+	for (i = 0; i < APP_IR_ARRAY_SIZE; i++) {
+ 8001e9e:	2300      	movs	r3, #0
+ 8001ea0:	77fb      	strb	r3, [r7, #31]
+ 8001ea2:	e016      	b.n	8001ed2 <APP_vCalibrateLineFollowing+0x42>
 		minVal[i] = APP_u16IRData[i];
- 8001e0c:	7ffa      	ldrb	r2, [r7, #31]
- 8001e0e:	7ffb      	ldrb	r3, [r7, #31]
- 8001e10:	4944      	ldr	r1, [pc, #272]	; (8001f24 <APP_vCalibrateLineFollowing+0x12c>)
- 8001e12:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
- 8001e16:	005b      	lsls	r3, r3, #1
- 8001e18:	3320      	adds	r3, #32
- 8001e1a:	443b      	add	r3, r7
- 8001e1c:	f823 2c10 	strh.w	r2, [r3, #-16]
+ 8001ea4:	7ffa      	ldrb	r2, [r7, #31]
+ 8001ea6:	7ffb      	ldrb	r3, [r7, #31]
+ 8001ea8:	4944      	ldr	r1, [pc, #272]	; (8001fbc <APP_vCalibrateLineFollowing+0x12c>)
+ 8001eaa:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
+ 8001eae:	005b      	lsls	r3, r3, #1
+ 8001eb0:	3320      	adds	r3, #32
+ 8001eb2:	443b      	add	r3, r7
+ 8001eb4:	f823 2c10 	strh.w	r2, [r3, #-16]
 		maxVal[i] = APP_u16IRData[i];
- 8001e20:	7ffa      	ldrb	r2, [r7, #31]
- 8001e22:	7ffb      	ldrb	r3, [r7, #31]
- 8001e24:	493f      	ldr	r1, [pc, #252]	; (8001f24 <APP_vCalibrateLineFollowing+0x12c>)
- 8001e26:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
- 8001e2a:	005b      	lsls	r3, r3, #1
- 8001e2c:	3320      	adds	r3, #32
- 8001e2e:	443b      	add	r3, r7
- 8001e30:	f823 2c1c 	strh.w	r2, [r3, #-28]
-	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
- 8001e34:	7ffb      	ldrb	r3, [r7, #31]
- 8001e36:	3301      	adds	r3, #1
- 8001e38:	77fb      	strb	r3, [r7, #31]
- 8001e3a:	7ffb      	ldrb	r3, [r7, #31]
- 8001e3c:	2b04      	cmp	r3, #4
- 8001e3e:	d9e5      	bls.n	8001e0c <APP_vCalibrateLineFollowing+0x14>
+ 8001eb8:	7ffa      	ldrb	r2, [r7, #31]
+ 8001eba:	7ffb      	ldrb	r3, [r7, #31]
+ 8001ebc:	493f      	ldr	r1, [pc, #252]	; (8001fbc <APP_vCalibrateLineFollowing+0x12c>)
+ 8001ebe:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
+ 8001ec2:	005b      	lsls	r3, r3, #1
+ 8001ec4:	3320      	adds	r3, #32
+ 8001ec6:	443b      	add	r3, r7
+ 8001ec8:	f823 2c1c 	strh.w	r2, [r3, #-28]
+	for (i = 0; i < APP_IR_ARRAY_SIZE; i++) {
+ 8001ecc:	7ffb      	ldrb	r3, [r7, #31]
+ 8001ece:	3301      	adds	r3, #1
+ 8001ed0:	77fb      	strb	r3, [r7, #31]
+ 8001ed2:	7ffb      	ldrb	r3, [r7, #31]
+ 8001ed4:	2b04      	cmp	r3, #4
+ 8001ed6:	d9e5      	bls.n	8001ea4 <APP_vCalibrateLineFollowing+0x14>
 	}
 	/* SET THE MOTOR TO MAX SPEED TO ROTATE THE ROBOT  TO GET MULTIPLE VALUES */
     APP_s32SpeedRight = APP_AVERAGE_SPEED;
- 8001e40:	4b39      	ldr	r3, [pc, #228]	; (8001f28 <APP_vCalibrateLineFollowing+0x130>)
- 8001e42:	f240 72ff 	movw	r2, #2047	; 0x7ff
- 8001e46:	601a      	str	r2, [r3, #0]
+ 8001ed8:	4b39      	ldr	r3, [pc, #228]	; (8001fc0 <APP_vCalibrateLineFollowing+0x130>)
+ 8001eda:	f240 72ff 	movw	r2, #2047	; 0x7ff
+ 8001ede:	601a      	str	r2, [r3, #0]
     APP_s32SpeedLeft = APP_AVERAGE_SPEED;
- 8001e48:	4b38      	ldr	r3, [pc, #224]	; (8001f2c <APP_vCalibrateLineFollowing+0x134>)
- 8001e4a:	f240 72ff 	movw	r2, #2047	; 0x7ff
- 8001e4e:	601a      	str	r2, [r3, #0]
+ 8001ee0:	4b38      	ldr	r3, [pc, #224]	; (8001fc4 <APP_vCalibrateLineFollowing+0x134>)
+ 8001ee2:	f240 72ff 	movw	r2, #2047	; 0x7ff
+ 8001ee6:	601a      	str	r2, [r3, #0]
     APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
- 8001e50:	2101      	movs	r1, #1
- 8001e52:	2000      	movs	r0, #0
- 8001e54:	f7ff ffa0 	bl	8001d98 <APP_vDriveMotors>
+ 8001ee8:	2101      	movs	r1, #1
+ 8001eea:	2000      	movs	r0, #0
+ 8001eec:	f7ff ff7c 	bl	8001de8 <APP_vDriveMotors>
 	/* START CALIBRATION PROCESS */
 	for (greatcounter = 0; greatcounter < 3000; greatcounter++) {
- 8001e58:	2300      	movs	r3, #0
- 8001e5a:	83bb      	strh	r3, [r7, #28]
- 8001e5c:	e037      	b.n	8001ece <APP_vCalibrateLineFollowing+0xd6>
-		for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
- 8001e5e:	2300      	movs	r3, #0
- 8001e60:	77fb      	strb	r3, [r7, #31]
- 8001e62:	e02e      	b.n	8001ec2 <APP_vCalibrateLineFollowing+0xca>
+ 8001ef0:	2300      	movs	r3, #0
+ 8001ef2:	83bb      	strh	r3, [r7, #28]
+ 8001ef4:	e037      	b.n	8001f66 <APP_vCalibrateLineFollowing+0xd6>
+		for (i = 0; i < APP_IR_ARRAY_SIZE; i++) {
+ 8001ef6:	2300      	movs	r3, #0
+ 8001ef8:	77fb      	strb	r3, [r7, #31]
+ 8001efa:	e02e      	b.n	8001f5a <APP_vCalibrateLineFollowing+0xca>
 			if (APP_u16IRData[i] > maxVal[i]) { maxVal[i] = APP_u16IRData[i]; }
- 8001e64:	7ffb      	ldrb	r3, [r7, #31]
- 8001e66:	4a2f      	ldr	r2, [pc, #188]	; (8001f24 <APP_vCalibrateLineFollowing+0x12c>)
- 8001e68:	f832 2013 	ldrh.w	r2, [r2, r3, lsl #1]
- 8001e6c:	7ffb      	ldrb	r3, [r7, #31]
- 8001e6e:	005b      	lsls	r3, r3, #1
- 8001e70:	3320      	adds	r3, #32
- 8001e72:	443b      	add	r3, r7
- 8001e74:	f833 3c1c 	ldrh.w	r3, [r3, #-28]
- 8001e78:	429a      	cmp	r2, r3
- 8001e7a:	d909      	bls.n	8001e90 <APP_vCalibrateLineFollowing+0x98>
- 8001e7c:	7ffa      	ldrb	r2, [r7, #31]
- 8001e7e:	7ffb      	ldrb	r3, [r7, #31]
- 8001e80:	4928      	ldr	r1, [pc, #160]	; (8001f24 <APP_vCalibrateLineFollowing+0x12c>)
- 8001e82:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
- 8001e86:	005b      	lsls	r3, r3, #1
- 8001e88:	3320      	adds	r3, #32
- 8001e8a:	443b      	add	r3, r7
- 8001e8c:	f823 2c1c 	strh.w	r2, [r3, #-28]
+ 8001efc:	7ffb      	ldrb	r3, [r7, #31]
+ 8001efe:	4a2f      	ldr	r2, [pc, #188]	; (8001fbc <APP_vCalibrateLineFollowing+0x12c>)
+ 8001f00:	f832 2013 	ldrh.w	r2, [r2, r3, lsl #1]
+ 8001f04:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f06:	005b      	lsls	r3, r3, #1
+ 8001f08:	3320      	adds	r3, #32
+ 8001f0a:	443b      	add	r3, r7
+ 8001f0c:	f833 3c1c 	ldrh.w	r3, [r3, #-28]
+ 8001f10:	429a      	cmp	r2, r3
+ 8001f12:	d909      	bls.n	8001f28 <APP_vCalibrateLineFollowing+0x98>
+ 8001f14:	7ffa      	ldrb	r2, [r7, #31]
+ 8001f16:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f18:	4928      	ldr	r1, [pc, #160]	; (8001fbc <APP_vCalibrateLineFollowing+0x12c>)
+ 8001f1a:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
+ 8001f1e:	005b      	lsls	r3, r3, #1
+ 8001f20:	3320      	adds	r3, #32
+ 8001f22:	443b      	add	r3, r7
+ 8001f24:	f823 2c1c 	strh.w	r2, [r3, #-28]
 			if (APP_u16IRData[i] < minVal[i]) { minVal[i] = APP_u16IRData[i]; }
- 8001e90:	7ffb      	ldrb	r3, [r7, #31]
- 8001e92:	4a24      	ldr	r2, [pc, #144]	; (8001f24 <APP_vCalibrateLineFollowing+0x12c>)
- 8001e94:	f832 2013 	ldrh.w	r2, [r2, r3, lsl #1]
- 8001e98:	7ffb      	ldrb	r3, [r7, #31]
- 8001e9a:	005b      	lsls	r3, r3, #1
- 8001e9c:	3320      	adds	r3, #32
- 8001e9e:	443b      	add	r3, r7
- 8001ea0:	f833 3c10 	ldrh.w	r3, [r3, #-16]
- 8001ea4:	429a      	cmp	r2, r3
- 8001ea6:	d209      	bcs.n	8001ebc <APP_vCalibrateLineFollowing+0xc4>
- 8001ea8:	7ffa      	ldrb	r2, [r7, #31]
- 8001eaa:	7ffb      	ldrb	r3, [r7, #31]
- 8001eac:	491d      	ldr	r1, [pc, #116]	; (8001f24 <APP_vCalibrateLineFollowing+0x12c>)
- 8001eae:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
- 8001eb2:	005b      	lsls	r3, r3, #1
- 8001eb4:	3320      	adds	r3, #32
- 8001eb6:	443b      	add	r3, r7
- 8001eb8:	f823 2c10 	strh.w	r2, [r3, #-16]
-		for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
- 8001ebc:	7ffb      	ldrb	r3, [r7, #31]
- 8001ebe:	3301      	adds	r3, #1
- 8001ec0:	77fb      	strb	r3, [r7, #31]
- 8001ec2:	7ffb      	ldrb	r3, [r7, #31]
- 8001ec4:	2b04      	cmp	r3, #4
- 8001ec6:	d9cd      	bls.n	8001e64 <APP_vCalibrateLineFollowing+0x6c>
+ 8001f28:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f2a:	4a24      	ldr	r2, [pc, #144]	; (8001fbc <APP_vCalibrateLineFollowing+0x12c>)
+ 8001f2c:	f832 2013 	ldrh.w	r2, [r2, r3, lsl #1]
+ 8001f30:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f32:	005b      	lsls	r3, r3, #1
+ 8001f34:	3320      	adds	r3, #32
+ 8001f36:	443b      	add	r3, r7
+ 8001f38:	f833 3c10 	ldrh.w	r3, [r3, #-16]
+ 8001f3c:	429a      	cmp	r2, r3
+ 8001f3e:	d209      	bcs.n	8001f54 <APP_vCalibrateLineFollowing+0xc4>
+ 8001f40:	7ffa      	ldrb	r2, [r7, #31]
+ 8001f42:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f44:	491d      	ldr	r1, [pc, #116]	; (8001fbc <APP_vCalibrateLineFollowing+0x12c>)
+ 8001f46:	f831 2012 	ldrh.w	r2, [r1, r2, lsl #1]
+ 8001f4a:	005b      	lsls	r3, r3, #1
+ 8001f4c:	3320      	adds	r3, #32
+ 8001f4e:	443b      	add	r3, r7
+ 8001f50:	f823 2c10 	strh.w	r2, [r3, #-16]
+		for (i = 0; i < APP_IR_ARRAY_SIZE; i++) {
+ 8001f54:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f56:	3301      	adds	r3, #1
+ 8001f58:	77fb      	strb	r3, [r7, #31]
+ 8001f5a:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f5c:	2b04      	cmp	r3, #4
+ 8001f5e:	d9cd      	bls.n	8001efc <APP_vCalibrateLineFollowing+0x6c>
 	for (greatcounter = 0; greatcounter < 3000; greatcounter++) {
- 8001ec8:	8bbb      	ldrh	r3, [r7, #28]
- 8001eca:	3301      	adds	r3, #1
- 8001ecc:	83bb      	strh	r3, [r7, #28]
- 8001ece:	8bbb      	ldrh	r3, [r7, #28]
- 8001ed0:	f640 32b7 	movw	r2, #2999	; 0xbb7
- 8001ed4:	4293      	cmp	r3, r2
- 8001ed6:	d9c2      	bls.n	8001e5e <APP_vCalibrateLineFollowing+0x66>
+ 8001f60:	8bbb      	ldrh	r3, [r7, #28]
+ 8001f62:	3301      	adds	r3, #1
+ 8001f64:	83bb      	strh	r3, [r7, #28]
+ 8001f66:	8bbb      	ldrh	r3, [r7, #28]
+ 8001f68:	f640 32b7 	movw	r2, #2999	; 0xbb7
+ 8001f6c:	4293      	cmp	r3, r2
+ 8001f6e:	d9c2      	bls.n	8001ef6 <APP_vCalibrateLineFollowing+0x66>
 		}
 	}
 	/* SET THE THRESHOLD */
-	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
- 8001ed8:	2300      	movs	r3, #0
- 8001eda:	77fb      	strb	r3, [r7, #31]
- 8001edc:	e019      	b.n	8001f12 <APP_vCalibrateLineFollowing+0x11a>
- 8001ede:	7ffb      	ldrb	r3, [r7, #31]
- 8001ee0:	005b      	lsls	r3, r3, #1
- 8001ee2:	3320      	adds	r3, #32
- 8001ee4:	443b      	add	r3, r7
- 8001ee6:	f833 3c10 	ldrh.w	r3, [r3, #-16]
- 8001eea:	461a      	mov	r2, r3
- 8001eec:	7ffb      	ldrb	r3, [r7, #31]
- 8001eee:	005b      	lsls	r3, r3, #1
- 8001ef0:	3320      	adds	r3, #32
- 8001ef2:	443b      	add	r3, r7
- 8001ef4:	f833 3c1c 	ldrh.w	r3, [r3, #-28]
- 8001ef8:	4413      	add	r3, r2
- 8001efa:	0fda      	lsrs	r2, r3, #31
- 8001efc:	4413      	add	r3, r2
- 8001efe:	105b      	asrs	r3, r3, #1
- 8001f00:	461a      	mov	r2, r3
- 8001f02:	7ffb      	ldrb	r3, [r7, #31]
- 8001f04:	b291      	uxth	r1, r2
- 8001f06:	4a0a      	ldr	r2, [pc, #40]	; (8001f30 <APP_vCalibrateLineFollowing+0x138>)
- 8001f08:	f822 1013 	strh.w	r1, [r2, r3, lsl #1]
- 8001f0c:	7ffb      	ldrb	r3, [r7, #31]
- 8001f0e:	3301      	adds	r3, #1
- 8001f10:	77fb      	strb	r3, [r7, #31]
- 8001f12:	7ffb      	ldrb	r3, [r7, #31]
- 8001f14:	2b04      	cmp	r3, #4
- 8001f16:	d9e2      	bls.n	8001ede <APP_vCalibrateLineFollowing+0xe6>
+	for (i = 0; i < APP_IR_ARRAY_SIZE; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
+ 8001f70:	2300      	movs	r3, #0
+ 8001f72:	77fb      	strb	r3, [r7, #31]
+ 8001f74:	e019      	b.n	8001faa <APP_vCalibrateLineFollowing+0x11a>
+ 8001f76:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f78:	005b      	lsls	r3, r3, #1
+ 8001f7a:	3320      	adds	r3, #32
+ 8001f7c:	443b      	add	r3, r7
+ 8001f7e:	f833 3c10 	ldrh.w	r3, [r3, #-16]
+ 8001f82:	461a      	mov	r2, r3
+ 8001f84:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f86:	005b      	lsls	r3, r3, #1
+ 8001f88:	3320      	adds	r3, #32
+ 8001f8a:	443b      	add	r3, r7
+ 8001f8c:	f833 3c1c 	ldrh.w	r3, [r3, #-28]
+ 8001f90:	4413      	add	r3, r2
+ 8001f92:	0fda      	lsrs	r2, r3, #31
+ 8001f94:	4413      	add	r3, r2
+ 8001f96:	105b      	asrs	r3, r3, #1
+ 8001f98:	461a      	mov	r2, r3
+ 8001f9a:	7ffb      	ldrb	r3, [r7, #31]
+ 8001f9c:	b291      	uxth	r1, r2
+ 8001f9e:	4a0a      	ldr	r2, [pc, #40]	; (8001fc8 <APP_vCalibrateLineFollowing+0x138>)
+ 8001fa0:	f822 1013 	strh.w	r1, [r2, r3, lsl #1]
+ 8001fa4:	7ffb      	ldrb	r3, [r7, #31]
+ 8001fa6:	3301      	adds	r3, #1
+ 8001fa8:	77fb      	strb	r3, [r7, #31]
+ 8001faa:	7ffb      	ldrb	r3, [r7, #31]
+ 8001fac:	2b04      	cmp	r3, #4
+ 8001fae:	d9e2      	bls.n	8001f76 <APP_vCalibrateLineFollowing+0xe6>
 }
- 8001f18:	bf00      	nop
- 8001f1a:	bf00      	nop
- 8001f1c:	3720      	adds	r7, #32
- 8001f1e:	46bd      	mov	sp, r7
- 8001f20:	bd80      	pop	{r7, pc}
- 8001f22:	bf00      	nop
- 8001f24:	20000040 	.word	0x20000040
- 8001f28:	2000005c 	.word	0x2000005c
- 8001f2c:	20000058 	.word	0x20000058
- 8001f30:	2000004c 	.word	0x2000004c
+ 8001fb0:	bf00      	nop
+ 8001fb2:	bf00      	nop
+ 8001fb4:	3720      	adds	r7, #32
+ 8001fb6:	46bd      	mov	sp, r7
+ 8001fb8:	bd80      	pop	{r7, pc}
+ 8001fba:	bf00      	nop
+ 8001fbc:	20000040 	.word	0x20000040
+ 8001fc0:	2000005c 	.word	0x2000005c
+ 8001fc4:	20000058 	.word	0x20000058
+ 8001fc8:	2000004c 	.word	0x2000004c
 
-08001f34 <APP_vCalibrateMazeSolving>:
+08001fcc <APP_vCalibrateMazeSolving>:
  * @note After calibration, the function calibrates line following sensors.
  *
  * @param None
  * @return None
  */
 void APP_vCalibrateMazeSolving(void) {
- 8001f34:	b580      	push	{r7, lr}
- 8001f36:	b08a      	sub	sp, #40	; 0x28
- 8001f38:	af00      	add	r7, sp, #0
+ 8001fcc:	b580      	push	{r7, lr}
+ 8001fce:	b08a      	sub	sp, #40	; 0x28
+ 8001fd0:	af00      	add	r7, sp, #0
 	/************************************ USART CONFIGURATIONS ************************************/
 	/* Initialize USART */
 	MUSART_InitTypeDef uart = {9600, MUSART_DATAWIDTH_8BIT,
- 8001f3a:	4a25      	ldr	r2, [pc, #148]	; (8001fd0 <APP_vCalibrateMazeSolving+0x9c>)
- 8001f3c:	f107 031c 	add.w	r3, r7, #28
- 8001f40:	ca07      	ldmia	r2, {r0, r1, r2}
- 8001f42:	e883 0007 	stmia.w	r3, {r0, r1, r2}
+ 8001fd2:	4a25      	ldr	r2, [pc, #148]	; (8002068 <APP_vCalibrateMazeSolving+0x9c>)
+ 8001fd4:	f107 031c 	add.w	r3, r7, #28
+ 8001fd8:	ca07      	ldmia	r2, {r0, r1, r2}
+ 8001fda:	e883 0007 	stmia.w	r3, {r0, r1, r2}
 							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
 							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
 							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
 	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE, 0, 0, 0};	/* Disable USART's Clock */
- 8001f46:	2300      	movs	r3, #0
- 8001f48:	61bb      	str	r3, [r7, #24]
+ 8001fde:	2300      	movs	r3, #0
+ 8001fe0:	61bb      	str	r3, [r7, #24]
 	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
- 8001f4a:	f107 0218 	add.w	r2, r7, #24
- 8001f4e:	f107 031c 	add.w	r3, r7, #28
- 8001f52:	4619      	mov	r1, r3
- 8001f54:	481f      	ldr	r0, [pc, #124]	; (8001fd4 <APP_vCalibrateMazeSolving+0xa0>)
- 8001f56:	f7ff fbdf 	bl	8001718 <MUSART_vInit>
+ 8001fe2:	f107 0218 	add.w	r2, r7, #24
+ 8001fe6:	f107 031c 	add.w	r3, r7, #28
+ 8001fea:	4619      	mov	r1, r3
+ 8001fec:	481f      	ldr	r0, [pc, #124]	; (800206c <APP_vCalibrateMazeSolving+0xa0>)
+ 8001fee:	f7ff fb93 	bl	8001718 <MUSART_vInit>
 	MUSART_vEnable(APP_MOBILE_USART);
- 8001f5a:	481e      	ldr	r0, [pc, #120]	; (8001fd4 <APP_vCalibrateMazeSolving+0xa0>)
- 8001f5c:	f7ff fd14 	bl	8001988 <MUSART_vEnable>
+ 8001ff2:	481e      	ldr	r0, [pc, #120]	; (800206c <APP_vCalibrateMazeSolving+0xa0>)
+ 8001ff4:	f7ff fcc8 	bl	8001988 <MUSART_vEnable>
 	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
- 8001f60:	2100      	movs	r1, #0
- 8001f62:	481c      	ldr	r0, [pc, #112]	; (8001fd4 <APP_vCalibrateMazeSolving+0xa0>)
- 8001f64:	f7ff fd32 	bl	80019cc <MUSART_vRxIntStatus>
+ 8001ff8:	2100      	movs	r1, #0
+ 8001ffa:	481c      	ldr	r0, [pc, #112]	; (800206c <APP_vCalibrateMazeSolving+0xa0>)
+ 8001ffc:	f7ff fce6 	bl	80019cc <MUSART_vRxIntStatus>
 	/**********************************************************************************************/
 
 	/************************* DMA CONFIGURATION FOR USART CONTROL BUFFER *************************/
 	MDMA_DirectInitType dma = {MDMA_DISABLE, MDMA_DIRECTION_PER_MEM, MDMA_ENABLE,
- 8001f68:	4a1b      	ldr	r2, [pc, #108]	; (8001fd8 <APP_vCalibrateMazeSolving+0xa4>)
- 8001f6a:	f107 0310 	add.w	r3, r7, #16
- 8001f6e:	e892 0003 	ldmia.w	r2, {r0, r1}
- 8001f72:	6018      	str	r0, [r3, #0]
- 8001f74:	3304      	adds	r3, #4
- 8001f76:	8019      	strh	r1, [r3, #0]
- 8001f78:	3302      	adds	r3, #2
- 8001f7a:	0c0a      	lsrs	r2, r1, #16
- 8001f7c:	701a      	strb	r2, [r3, #0]
+ 8002000:	4a1b      	ldr	r2, [pc, #108]	; (8002070 <APP_vCalibrateMazeSolving+0xa4>)
+ 8002002:	f107 0310 	add.w	r3, r7, #16
+ 8002006:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 800200a:	6018      	str	r0, [r3, #0]
+ 800200c:	3304      	adds	r3, #4
+ 800200e:	8019      	strh	r1, [r3, #0]
+ 8002010:	3302      	adds	r3, #2
+ 8002012:	0c0a      	lsrs	r2, r1, #16
+ 8002014:	701a      	strb	r2, [r3, #0]
 								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_HIGH, MDMA_CHANNEL_4};
 	MDMA_TransferStruct dmat = {(u32*)MUSART_u32EnableRxDMA(APP_MOBILE_USART),
- 8001f7e:	4815      	ldr	r0, [pc, #84]	; (8001fd4 <APP_vCalibrateMazeSolving+0xa0>)
- 8001f80:	f7ff fd12 	bl	80019a8 <MUSART_u32EnableRxDMA>
- 8001f84:	4603      	mov	r3, r0
- 8001f86:	607b      	str	r3, [r7, #4]
- 8001f88:	4b14      	ldr	r3, [pc, #80]	; (8001fdc <APP_vCalibrateMazeSolving+0xa8>)
- 8001f8a:	60bb      	str	r3, [r7, #8]
- 8001f8c:	2301      	movs	r3, #1
- 8001f8e:	81bb      	strh	r3, [r7, #12]
- 8001f90:	2300      	movs	r3, #0
- 8001f92:	73bb      	strb	r3, [r7, #14]
+ 8002016:	4815      	ldr	r0, [pc, #84]	; (800206c <APP_vCalibrateMazeSolving+0xa0>)
+ 8002018:	f7ff fcc6 	bl	80019a8 <MUSART_u32EnableRxDMA>
+ 800201c:	4603      	mov	r3, r0
+ 800201e:	607b      	str	r3, [r7, #4]
+ 8002020:	4b14      	ldr	r3, [pc, #80]	; (8002074 <APP_vCalibrateMazeSolving+0xa8>)
+ 8002022:	60bb      	str	r3, [r7, #8]
+ 8002024:	2301      	movs	r3, #1
+ 8002026:	81bb      	strh	r3, [r7, #12]
+ 8002028:	2300      	movs	r3, #0
+ 800202a:	73bb      	strb	r3, [r7, #14]
 								(u32*)(&APP_u8Control), 1, MDMA_SIZE_BYTE};
 	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
- 8001f94:	f107 0310 	add.w	r3, r7, #16
- 8001f98:	461a      	mov	r2, r3
- 8001f9a:	2105      	movs	r1, #5
- 8001f9c:	4810      	ldr	r0, [pc, #64]	; (8001fe0 <APP_vCalibrateMazeSolving+0xac>)
- 8001f9e:	f7fe feb9 	bl	8000d14 <MDMA_vDirectInit>
+ 800202c:	f107 0310 	add.w	r3, r7, #16
+ 8002030:	461a      	mov	r2, r3
+ 8002032:	2105      	movs	r1, #5
+ 8002034:	4810      	ldr	r0, [pc, #64]	; (8002078 <APP_vCalibrateMazeSolving+0xac>)
+ 8002036:	f7fe fe6d 	bl	8000d14 <MDMA_vDirectInit>
 	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
- 8001fa2:	1d3b      	adds	r3, r7, #4
- 8001fa4:	461a      	mov	r2, r3
- 8001fa6:	2105      	movs	r1, #5
- 8001fa8:	480d      	ldr	r0, [pc, #52]	; (8001fe0 <APP_vCalibrateMazeSolving+0xac>)
- 8001faa:	f7fe ff9e 	bl	8000eea <MDMA_vStart>
+ 800203a:	1d3b      	adds	r3, r7, #4
+ 800203c:	461a      	mov	r2, r3
+ 800203e:	2105      	movs	r1, #5
+ 8002040:	480d      	ldr	r0, [pc, #52]	; (8002078 <APP_vCalibrateMazeSolving+0xac>)
+ 8002042:	f7fe ff52 	bl	8000eea <MDMA_vStart>
 
 	/********************************** CALIBRATION FOR DIRECTION *********************************/
 	// TODO -- ALLOW THE MOBILE TO FULLY CONTROL THE CAR SO IT CAN CALIBRATE
 
 	/* ALLOW THE CAR IT SELF TO CALIBRATE */
 	APP_vCalibrateLineFollowing();
- 8001fae:	f7ff ff23 	bl	8001df8 <APP_vCalibrateLineFollowing>
+ 8002046:	f7ff ff23 	bl	8001e90 <APP_vCalibrateLineFollowing>
 	/**********************************************************************************************/
 
 	/************************ DMA CONFIGURATION FOR USART DIRECTION BUFFER ************************/
 	dmat.DstAddr = (u32*)APP_u8DirBuffer;
- 8001fb2:	4b0c      	ldr	r3, [pc, #48]	; (8001fe4 <APP_vCalibrateMazeSolving+0xb0>)
- 8001fb4:	60bb      	str	r3, [r7, #8]
+ 800204a:	4b0c      	ldr	r3, [pc, #48]	; (800207c <APP_vCalibrateMazeSolving+0xb0>)
+ 800204c:	60bb      	str	r3, [r7, #8]
 	dmat.Length = APP_MOBILE_MSG_LEN;
- 8001fb6:	2306      	movs	r3, #6
- 8001fb8:	81bb      	strh	r3, [r7, #12]
+ 800204e:	2306      	movs	r3, #6
+ 8002050:	81bb      	strh	r3, [r7, #12]
 	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
- 8001fba:	1d3b      	adds	r3, r7, #4
- 8001fbc:	461a      	mov	r2, r3
- 8001fbe:	2105      	movs	r1, #5
- 8001fc0:	4807      	ldr	r0, [pc, #28]	; (8001fe0 <APP_vCalibrateMazeSolving+0xac>)
- 8001fc2:	f7fe ff92 	bl	8000eea <MDMA_vStart>
+ 8002052:	1d3b      	adds	r3, r7, #4
+ 8002054:	461a      	mov	r2, r3
+ 8002056:	2105      	movs	r1, #5
+ 8002058:	4807      	ldr	r0, [pc, #28]	; (8002078 <APP_vCalibrateMazeSolving+0xac>)
+ 800205a:	f7fe ff46 	bl	8000eea <MDMA_vStart>
 	/**********************************************************************************************/
 }
- 8001fc6:	bf00      	nop
- 8001fc8:	3728      	adds	r7, #40	; 0x28
- 8001fca:	46bd      	mov	sp, r7
- 8001fcc:	bd80      	pop	{r7, pc}
- 8001fce:	bf00      	nop
- 8001fd0:	08002108 	.word	0x08002108
- 8001fd4:	40011000 	.word	0x40011000
- 8001fd8:	08002114 	.word	0x08002114
- 8001fdc:	20000066 	.word	0x20000066
- 8001fe0:	40026400 	.word	0x40026400
- 8001fe4:	20000060 	.word	0x20000060
+ 800205e:	bf00      	nop
+ 8002060:	3728      	adds	r7, #40	; 0x28
+ 8002062:	46bd      	mov	sp, r7
+ 8002064:	bd80      	pop	{r7, pc}
+ 8002066:	bf00      	nop
+ 8002068:	080021a0 	.word	0x080021a0
+ 800206c:	40011000 	.word	0x40011000
+ 8002070:	080021ac 	.word	0x080021ac
+ 8002074:	20000066 	.word	0x20000066
+ 8002078:	40026400 	.word	0x40026400
+ 800207c:	20000060 	.word	0x20000060
 
-08001fe8 <APP_vReturnToPointZero>:
+08002080 <APP_vReturnToPointZero>:
  * Once the black line is detected, the car stops.
  *
  * @param None
  * @return None
  */
 void APP_vReturnToPointZero(void) {
- 8001fe8:	b580      	push	{r7, lr}
- 8001fea:	af00      	add	r7, sp, #0
+ 8002080:	b580      	push	{r7, lr}
+ 8002082:	af00      	add	r7, sp, #0
 	/* ROTATE THE CAR */
 	APP_s32SpeedRight = APP_AVERAGE_SPEED;
- 8001fec:	4b0f      	ldr	r3, [pc, #60]	; (800202c <APP_vReturnToPointZero+0x44>)
- 8001fee:	f240 72ff 	movw	r2, #2047	; 0x7ff
- 8001ff2:	601a      	str	r2, [r3, #0]
+ 8002084:	4b0f      	ldr	r3, [pc, #60]	; (80020c4 <APP_vReturnToPointZero+0x44>)
+ 8002086:	f240 72ff 	movw	r2, #2047	; 0x7ff
+ 800208a:	601a      	str	r2, [r3, #0]
 	APP_s32SpeedLeft = APP_AVERAGE_SPEED;
- 8001ff4:	4b0e      	ldr	r3, [pc, #56]	; (8002030 <APP_vReturnToPointZero+0x48>)
- 8001ff6:	f240 72ff 	movw	r2, #2047	; 0x7ff
- 8001ffa:	601a      	str	r2, [r3, #0]
+ 800208c:	4b0e      	ldr	r3, [pc, #56]	; (80020c8 <APP_vReturnToPointZero+0x48>)
+ 800208e:	f240 72ff 	movw	r2, #2047	; 0x7ff
+ 8002092:	601a      	str	r2, [r3, #0]
 	APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
- 8001ffc:	2101      	movs	r1, #1
- 8001ffe:	2000      	movs	r0, #0
- 8002000:	f7ff feca 	bl	8001d98 <APP_vDriveMotors>
+ 8002094:	2101      	movs	r1, #1
+ 8002096:	2000      	movs	r0, #0
+ 8002098:	f7ff fea6 	bl	8001de8 <APP_vDriveMotors>
 	/* KEEP ROTATING UNTILL REACHING THE BLACK LINE IN THE MIDDLE SENSOR */
 	while (APP_u16IRData[2] > APP_u16IRThreshold[2]);
- 8002004:	bf00      	nop
- 8002006:	4b0b      	ldr	r3, [pc, #44]	; (8002034 <APP_vReturnToPointZero+0x4c>)
- 8002008:	889a      	ldrh	r2, [r3, #4]
- 800200a:	4b0b      	ldr	r3, [pc, #44]	; (8002038 <APP_vReturnToPointZero+0x50>)
- 800200c:	889b      	ldrh	r3, [r3, #4]
- 800200e:	429a      	cmp	r2, r3
- 8002010:	d8f9      	bhi.n	8002006 <APP_vReturnToPointZero+0x1e>
+ 800209c:	bf00      	nop
+ 800209e:	4b0b      	ldr	r3, [pc, #44]	; (80020cc <APP_vReturnToPointZero+0x4c>)
+ 80020a0:	889a      	ldrh	r2, [r3, #4]
+ 80020a2:	4b0b      	ldr	r3, [pc, #44]	; (80020d0 <APP_vReturnToPointZero+0x50>)
+ 80020a4:	889b      	ldrh	r3, [r3, #4]
+ 80020a6:	429a      	cmp	r2, r3
+ 80020a8:	d8f9      	bhi.n	800209e <APP_vReturnToPointZero+0x1e>
 	/* STOP THE CAR */
 	APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
- 8002012:	4b06      	ldr	r3, [pc, #24]	; (800202c <APP_vReturnToPointZero+0x44>)
- 8002014:	2200      	movs	r2, #0
- 8002016:	601a      	str	r2, [r3, #0]
+ 80020aa:	4b06      	ldr	r3, [pc, #24]	; (80020c4 <APP_vReturnToPointZero+0x44>)
+ 80020ac:	2200      	movs	r2, #0
+ 80020ae:	601a      	str	r2, [r3, #0]
 	APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
- 8002018:	4b05      	ldr	r3, [pc, #20]	; (8002030 <APP_vReturnToPointZero+0x48>)
- 800201a:	2200      	movs	r2, #0
- 800201c:	601a      	str	r2, [r3, #0]
+ 80020b0:	4b05      	ldr	r3, [pc, #20]	; (80020c8 <APP_vReturnToPointZero+0x48>)
+ 80020b2:	2200      	movs	r2, #0
+ 80020b4:	601a      	str	r2, [r3, #0]
 	APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
- 800201e:	2100      	movs	r1, #0
- 8002020:	2000      	movs	r0, #0
- 8002022:	f7ff feb9 	bl	8001d98 <APP_vDriveMotors>
+ 80020b6:	2100      	movs	r1, #0
+ 80020b8:	2000      	movs	r0, #0
+ 80020ba:	f7ff fe95 	bl	8001de8 <APP_vDriveMotors>
 }
- 8002026:	bf00      	nop
- 8002028:	bd80      	pop	{r7, pc}
- 800202a:	bf00      	nop
- 800202c:	2000005c 	.word	0x2000005c
- 8002030:	20000058 	.word	0x20000058
- 8002034:	20000040 	.word	0x20000040
- 8002038:	2000004c 	.word	0x2000004c
+ 80020be:	bf00      	nop
+ 80020c0:	bd80      	pop	{r7, pc}
+ 80020c2:	bf00      	nop
+ 80020c4:	2000005c 	.word	0x2000005c
+ 80020c8:	20000058 	.word	0x20000058
+ 80020cc:	20000040 	.word	0x20000040
+ 80020d0:	2000004c 	.word	0x2000004c
 
-0800203c <Reset_Handler>:
+080020d4 <Reset_Handler>:
 
   .section .text.Reset_Handler
   .weak Reset_Handler
   .type Reset_Handler, %function
 Reset_Handler:
   ldr   r0, =_estack
- 800203c:	480d      	ldr	r0, [pc, #52]	; (8002074 <LoopForever+0x2>)
+ 80020d4:	480d      	ldr	r0, [pc, #52]	; (800210c <LoopForever+0x2>)
   mov   sp, r0          /* set stack pointer */
- 800203e:	4685      	mov	sp, r0
+ 80020d6:	4685      	mov	sp, r0
 /* Call the clock system initialization function.*/
   bl  SystemInit
- 8002040:	f3af 8000 	nop.w
+ 80020d8:	f3af 8000 	nop.w
 
 /* Copy the data segment initializers from flash to SRAM */
   ldr r0, =_sdata
- 8002044:	480c      	ldr	r0, [pc, #48]	; (8002078 <LoopForever+0x6>)
+ 80020dc:	480c      	ldr	r0, [pc, #48]	; (8002110 <LoopForever+0x6>)
   ldr r1, =_edata
- 8002046:	490d      	ldr	r1, [pc, #52]	; (800207c <LoopForever+0xa>)
+ 80020de:	490d      	ldr	r1, [pc, #52]	; (8002114 <LoopForever+0xa>)
   ldr r2, =_sidata
- 8002048:	4a0d      	ldr	r2, [pc, #52]	; (8002080 <LoopForever+0xe>)
+ 80020e0:	4a0d      	ldr	r2, [pc, #52]	; (8002118 <LoopForever+0xe>)
   movs r3, #0
- 800204a:	2300      	movs	r3, #0
+ 80020e2:	2300      	movs	r3, #0
   b LoopCopyDataInit
- 800204c:	e002      	b.n	8002054 <LoopCopyDataInit>
+ 80020e4:	e002      	b.n	80020ec <LoopCopyDataInit>
 
-0800204e <CopyDataInit>:
+080020e6 <CopyDataInit>:
 
 CopyDataInit:
   ldr r4, [r2, r3]
- 800204e:	58d4      	ldr	r4, [r2, r3]
+ 80020e6:	58d4      	ldr	r4, [r2, r3]
   str r4, [r0, r3]
- 8002050:	50c4      	str	r4, [r0, r3]
+ 80020e8:	50c4      	str	r4, [r0, r3]
   adds r3, r3, #4
- 8002052:	3304      	adds	r3, #4
+ 80020ea:	3304      	adds	r3, #4
 
-08002054 <LoopCopyDataInit>:
+080020ec <LoopCopyDataInit>:
 
 LoopCopyDataInit:
   adds r4, r0, r3
- 8002054:	18c4      	adds	r4, r0, r3
+ 80020ec:	18c4      	adds	r4, r0, r3
   cmp r4, r1
- 8002056:	428c      	cmp	r4, r1
+ 80020ee:	428c      	cmp	r4, r1
   bcc CopyDataInit
- 8002058:	d3f9      	bcc.n	800204e <CopyDataInit>
+ 80020f0:	d3f9      	bcc.n	80020e6 <CopyDataInit>
 
 /* Zero fill the bss segment. */
   ldr r2, =_sbss
- 800205a:	4a0a      	ldr	r2, [pc, #40]	; (8002084 <LoopForever+0x12>)
+ 80020f2:	4a0a      	ldr	r2, [pc, #40]	; (800211c <LoopForever+0x12>)
   ldr r4, =_ebss
- 800205c:	4c0a      	ldr	r4, [pc, #40]	; (8002088 <LoopForever+0x16>)
+ 80020f4:	4c0a      	ldr	r4, [pc, #40]	; (8002120 <LoopForever+0x16>)
   movs r3, #0
- 800205e:	2300      	movs	r3, #0
+ 80020f6:	2300      	movs	r3, #0
   b LoopFillZerobss
- 8002060:	e001      	b.n	8002066 <LoopFillZerobss>
+ 80020f8:	e001      	b.n	80020fe <LoopFillZerobss>
 
-08002062 <FillZerobss>:
+080020fa <FillZerobss>:
 
 FillZerobss:
   str  r3, [r2]
- 8002062:	6013      	str	r3, [r2, #0]
+ 80020fa:	6013      	str	r3, [r2, #0]
   adds r2, r2, #4
- 8002064:	3204      	adds	r2, #4
+ 80020fc:	3204      	adds	r2, #4
 
-08002066 <LoopFillZerobss>:
+080020fe <LoopFillZerobss>:
 
 LoopFillZerobss:
   cmp r2, r4
- 8002066:	42a2      	cmp	r2, r4
+ 80020fe:	42a2      	cmp	r2, r4
   bcc FillZerobss
- 8002068:	d3fb      	bcc.n	8002062 <FillZerobss>
+ 8002100:	d3fb      	bcc.n	80020fa <FillZerobss>
 
 /* Call static constructors */
   bl __libc_init_array
- 800206a:	f000 f811 	bl	8002090 <__libc_init_array>
+ 8002102:	f000 f811 	bl	8002128 <__libc_init_array>
 /* Call the application's entry point.*/
   bl main
- 800206e:	f7ff fcf7 	bl	8001a60 <main>
+ 8002106:	f7ff fcab 	bl	8001a60 <main>
 
-08002072 <LoopForever>:
+0800210a <LoopForever>:
 
 LoopForever:
   b LoopForever
- 8002072:	e7fe      	b.n	8002072 <LoopForever>
+ 800210a:	e7fe      	b.n	800210a <LoopForever>
   ldr   r0, =_estack
- 8002074:	20010000 	.word	0x20010000
+ 800210c:	20010000 	.word	0x20010000
   ldr r0, =_sdata
- 8002078:	20000000 	.word	0x20000000
+ 8002110:	20000000 	.word	0x20000000
   ldr r1, =_edata
- 800207c:	20000000 	.word	0x20000000
+ 8002114:	20000000 	.word	0x20000000
   ldr r2, =_sidata
- 8002080:	08002124 	.word	0x08002124
+ 8002118:	080021bc 	.word	0x080021bc
   ldr r2, =_sbss
- 8002084:	20000000 	.word	0x20000000
+ 800211c:	20000000 	.word	0x20000000
   ldr r4, =_ebss
- 8002088:	20000068 	.word	0x20000068
+ 8002120:	20000068 	.word	0x20000068
 
-0800208c <ADC_IRQHandler>:
+08002124 <ADC_IRQHandler>:
  * @retval : None
 */
   .section .text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
   b Infinite_Loop
- 800208c:	e7fe      	b.n	800208c <ADC_IRQHandler>
+ 8002124:	e7fe      	b.n	8002124 <ADC_IRQHandler>
 	...
 
-08002090 <__libc_init_array>:
- 8002090:	b570      	push	{r4, r5, r6, lr}
- 8002092:	4d0d      	ldr	r5, [pc, #52]	; (80020c8 <__libc_init_array+0x38>)
- 8002094:	4c0d      	ldr	r4, [pc, #52]	; (80020cc <__libc_init_array+0x3c>)
- 8002096:	1b64      	subs	r4, r4, r5
- 8002098:	10a4      	asrs	r4, r4, #2
- 800209a:	2600      	movs	r6, #0
- 800209c:	42a6      	cmp	r6, r4
- 800209e:	d109      	bne.n	80020b4 <__libc_init_array+0x24>
- 80020a0:	4d0b      	ldr	r5, [pc, #44]	; (80020d0 <__libc_init_array+0x40>)
- 80020a2:	4c0c      	ldr	r4, [pc, #48]	; (80020d4 <__libc_init_array+0x44>)
- 80020a4:	f000 f818 	bl	80020d8 <_init>
- 80020a8:	1b64      	subs	r4, r4, r5
- 80020aa:	10a4      	asrs	r4, r4, #2
- 80020ac:	2600      	movs	r6, #0
- 80020ae:	42a6      	cmp	r6, r4
- 80020b0:	d105      	bne.n	80020be <__libc_init_array+0x2e>
- 80020b2:	bd70      	pop	{r4, r5, r6, pc}
- 80020b4:	f855 3b04 	ldr.w	r3, [r5], #4
- 80020b8:	4798      	blx	r3
- 80020ba:	3601      	adds	r6, #1
- 80020bc:	e7ee      	b.n	800209c <__libc_init_array+0xc>
- 80020be:	f855 3b04 	ldr.w	r3, [r5], #4
- 80020c2:	4798      	blx	r3
- 80020c4:	3601      	adds	r6, #1
- 80020c6:	e7f2      	b.n	80020ae <__libc_init_array+0x1e>
- 80020c8:	0800211c 	.word	0x0800211c
- 80020cc:	0800211c 	.word	0x0800211c
- 80020d0:	0800211c 	.word	0x0800211c
- 80020d4:	08002120 	.word	0x08002120
+08002128 <__libc_init_array>:
+ 8002128:	b570      	push	{r4, r5, r6, lr}
+ 800212a:	4d0d      	ldr	r5, [pc, #52]	; (8002160 <__libc_init_array+0x38>)
+ 800212c:	4c0d      	ldr	r4, [pc, #52]	; (8002164 <__libc_init_array+0x3c>)
+ 800212e:	1b64      	subs	r4, r4, r5
+ 8002130:	10a4      	asrs	r4, r4, #2
+ 8002132:	2600      	movs	r6, #0
+ 8002134:	42a6      	cmp	r6, r4
+ 8002136:	d109      	bne.n	800214c <__libc_init_array+0x24>
+ 8002138:	4d0b      	ldr	r5, [pc, #44]	; (8002168 <__libc_init_array+0x40>)
+ 800213a:	4c0c      	ldr	r4, [pc, #48]	; (800216c <__libc_init_array+0x44>)
+ 800213c:	f000 f818 	bl	8002170 <_init>
+ 8002140:	1b64      	subs	r4, r4, r5
+ 8002142:	10a4      	asrs	r4, r4, #2
+ 8002144:	2600      	movs	r6, #0
+ 8002146:	42a6      	cmp	r6, r4
+ 8002148:	d105      	bne.n	8002156 <__libc_init_array+0x2e>
+ 800214a:	bd70      	pop	{r4, r5, r6, pc}
+ 800214c:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8002150:	4798      	blx	r3
+ 8002152:	3601      	adds	r6, #1
+ 8002154:	e7ee      	b.n	8002134 <__libc_init_array+0xc>
+ 8002156:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800215a:	4798      	blx	r3
+ 800215c:	3601      	adds	r6, #1
+ 800215e:	e7f2      	b.n	8002146 <__libc_init_array+0x1e>
+ 8002160:	080021b4 	.word	0x080021b4
+ 8002164:	080021b4 	.word	0x080021b4
+ 8002168:	080021b4 	.word	0x080021b4
+ 800216c:	080021b8 	.word	0x080021b8
 
-080020d8 <_init>:
- 80020d8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 80020da:	bf00      	nop
- 80020dc:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 80020de:	bc08      	pop	{r3}
- 80020e0:	469e      	mov	lr, r3
- 80020e2:	4770      	bx	lr
+08002170 <_init>:
+ 8002170:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8002172:	bf00      	nop
+ 8002174:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8002176:	bc08      	pop	{r3}
+ 8002178:	469e      	mov	lr, r3
+ 800217a:	4770      	bx	lr
 
-080020e4 <_fini>:
- 80020e4:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 80020e6:	bf00      	nop
- 80020e8:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 80020ea:	bc08      	pop	{r3}
- 80020ec:	469e      	mov	lr, r3
- 80020ee:	4770      	bx	lr
+0800217c <_fini>:
+ 800217c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800217e:	bf00      	nop
+ 8002180:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8002182:	bc08      	pop	{r3}
+ 8002184:	469e      	mov	lr, r3
+ 8002186:	4770      	bx	lr

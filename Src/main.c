@@ -29,8 +29,8 @@
 #include "main.h"
 
 /************************************ VARIABLE DEFINITIONS ************************************/
-u16 APP_u16IRData[APP_IR_ARRAY_COUNT];		/* IR ARRAY CURRENT MEASURED VALUES          */
-u16 APP_u16IRThreshold[APP_IR_ARRAY_COUNT];	/* IR ARRAY THRESHOLD VALUES                 */
+u16 APP_u16IRData[APP_IR_ARRAY_SIZE];		/* IR ARRAY CURRENT MEASURED VALUES          */
+u16 APP_u16IRThreshold[APP_IR_ARRAY_SIZE];	/* IR ARRAY THRESHOLD VALUES                 */
 u32 APP_s32SpeedLeft = 0;                   /* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
 u32 APP_s32SpeedRight = 0;                  /* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
 			/* MOBILE VARIABLES */
@@ -66,11 +66,11 @@ int main(void) {
 	/********************************** CHOOSE WHICH CODE TO RUN **********************************/
 	APP_ALGORITHM AlgorithmFlag = 0;
 	while (true) {
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP1)) {
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_LINE_FOLLOW)) {
 			AlgorithmFlag = APP_LINE_FOLLOWING;
 			break;
 		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_APP2)) {
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE)) {
 			AlgorithmFlag = APP_MAZE_SOLVING;
 			break;
 		}
@@ -86,27 +86,27 @@ int main(void) {
 		APP_vReturnToPointZero();
 		while (true) {
 			/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
-			if ((APP_u16IRData[0] < APP_u16IRThreshold[0]) &&
-					(APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1])) {
+			if ((APP_u16IRData[0] > APP_u16IRThreshold[0]) &&
+					(APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1])) {
 				// TODO -- SHOULD KEEP FORWARD
 				continue;
 			}
 			/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
-			else if (APP_u16IRData[APP_IR_ARRAY_COUNT - 1] < APP_u16IRThreshold[APP_IR_ARRAY_COUNT - 1]) {
+			else if (APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1]) {
 				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
 				APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
 				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 				continue;
 			}
 			/* EXTREME LEFT --> (BLACK AT 0) && (WHITE AT 4 (IT IS WHITE HERE)) */
-			else if (APP_u16IRData[0] < APP_u16IRThreshold[0]) {
+			else if (APP_u16IRData[0] > APP_u16IRThreshold[0]) {
 				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
 				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
 				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
 				continue;
 			}
 			/* NORMAL PID CONTROL */
-			else if (APP_u16IRData[2] < APP_u16IRThreshold[2]) {
+			else if (APP_u16IRData[2] > APP_u16IRThreshold[2]) {
 				// TODO -- SHOULD KEEP FORWARD
 				continue;
 			}
@@ -172,19 +172,28 @@ void APP_vInit(void) {
 	MGPIO_vSetPinMode(APP_TIM_PWM_L_PIN, MGPIO_MODE_ALTERNATE);
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_L_PIN, APP_TIM_PWM_L_AF);
 	/* INIT BUTTON PINS */
-	MGPIO_vSetPinMode(APP_BUTTON_APP1, MGPIO_MODE_INPUT);
-	MGPIO_vSetPinInputType(APP_BUTTON_APP1, MGPIO_INPUT_TYPE_PULLUP);
-	MGPIO_vSetPinMode(APP_BUTTON_APP2, MGPIO_MODE_INPUT);
-	MGPIO_vSetPinInputType(APP_BUTTON_APP2, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinMode(APP_BUTTON_LINE_FOLLOW, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_LINE_FOLLOW, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE, MGPIO_INPUT_TYPE_PULLUP);
 	/* INIT DIRECTION PINS */
-	MGPIO_vSetPinMode(APP_DIRECTION_R, MGPIO_MODE_OUTPUT);
-	MGPIO_vSetPinOutputType(APP_DIRECTION_R, MGPIO_OUTPUT_TYPE_PP);
-	MGPIO_vSetPinOutputSpeed(APP_DIRECTION_R, MGPIO_HIGH_SPEED);
-	MGPIO_vSetPinMode(APP_DIRECTION_L, MGPIO_MODE_OUTPUT);
-	MGPIO_vSetPinOutputType(APP_DIRECTION_L, MGPIO_OUTPUT_TYPE_PP);
-	MGPIO_vSetPinOutputSpeed(APP_DIRECTION_L, MGPIO_HIGH_SPEED);
-	MGPIO_vSetPinValue(APP_DIRECTION_R, MGPIO_OUTPUT_LOW);
-	MGPIO_vSetPinValue(APP_DIRECTION_L, MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
+
+	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -244,8 +253,22 @@ void APP_vInit(void) {
  */
 void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
 	/* SET THE WHEELS DIRECTION */
-	MGPIO_vSetPinValue(APP_DIRECTION_R, Right_Dir);
-	MGPIO_vSetPinValue(APP_DIRECTION_L, Left_Dir);
+	if (Right_Dir == APP_CLOCK_WISE) {
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+	} else {
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
+	}
+
+	if (Left_Dir == APP_CLOCK_WISE) {
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+	} else {
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
+	}
+
 	/* SET THE WHEELS SPEED */
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, (u32)APP_s32SpeedRight);
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, (u32)APP_s32SpeedLeft);
@@ -262,12 +285,12 @@ void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
  * @return None
  */
 void APP_vCalibrateLineFollowing(void) {
-	u16 minVal[APP_IR_ARRAY_COUNT];
-	u16 maxVal[APP_IR_ARRAY_COUNT];
+	u16 minVal[APP_IR_ARRAY_SIZE];
+	u16 maxVal[APP_IR_ARRAY_SIZE];
 	/* INITIALIZE THE MINIMUM AND MAXIMUM */
 	u8 i = 0;
 	u16 greatcounter = 0;
-	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
+	for (i = 0; i < APP_IR_ARRAY_SIZE; i++) {
 		minVal[i] = APP_u16IRData[i];
 		maxVal[i] = APP_u16IRData[i];
 	}
@@ -277,13 +300,13 @@ void APP_vCalibrateLineFollowing(void) {
     APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
 	/* START CALIBRATION PROCESS */
 	for (greatcounter = 0; greatcounter < 3000; greatcounter++) {
-		for (i = 0; i < APP_IR_ARRAY_COUNT; i++) {
+		for (i = 0; i < APP_IR_ARRAY_SIZE; i++) {
 			if (APP_u16IRData[i] > maxVal[i]) { maxVal[i] = APP_u16IRData[i]; }
 			if (APP_u16IRData[i] < minVal[i]) { minVal[i] = APP_u16IRData[i]; }
 		}
 	}
 	/* SET THE THRESHOLD */
-	for (i = 0; i < APP_IR_ARRAY_COUNT; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
+	for (i = 0; i < APP_IR_ARRAY_SIZE; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
 }
 
 /**
