@@ -29,13 +29,12 @@
 #include "main.h"
 
 /************************************ VARIABLE DEFINITIONS ************************************/
-u16 APP_u16IRData[APP_IR_ARRAY_SIZE];		/* IR ARRAY CURRENT MEASURED VALUES          */
-u16 APP_u16IRThreshold[APP_IR_ARRAY_SIZE];	/* IR ARRAY THRESHOLD VALUES                 */
+u16 APP_u16IRData[APP_IR_ARRAY_SIZE];       /* IR ARRAY CURRENT MEASURED VALUES          */
+u16 APP_u16IRThreshold[APP_IR_ARRAY_SIZE];  /* IR ARRAY THRESHOLD VALUES                 */
 u32 APP_s32SpeedLeft = 0;                   /* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
 u32 APP_s32SpeedRight = 0;                  /* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
 			/* MOBILE VARIABLES */
 u8 APP_u8DirBuffer[APP_MOBILE_MSG_LEN];     /* DATA DIRECTION FROM MOBILE APPLICATION    */
-u8 APP_u8Control;                           /* MOVEMENT CONTROL FROM MOBILE APPLICATION  */
 			/*   PID VARIABLES   */
 f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;        /* PID CONTROLLER CONSTANTS                  */
 s32 APP_s32Error, APP_s32PrevError = 0;     /* ERROR TO BE ACCUMULATED, DIFFERENTIATED   */
@@ -45,16 +44,16 @@ s32 APP_s32P, APP_s32I, APP_s32D;           /* PID CONTROL VARIABLES            
 
 
 /************************************ FUNCTION DEFINITIONS ************************************/
-void APP_vInit(void);                       /* INITIALIZATION FUNCTION                   */
+void APP_vInit(void);                       /* INITIALIZATION FUNCTION                    */
 void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir,
-				APP_WHEEL_DIR Left_Dir);    /* MOTOR DRIVER FUNCTION                     */
-void APP_vCalibrateLineFollowing(void);     /* CALIBRATION TO GET THRESHOLD              */
-void APP_vCalibrateMazeSolving(void);       /* CALIBRATION WITH MOBILE TO GET PATH       */
-void APP_vReturnToPointZero(void);          /* RESET THE FACE DIRECTION OF THE CAR       */
-void APP_vPIDcontrol(void);                 /* LINE FOLLOWING FUNCTION USING PID CONCEPT */
+                APP_WHEEL_DIR Left_Dir);    /* MOTOR DRIVER FUNCTION                      */
+void APP_vCalibrateLineFollowing(void);     /* CALIBRATION TO GET THRESHOLD               */
+void APP_vReturnToPointZero(void);          /* RESET THE FACE DIRECTION OF THE CAR        */
+void APP_vPIDcontrol(void);                 /* ERROR DETECTION FUNCTION USING PID CONCEPT */
+void APP_vLineFollow(void);                 /* LINE FOLLOWING ALGORITHM                   */
+void APP_vMazeSolveMobile(void);            /* MAZE SOLVE USING MOBILE APPLICATION        */
+void APP_vMazeSolveRobot(void);             /* MAZE SOLVE USING ROBOT ALGORITHM           */
 /**********************************************************************************************/
-
-
 
 int main(void) {
 
@@ -66,64 +65,64 @@ int main(void) {
 	/********************************** CHOOSE WHICH CODE TO RUN **********************************/
 	APP_ALGORITHM AlgorithmFlag = 0;
 	while (true) {
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_CALIBRATE_ROBOT)) {
+			AlgorithmFlag = __APP_CALIBRATE_ROBOT__;
+			break;
+		}
 		if (!MGPIO_u8GetPinValue(APP_BUTTON_LINE_FOLLOW)) {
-			AlgorithmFlag = APP_LINE_FOLLOWING;
+			AlgorithmFlag = __APP_LINE_FOLLOWING__;
 			break;
 		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE)) {
-			AlgorithmFlag = APP_MAZE_SOLVING;
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_MOBILE)) {
+			AlgorithmFlag = __APP_MAZE_SOLVING_MOBILE__;
+			break;
+		}
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_ROBOT)) {
+			AlgorithmFlag = __APP_MAZE_SOLVING_ROBOT__;
 			break;
 		}
 	}
 	/**********************************************************************************************/
 
 
-	/********************************** LINE FOLLOWING ALGORITHM **********************************/
-	if (AlgorithmFlag == APP_LINE_FOLLOWING) {
-		/* CALIBRATION OF LINE FOLLOWING */
-		APP_vCalibrateLineFollowing();
-		/* RETURN TO POINT ZERO */
-		APP_vReturnToPointZero();
-		while (true) {
-			/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
-			if ((APP_u16IRData[0] > APP_u16IRThreshold[0]) &&
-					(APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1])) {
-				// TODO -- SHOULD KEEP FORWARD
-				continue;
-			}
-			/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
-			else if (APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1]) {
-				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
-				APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
-				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
-				continue;
-			}
-			/* EXTREME LEFT --> (BLACK AT 0) && (WHITE AT 4 (IT IS WHITE HERE)) */
-			else if (APP_u16IRData[0] > APP_u16IRThreshold[0]) {
-				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
-				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
-				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
-				continue;
-			}
-			/* NORMAL PID CONTROL */
-			else if (APP_u16IRData[2] > APP_u16IRThreshold[2]) {
-				// TODO -- SHOULD KEEP FORWARD
-				continue;
-			}
+	while (true) {
+
+		/***************************** MAZE SOLVING USING MOBILE ALGORITHM ****************************/
+		if (AlgorithmFlag == __APP_CALIBRATE_ROBOT__) {
+			/* CALIBRATION OF LINE FOLLOWING */
+			APP_vCalibrateLineFollowing();
 		}
-	}
-	/**********************************************************************************************/
+		/**********************************************************************************************/
 
 
-	/*********************************** MAZE SOLVING ALGORITHM ***********************************/
-	else if (AlgorithmFlag == APP_MAZE_SOLVING) {
-		/* CALIBRATION FOR MAZE SOLVING */
-		APP_vCalibrateMazeSolving();
-		/* RETURN TO POINT ZERO */
-		APP_vReturnToPointZero();
-		// TODO -- IMPLEMENT MAZE SOLVING ALGORTHIM
+		/********************************** LINE FOLLOWING ALGORITHM **********************************/
+		else if (AlgorithmFlag == __APP_LINE_FOLLOWING__) {
+			/* CALIBRATION OF LINE FOLLOWING */
+			APP_vCalibrateLineFollowing();
+			/* RETURN TO POINT ZERO */
+			APP_vReturnToPointZero();
+			/* IMPLEMENT ALGORITHM */
+			APP_vLineFollow();
+		}
+		/**********************************************************************************************/
+
+
+		/***************************** MAZE SOLVING USING MOBILE ALGORITHM ****************************/
+		else if (AlgorithmFlag == __APP_MAZE_SOLVING_MOBILE__) {
+			/* IMPLEMENT ALGORITHM */
+			APP_vMazeSolveMobile();
+		}
+		/**********************************************************************************************/
+
+
+		/***************************** MAZE SOLVING USING ROBOT ALGORITHM *****************************/
+		else if (AlgorithmFlag == __APP_MAZE_SOLVING_ROBOT__) {
+			/* IMPLEMENT ALGORITHM */
+			APP_vMazeSolveRobot();
+		}
+		/**********************************************************************************************/
+
 	}
-	/**********************************************************************************************/
 }
 
 
@@ -172,10 +171,14 @@ void APP_vInit(void) {
 	MGPIO_vSetPinMode(APP_TIM_PWM_L_PIN, MGPIO_MODE_ALTERNATE);
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_L_PIN, APP_TIM_PWM_L_AF);
 	/* INIT BUTTON PINS */
+	MGPIO_vSetPinMode(APP_BUTTON_CALIBRATE_ROBOT, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_CALIBRATE_ROBOT, MGPIO_INPUT_TYPE_PULLUP);
 	MGPIO_vSetPinMode(APP_BUTTON_LINE_FOLLOW, MGPIO_MODE_INPUT);
 	MGPIO_vSetPinInputType(APP_BUTTON_LINE_FOLLOW, MGPIO_INPUT_TYPE_PULLUP);
-	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE, MGPIO_MODE_INPUT);
-	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE_ROBOT, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE_ROBOT, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE_MOBILE, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE_MOBILE, MGPIO_INPUT_TYPE_PULLUP);
 	/* INIT DIRECTION PINS */
 	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
 	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
@@ -224,6 +227,29 @@ void APP_vInit(void) {
 	MDMA_vDirectInit(DMA2, MDMA_STREAM_0, &dma);
 	MDMA_vStart(DMA2, MDMA_STREAM_0, &dmat);
 	MADC_vEnable(MADC_ENABLE, MADC_DISABLE);
+	/**********************************************************************************************/
+
+	/************************************ USART CONFIGURATIONS ************************************/
+	/* Initialize USART */
+	MUSART_InitTypeDef uart = {9600, MUSART_DATAWIDTH_8BIT,
+							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
+							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
+							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
+	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE, 0, 0, 0};	/* Disable USART's Clock */
+	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
+	MUSART_vEnable(APP_MOBILE_USART);
+	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
+	/**********************************************************************************************/
+
+	/************************ DMA CONFIGURATION FOR USART DIRECTION BUFFER ************************/
+	dma.PriorityLevel = MDMA_PRIORITY_HIGH;
+	dma.Channel = MDMA_CHANNEL_4;
+	dmat.SrcAddr = (u32*)MUSART_u32EnableRxDMA(APP_MOBILE_USART);
+	dmat.DstAddr = (u32*)(&APP_u8DirBuffer);
+	dmat.Length = APP_MOBILE_MSG_LEN;
+	dmat.Size = MDMA_SIZE_BYTE;
+	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
+	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
 	/**********************************************************************************************/
 
 	/*********************************** GPT PWM CONFIGURATIONS ***********************************/
@@ -310,55 +336,6 @@ void APP_vCalibrateLineFollowing(void) {
 }
 
 /**
- * @brief Calibrate maze solving parameters.
- *
- * This function initializes USART communication, configures DMA for USART control buffer,
- * performs calibration for direction, and then configures DMA for USART direction buffer.
- *
- * @note Calibration for direction may involve allowing the mobile device to control the car or
- *       allowing the car itself to perform calibration.
- * @note After calibration, the function calibrates line following sensors.
- *
- * @param None
- * @return None
- */
-void APP_vCalibrateMazeSolving(void) {
-	/************************************ USART CONFIGURATIONS ************************************/
-	/* Initialize USART */
-	MUSART_InitTypeDef uart = {9600, MUSART_DATAWIDTH_8BIT,
-							MUSART_STOP_ONE_BIT, MUSART_DISABLE,
-							MUSART_PARITY_EVEN, MUSART_DIRECTION_TX_RX,
-							MUSART_DISABLE, MUSART_OVER_SAMPLING_16};
-	MUSART_ClockInitTypeDef uart_clock = {MUSART_DISABLE, 0, 0, 0};	/* Disable USART's Clock */
-	MUSART_vInit(APP_MOBILE_USART, &uart, &uart_clock);
-	MUSART_vEnable(APP_MOBILE_USART);
-	MUSART_vRxIntStatus(APP_MOBILE_USART, MUSART_DISABLE);
-	/**********************************************************************************************/
-
-	/************************* DMA CONFIGURATION FOR USART CONTROL BUFFER *************************/
-	MDMA_DirectInitType dma = {MDMA_DISABLE, MDMA_DIRECTION_PER_MEM, MDMA_ENABLE,
-								MDMA_DISABLE, MDMA_ENABLE, MDMA_PRIORITY_HIGH, MDMA_CHANNEL_4};
-	MDMA_TransferStruct dmat = {(u32*)MUSART_u32EnableRxDMA(APP_MOBILE_USART),
-								(u32*)(&APP_u8Control), 1, MDMA_SIZE_BYTE};
-	MDMA_vDirectInit(DMA2, MDMA_STREAM_5, &dma);
-	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
-	/**********************************************************************************************/
-
-	/********************************** CALIBRATION FOR DIRECTION *********************************/
-	// TODO -- ALLOW THE MOBILE TO FULLY CONTROL THE CAR SO IT CAN CALIBRATE
-
-	/* ALLOW THE CAR IT SELF TO CALIBRATE */
-	APP_vCalibrateLineFollowing();
-	/**********************************************************************************************/
-
-	/************************ DMA CONFIGURATION FOR USART DIRECTION BUFFER ************************/
-	dmat.DstAddr = (u32*)APP_u8DirBuffer;
-	dmat.Length = APP_MOBILE_MSG_LEN;
-	MDMA_vStart(DMA2, MDMA_STREAM_5, &dmat);
-	/**********************************************************************************************/
-}
-
-/**
  * @brief Return the car to point zero.
  *
  * This function rotates the car until it reaches the black line detected by the middle sensor.
@@ -412,4 +389,91 @@ void APP_vPIDcontrol(void) {
 	if (APP_s32SpeedRight > APP_CAR_MOVE_FULL_FORCE) 	  { APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE; }
 	else if (APP_s32SpeedRight < APP_CAR_MOVE_ZERO_FORCE) { APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE; }
 	APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
+}
+
+/**
+ * @brief LINE FOLLOWING CODE.
+ *
+ * @param None
+ * @return None
+ */
+void APP_vLineFollow(void) {
+	while (true) {
+		/* CONFLICT EXTREME RIGHT AND EXTREME LEFT --> (BLACK AT 0) && (BLACK AT 4) */
+		if ((APP_u16IRData[0] > APP_u16IRThreshold[0]) &&
+				(APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1])) {
+			// TODO -- SHOULD KEEP FORWARD
+			continue;
+		}
+		/* EXTREME RIGHT --> (WHITE AT 0 (IT IS WHITE HERE)) && (BLACK AT 4) */
+		else if (APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1]) {
+			APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
+			APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+			APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
+			continue;
+		}
+		/* EXTREME LEFT --> (BLACK AT 0) && (WHITE AT 4 (IT IS WHITE HERE)) */
+		else if (APP_u16IRData[0] > APP_u16IRThreshold[0]) {
+			APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+			APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
+			APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
+			continue;
+		}
+		/* NORMAL PID CONTROL */
+		else if (APP_u16IRData[2] > APP_u16IRThreshold[2]) {
+			// TODO -- SHOULD KEEP FORWARD
+			continue;
+		}
+	}
+}
+
+/**
+ * @brief MAZE SOLVING USING MOBILE ALGORITHM CODE.
+ *
+ * @param None
+ * @return None
+ */
+void APP_vMazeSolveMobile(void) {
+	u32 APP_u32CurrDir = 0;
+	while (true) {
+		/* IF ANY EDGE DETECT BLACK */
+		if ((APP_u16IRData[0] > APP_u16IRThreshold[0])
+				|| (APP_u16IRData[APP_IR_ARRAY_SIZE - 1] > APP_u16IRThreshold[APP_IR_ARRAY_SIZE - 1])) {
+			/* CHECK DIRECTION */
+			if (APP_u8DirBuffer[APP_u32CurrDir] == 'R') {
+				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
+				APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
+				for (u8 c = 0; c < APP_TURN_THRESHOLD; c++) { __asm volatile("NOP"); }
+			} else if (APP_u8DirBuffer[APP_u32CurrDir] == 'L') {
+				APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
+				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
+				for (u8 c = 0; c < APP_TURN_THRESHOLD; c++) { __asm volatile("NOP"); }
+			} else if (APP_u8DirBuffer[APP_u32CurrDir] == 'F') {
+				APP_s32SpeedLeft = APP_CAR_MOVE_FULL_FORCE;
+				APP_s32SpeedRight = APP_CAR_MOVE_FULL_FORCE;
+				APP_vDriveMotors(APP_CLOCK_WISE, APP_CLOCK_WISE);
+				for (u8 c = 0; c < APP_TURN_THRESHOLD; c++) { __asm volatile("NOP"); }
+			}
+			/* INCREMENT COUNTER */
+			APP_u32CurrDir++;
+		} else {
+			/* NORMAL PID CONTROL */
+			APP_vPIDcontrol();
+		}
+	}
+}
+
+/**
+ * @brief MAZE SOLVING USING ROBOT ALGORITHM CODE.
+ *
+ * @param None
+ * @return None
+ */
+void APP_vMazeSolveRobot(void) {
+	// TODO -- IMPLEMENT MAZE SOLVING ROBOT ALGORTHIM
+	while (true) {
+
+	}
 }
