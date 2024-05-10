@@ -81,7 +81,7 @@ typedef enum {
 #define APP_CAR_MOVE_FULL_FORCE				APP_PWM_PERIOD
 #define APP_CAR_MOVE_ZERO_FORCE				0
 /* DEFINE AVERAGE SPEED FOR THE MOTORS */
-#define APP_AVERAGE_SPEED					(APP_PWM_PERIOD/2)
+#define APP_AVERAGE_SPEED					2000
 /**********************************************************************************************/
 
 #endif /* _MAIN_H_ */

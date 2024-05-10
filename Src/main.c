@@ -73,12 +73,12 @@ int main(void) {
 			AlgorithmFlag = __APP_LINE_FOLLOWING__;
 			break;
 		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_MOBILE)) {
-			AlgorithmFlag = __APP_MAZE_SOLVING_MOBILE__;
-			break;
-		}
 		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_ROBOT)) {
 			AlgorithmFlag = __APP_MAZE_SOLVING_ROBOT__;
+			break;
+		}
+		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_MOBILE)) {
+			AlgorithmFlag = __APP_MAZE_SOLVING_MOBILE__;
 			break;
 		}
 	}
@@ -97,8 +97,6 @@ int main(void) {
 
 		/********************************** LINE FOLLOWING ALGORITHM **********************************/
 		else if (AlgorithmFlag == __APP_LINE_FOLLOWING__) {
-			/* CALIBRATION OF LINE FOLLOWING */
-			APP_vCalibrateLineFollowing();
 			/* RETURN TO POINT ZERO */
 			APP_vReturnToPointZero();
 			/* IMPLEMENT ALGORITHM */
@@ -125,7 +123,6 @@ int main(void) {
 	}
 }
 
-
 /**
  * @brief Initialize the application.
  *
@@ -142,6 +139,7 @@ void APP_vInit(void) {
 	/* INIT ALL NEEDED PERIPHERALS CLOCK */
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOAEN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOBEN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1 ,MRCC_AHB1_GPIOCEN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
@@ -192,11 +190,12 @@ void APP_vInit(void) {
 	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
 	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
 	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
-
 	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
 	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
 	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
 	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinMode(GPIOC, MGPIO_PIN13, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinValue(GPIOC, MGPIO_PIN13, MGPIO_OUTPUT_HIGH);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -288,11 +287,11 @@ void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
 	}
 
 	if (Left_Dir == APP_CLOCK_WISE) {
-		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
-		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
-	} else {
 		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
 		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
+	} else {
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
 	}
 
 	/* SET THE WHEELS SPEED */
