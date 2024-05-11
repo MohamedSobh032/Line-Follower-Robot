@@ -33,14 +33,13 @@ u16 APP_u16IRData[APP_IR_ARRAY_SIZE];       /* IR ARRAY CURRENT MEASURED VALUES 
 u16 APP_u16IRThreshold[APP_IR_ARRAY_SIZE];  /* IR ARRAY THRESHOLD VALUES                 */
 u32 APP_s32SpeedLeft = 0;                   /* LEFT MOTOR SPEED IN TERMS OF PERIODICITY  */
 u32 APP_s32SpeedRight = 0;                  /* RIGHT MOTOR SPEED IN TERMS OF PERIODICITY */
-			/* MOBILE VARIABLES */
+			/*      MOBILE VARIABLES      */
 u8 APP_u8DirBuffer[APP_MOBILE_MSG_LEN];     /* DATA DIRECTION FROM MOBILE APPLICATION    */
-			/*   PID VARIABLES   */
+			/*        PID VARIABLES       */
 f32 APP_f32Kp, APP_f32Kd, APP_f32Ki;        /* PID CONTROLLER CONSTANTS                  */
 s32 APP_s32Error, APP_s32PrevError = 0;     /* ERROR TO BE ACCUMULATED, DIFFERENTIATED   */
 s32 APP_s32P, APP_s32I, APP_s32D;           /* PID CONTROL VARIABLES                     */
 /**********************************************************************************************/
-
 
 
 /************************************ FUNCTION DEFINITIONS ************************************/
@@ -55,71 +54,63 @@ void APP_vMazeSolveMobile(void);            /* MAZE SOLVE USING MOBILE APPLICATI
 void APP_vMazeSolveRobot(void);             /* MAZE SOLVE USING ROBOT ALGORITHM           */
 /**********************************************************************************************/
 
+
 int main(void) {
 
 	/*************************************** INITIALIZATION ***************************************/
 	APP_vInit();
 	/**********************************************************************************************/
-
-
-	/********************************** CHOOSE WHICH CODE TO RUN **********************************/
-	APP_ALGORITHM AlgorithmFlag = 0;
 	while (true) {
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_CALIBRATE_ROBOT)) {
-			AlgorithmFlag = __APP_CALIBRATE_ROBOT__;
-			break;
+		/********************************** CHOOSE WHICH CODE TO RUN **********************************/
+		APP_ALGORITHM AlgorithmFlag = 0;
+		while (true) {
+			if (!MGPIO_u8GetPinValue(APP_BUTTON_CALIBRATE_ROBOT)) {
+				MGPIO_vSetPinValue(GPIOC, MGPIO_PIN13  , MGPIO_OUTPUT_LOW);
+				AlgorithmFlag = __APP_CALIBRATE_ROBOT__;
+				break;
+			}
+			if (!MGPIO_u8GetPinValue(APP_BUTTON_LINE_FOLLOW)) {
+				AlgorithmFlag = __APP_LINE_FOLLOWING__;
+				break;
+			}
+			if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_MOBILE)) {
+				AlgorithmFlag = __APP_MAZE_SOLVING_MOBILE__;
+				break;
+			}
+			if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_ROBOT)) {
+				AlgorithmFlag = __APP_MAZE_SOLVING_ROBOT__;
+				break;
+			}
 		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_LINE_FOLLOW)) {
-			AlgorithmFlag = __APP_LINE_FOLLOWING__;
-			break;
-		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_ROBOT)) {
-			AlgorithmFlag = __APP_MAZE_SOLVING_ROBOT__;
-			break;
-		}
-		if (!MGPIO_u8GetPinValue(APP_BUTTON_MAZE_SOLVE_MOBILE)) {
-			AlgorithmFlag = __APP_MAZE_SOLVING_MOBILE__;
-			break;
-		}
-	}
-	/**********************************************************************************************/
-
-
-	while (true) {
+		/**********************************************************************************************/
 
 		/***************************** MAZE SOLVING USING MOBILE ALGORITHM ****************************/
 		if (AlgorithmFlag == __APP_CALIBRATE_ROBOT__) {
-			/* CALIBRATION OF LINE FOLLOWING */
+			/*      IMPLEMENT ALGORITHM      */
 			APP_vCalibrateLineFollowing();
 		}
 		/**********************************************************************************************/
 
-
 		/********************************** LINE FOLLOWING ALGORITHM **********************************/
 		else if (AlgorithmFlag == __APP_LINE_FOLLOWING__) {
-			/* RETURN TO POINT ZERO */
-			APP_vReturnToPointZero();
-			/* IMPLEMENT ALGORITHM */
+			/*      IMPLEMENT ALGORITHM      */
 			APP_vLineFollow();
 		}
 		/**********************************************************************************************/
 
-
 		/***************************** MAZE SOLVING USING MOBILE ALGORITHM ****************************/
 		else if (AlgorithmFlag == __APP_MAZE_SOLVING_MOBILE__) {
-			/* IMPLEMENT ALGORITHM */
+			/*      IMPLEMENT ALGORITHM      */
 			APP_vMazeSolveMobile();
 		}
 		/**********************************************************************************************/
 
-
 		/***************************** MAZE SOLVING USING ROBOT ALGORITHM *****************************/
 		else if (AlgorithmFlag == __APP_MAZE_SOLVING_ROBOT__) {
-			/* IMPLEMENT ALGORITHM */
+			/*      IMPLEMENT ALGORITHM      */
 			APP_vMazeSolveRobot();
 		}
 		/**********************************************************************************************/
-
 	}
 }
 
@@ -139,7 +130,7 @@ void APP_vInit(void) {
 	/* INIT ALL NEEDED PERIPHERALS CLOCK */
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOAEN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOBEN);
-	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1 ,MRCC_AHB1_GPIOCEN);
+	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_GPIOCEN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_ADC1EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_AHB1, MRCC_AHB1_DMA2EN);
 	MRCC_vEnablePeriphClock(MRCC_BUS_APB2, MRCC_APB2_USART1EN);
@@ -165,37 +156,37 @@ void APP_vInit(void) {
 	MGPIO_vSetPinAFDirection(APP_MOBILE_USART_RX, APP_MOBILE_USART_AF);
 	/* INIT TIMER PWM PIN */
 	MGPIO_vSetPinMode(APP_TIM_PWM_R_PIN, MGPIO_MODE_ALTERNATE);
-	MGPIO_vSetPinAFDirection(APP_TIM_PWM_R_PIN, APP_TIM_PWM_R_AF);
 	MGPIO_vSetPinMode(APP_TIM_PWM_L_PIN, MGPIO_MODE_ALTERNATE);
+	MGPIO_vSetPinAFDirection(APP_TIM_PWM_R_PIN, APP_TIM_PWM_R_AF);
 	MGPIO_vSetPinAFDirection(APP_TIM_PWM_L_PIN, APP_TIM_PWM_L_AF);
 	/* INIT BUTTON PINS */
-	MGPIO_vSetPinMode(APP_BUTTON_CALIBRATE_ROBOT, MGPIO_MODE_INPUT);
-	MGPIO_vSetPinInputType(APP_BUTTON_CALIBRATE_ROBOT, MGPIO_INPUT_TYPE_PULLUP);
-	MGPIO_vSetPinMode(APP_BUTTON_LINE_FOLLOW, MGPIO_MODE_INPUT);
-	MGPIO_vSetPinInputType(APP_BUTTON_LINE_FOLLOW, MGPIO_INPUT_TYPE_PULLUP);
-	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE_ROBOT, MGPIO_MODE_INPUT);
-	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE_ROBOT, MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinMode(APP_BUTTON_CALIBRATE_ROBOT,   MGPIO_MODE_INPUT);
+	MGPIO_vSetPinMode(APP_BUTTON_LINE_FOLLOW,       MGPIO_MODE_INPUT);
+	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE_ROBOT,  MGPIO_MODE_INPUT);
 	MGPIO_vSetPinMode(APP_BUTTON_MAZE_SOLVE_MOBILE, MGPIO_MODE_INPUT);
+	MGPIO_vSetPinInputType(APP_BUTTON_CALIBRATE_ROBOT,   MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinInputType(APP_BUTTON_LINE_FOLLOW,       MGPIO_INPUT_TYPE_PULLUP);
+	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE_ROBOT,  MGPIO_INPUT_TYPE_PULLUP);
 	MGPIO_vSetPinInputType(APP_BUTTON_MAZE_SOLVE_MOBILE, MGPIO_INPUT_TYPE_PULLUP);
 	/* INIT DIRECTION PINS */
 	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
-	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
-	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
 	MGPIO_vSetPinMode(APP_RIGHT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN0 , MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN1 , MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinMode(GPIOC, MGPIO_PIN13  , MGPIO_MODE_OUTPUT);
+	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
 	MGPIO_vSetPinOutputType(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN0 , MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN1 , MGPIO_OUTPUT_TYPE_PP);
+	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
 	MGPIO_vSetPinOutputSpeed(APP_RIGHT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
-	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN0, MGPIO_MODE_OUTPUT);
-	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_TYPE_PP);
-	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN0, MGPIO_HIGH_SPEED);
-	MGPIO_vSetPinMode(APP_LEFT_MOTOR_PIN1, MGPIO_MODE_OUTPUT);
-	MGPIO_vSetPinOutputType(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_TYPE_PP);
-	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN1, MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN0 , MGPIO_HIGH_SPEED);
+	MGPIO_vSetPinOutputSpeed(APP_LEFT_MOTOR_PIN1 , MGPIO_HIGH_SPEED);
 	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
 	MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
-	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
-	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
-	MGPIO_vSetPinMode(GPIOC, MGPIO_PIN13, MGPIO_MODE_OUTPUT);
-	MGPIO_vSetPinValue(GPIOC, MGPIO_PIN13, MGPIO_OUTPUT_HIGH);
+	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0 , MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1 , MGPIO_OUTPUT_LOW);
+	MGPIO_vSetPinValue(GPIOC, MGPIO_PIN13  , MGPIO_OUTPUT_HIGH);
 	/**********************************************************************************************/
 
 	/************************************* ADC CONFIGURATIONS *************************************/
@@ -285,15 +276,13 @@ void APP_vDriveMotors(APP_WHEEL_DIR Right_Dir, APP_WHEEL_DIR Left_Dir) {
 		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
 		MGPIO_vSetPinValue(APP_RIGHT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
 	}
-
 	if (Left_Dir == APP_CLOCK_WISE) {
-		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
-		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
-	} else {
 		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_HIGH);
 		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_LOW);
+	} else {
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN0, MGPIO_OUTPUT_LOW);
+		MGPIO_vSetPinValue(APP_LEFT_MOTOR_PIN1, MGPIO_OUTPUT_HIGH);
 	}
-
 	/* SET THE WHEELS SPEED */
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_R, APP_CHANNEL_PWM_R, (u32)APP_s32SpeedRight);
 	MGPT_vSetPWMDutyCycle(APP_TIM_PWM_L, APP_CHANNEL_PWM_L, (u32)APP_s32SpeedLeft);
@@ -319,7 +308,7 @@ void APP_vCalibrateLineFollowing(void) {
 		minVal[i] = APP_u16IRData[i];
 		maxVal[i] = APP_u16IRData[i];
 	}
-	/* SET THE MOTOR TO MAX SPEED TO ROTATE THE ROBOT  TO GET MULTIPLE VALUES */
+	/* SET THE MOTOR TO MAX SPEED TO ROTATE THE ROBOT TO GET MULTIPLE VALUES */
     APP_s32SpeedRight = APP_AVERAGE_SPEED;
     APP_s32SpeedLeft = APP_AVERAGE_SPEED;
     APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
@@ -332,6 +321,10 @@ void APP_vCalibrateLineFollowing(void) {
 	}
 	/* SET THE THRESHOLD */
 	for (i = 0; i < APP_IR_ARRAY_SIZE; i++) { APP_u16IRThreshold[i] = (minVal[i] + maxVal[i]) / 2; }
+	/* STOP THE CAR */
+    APP_s32SpeedRight = APP_CAR_MOVE_ZERO_FORCE;
+    APP_s32SpeedLeft = APP_CAR_MOVE_ZERO_FORCE;
+    APP_vDriveMotors(APP_CLOCK_WISE, APP_ANTI_CLOCK_WISE);
 }
 
 /**

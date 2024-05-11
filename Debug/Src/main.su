@@ -1,9 +1,9 @@
 ../Src/main.c:58:5:main	16	static
-../Src/main.c:137:6:APP_vInit	72	static
-../Src/main.c:283:6:APP_vDriveMotors	16	static
-../Src/main.c:316:6:APP_vCalibrateLineFollowing	40	static
-../Src/main.c:350:6:APP_vReturnToPointZero	8	static
-../Src/main.c:372:6:APP_vPIDcontrol	16	static
-../Src/main.c:403:6:APP_vLineFollow	8	static
-../Src/main.c:439:6:APP_vMazeSolveMobile	16	static,ignoring_inline_asm
-../Src/main.c:477:6:APP_vMazeSolveRobot	4	static
+../Src/main.c:129:6:APP_vInit	72	static
+../Src/main.c:273:6:APP_vDriveMotors	16	static
+../Src/main.c:304:6:APP_vCalibrateLineFollowing	40	static
+../Src/main.c:342:6:APP_vReturnToPointZero	8	static
+../Src/main.c:364:6:APP_vPIDcontrol	16	static
+../Src/main.c:395:6:APP_vLineFollow	8	static
+../Src/main.c:431:6:APP_vMazeSolveMobile	16	static,ignoring_inline_asm
+../Src/main.c:469:6:APP_vMazeSolveRobot	4	static

@@ -51,6 +51,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 Project_MazeSolver_CubeIDE.list \
 
+OBJCOPY_HEX += \
+Project_MazeSolver_CubeIDE.hex \
+
 
 # All Target
 all: main-build
@@ -74,12 +77,17 @@ Project_MazeSolver_CubeIDE.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Project_MazeSolver_CubeIDE.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "Project_MazeSolver_CubeIDE.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) Project_MazeSolver_CubeIDE.elf Project_MazeSolver_CubeIDE.list Project_MazeSolver_CubeIDE.map default.size.stdout
+	-$(RM) Project_MazeSolver_CubeIDE.elf Project_MazeSolver_CubeIDE.hex Project_MazeSolver_CubeIDE.list Project_MazeSolver_CubeIDE.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
