@@ -51,6 +51,9 @@ Once the exit is reached, the maze-solving process is complete.
  4. Motor Driver L298N
  5. TCRT5000 Line Following and Object Detection Sensor (5 of them or an array)
  6. 4 Push Buttons (connectivity --> 1 pin connected to gnd, and the other to the MCU)
- 7. Any Connectivity Method (Breadboard or PCB) mobile device (if using mobile application).
+ 7. Any Connectivity Method (Breadboard or PCB) mobile device (if using mobile application)
+ 8. 12V Adaptor
+ 9. Female Power Jack
+ 10. Cable Extend
 ## Software libraries:
 No need, the whole code is written from scratch :)
